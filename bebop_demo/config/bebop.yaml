@@ -1,0 +1,27 @@
+# Velocity command configuration.
+- topic_name: "/parrot_bebop_2/gazebo/command/twist"
+  ros_type_name: "geometry_msgs/msg/Twist"
+  gz_type_name: "gz.msgs.Twist"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Motor speed command configuration.
+- topic_name: "/parrot_bebop_2/gazebo/command/motor_speed"
+  ros_type_name: "std_msgs/msg/Float32"
+  gz_type_name: "gz.msgs.Float"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Odometry state configuration.
+- topic_name: "/model/parrot_bebop_2/odometry"
+  ros_type_name: "nav_msgs/msg/Odometry"
+  gz_type_name: "gz.msgs.Odometry"
+  lazy: true
+  direction: GZ_TO_ROS
+
+# Pose state configuration.
+- topic_name: "/model/parrot_bebop_2/pose"
+  ros_type_name: "geometry_msgs/msg/Pose"
+  gz_type_name: "gz.msgs.Pose"
+  lazy: true
+  direction: GZ_TO_ROS
