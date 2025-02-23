@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format2.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="2">
+
+  <name>bebop_ros_gz</name>
+  <version>0.0.1</version>
+  <description>Meta-package containing interfaces for using ROS 2 with <a href="https://gazebosim.org">Gazebo</a> simulation.</description>
+  <maintainer email="hello@juliordz.com">Julio Rodriguez</maintainer>
+  <license>Apache 2.0</license>
+
+  <author>Julio Rodriguez</author>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <exec_depend>bebop_demo</exec_depend>
+  <exec_depend>bebop_controller</exec_depend>
+  <exec_depend>bebop_demo</exec_depend>
+  <!-- See https://github.com/gazebosim/ros_gz/issues/40 -->
+  <!--exec_depend>ros_gz_point_cloud</exec_depend-->
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
