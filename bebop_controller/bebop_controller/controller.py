@@ -3,55 +3,70 @@
 import rclpy
 from rclpy.node import Node
 import math
-import numpy as np
-from tf2_ros import TransformException, Buffer, TransformListener
-from std_msgs.msg import Empty, Float32
-from geometry_msgs.msg import Twist, PoseStamped, Pose
+from geometry_msgs.msg import Twist, Pose
+from nav_msgs.msg import Odometry
+from sensor_msgs.msg import Joy
 from std_srvs.srv import Empty as EmptySrv
-from rclpy.qos import QoSProfile, ReliabilityPolicy
-from tf2_geometry_msgs import do_transform_pose
-from pid import PID
+from .pid import PID
 
 class Controller(Node):
     Idle = 0
     Automatic = 1
     TakingOff = 2
     Landing = 3
+    EmergencyStop = 4
 
-    def __init__(self, frame):
+    def __init__(self):
         super().__init__('controller')
-        self.frame = frame
-        qos = QoSProfile(depth=10, reliability=ReliabilityPolicy.BEST_EFFORT)
-        self.pub_nav = self.create_publisher(Twist, 'cmd_vel', qos)
-        self.tf_buffer = Buffer()
-        self.tf_listener = TransformListener(self.tf_buffer, self)
-        self.pid_x = PID(35, 10, 0.0, -20, 20, "x")
-        self.pid_y = PID(-35, -10, -0.0, -20, 20, "y")
-        self.pid_z = PID(4000, 3000.0, 2000.0, 10000, 60000, "z")
-        self.pid_yaw = PID(-50.0, 0.0, 0.0, -200.0, 200.0, "yaw")
-        self.state = Controller.Idle
-        self.goal = Pose()
-        self.create_subscription(Pose, 'goal', self._pose_changed, qos)
+
+        # Publisher for drone commands
+        self.pub_nav = self.create_publisher(Twist, '/parrot_bebop_2/gazebo/command/twist', 10)
+
+        # Subscribers
+        self.create_subscription(Odometry, '/model/parrot_bebop_2/odometry', self.odometry_callback, 10)
+        self.create_subscription(Pose, 'goal', self._pose_changed, 10)
+        self.joy_sub = self.create_subscription(Joy, 'joy', self.joy_callback, 10)
+
+        # Services
         self.create_service(EmptySrv, 'takeoff', self._takeoff)
         self.create_service(EmptySrv, 'land', self._land)
+
+        # Timer for control loop
         self.timer = self.create_timer(0.01, self.run)
 
-    def get_transform(self, source_frame, target_frame):
-        try:
-            now = self.get_clock().now()
-            transform = self.tf_buffer.lookup_transform(source_frame, target_frame, now)
-            position = transform.transform.translation
-            quaternion = transform.transform.rotation
-            return position, quaternion, now
-        except TransformException as ex:
-            self.get_logger().error(f'Could not transform {source_frame} to {target_frame}: {ex}')
-            return None
+        # Current and goal poses
+        self.current_pose = Pose()
+        self.goal = Pose()
 
-    def pid_reset(self):
-        self.pid_x.reset()
-        self.pid_y.reset()
-        self.pid_z.reset()
-        self.pid_yaw.reset()
+        # PID controllers
+        self.pid_x = PID(self, 3.5, 1.0, 0.0, -20.00, 20.00, "x")  
+        self.pid_y = PID(self, 3.5, 1.0, 0.0, -20.00, 20.00, "y")  
+        self.pid_z = PID(self, 4.0, 3.00, 2.00, -100.0, 100.000, "z")  
+        self.pid_yaw = PID(self, 5.00, 1.0, 0.20, -200.0, 200.0, "yaw")  
+
+        # State of the controller
+        self.state = Controller.Idle
+
+        # Scale factor for joystick input
+        self.scale = 0.6
+
+    def odometry_callback(self, msg):
+        self.current_pose.position = msg.pose.pose.position
+        self.current_pose.orientation = msg.pose.pose.orientation
+
+    def joy_callback(self, msg):
+        # self.get_logger().info(f"Joy message received: {msg}")
+        # self.get_logger().info(f"Button states: {msg.buttons}")
+        
+        if msg.buttons[0] == 1:  # A button
+            self.get_logger().info("Landing initiated via Xbox controller.")
+            self.state = Controller.Landing
+        elif msg.buttons[1] == 1:  # B button
+            self.get_logger().info("Emergency stop triggered via Xbox controller.")
+            self.state = Controller.EmergencyStop
+        elif msg.buttons[3] == 1:  # Y button
+            self.get_logger().info("Takeoff initiated via Xbox controller.")
+            self.state = Controller.TakingOff
 
     def _pose_changed(self, msg):
         self.goal = msg
@@ -67,91 +82,44 @@ class Controller(Node):
         return response
 
     def run(self):
-        thrust = 0
+        msg = Twist()
+
+        if self.state == Controller.EmergencyStop:
+            self.pub_nav.publish(msg)
+            return
+
         if self.state == Controller.TakingOff:
-            transform = self.get_transform("world", self.frame)
-            if transform:
-                position, quaternion, t = transform
-                if position.z > 0.05 or thrust > 50000:
-                    self.pid_reset()
-                    self.pid_z.integral = thrust / self.pid_z.ki
-                    self.target_z = 0.5
-                    self.state = Controller.Automatic
-                    thrust = 0
-                else:
-                    thrust += 100
-                    msg = Twist()
-                    msg.linear.z = float(thrust)
-                    self.pub_nav.publish(msg)
-            else:
-                self.get_logger().error(f"Could not transform from world to {self.frame}.")
+            msg.linear.z = 0.0  # Adjust this value as needed
+            self.pub_nav.publish(msg)
+            self.state = Controller.Automatic  # Transition to automatic control after takeoff
 
         if self.state == Controller.Landing:
-            self.goal.position.z = 0.05
-            transform = self.get_transform("world", self.frame)
-            if transform:
-                position, quaternion, t = transform
-                if position.z <= 0.1:
-                    self.state = Controller.Idle
-                    msg = Twist()
-                    self.pub_nav.publish(msg)
-            else:
-                self.get_logger().error(f"Could not transform from world to {self.frame}.")
+            msg.linear.z = 0.0  # Adjust this value as needed
+            self.pub_nav.publish(msg)
+            self.state = Controller.Idle  # Transition to idle after landing
 
-        if self.state == Controller.Automatic or self.state == Controller.Landing:
-            transform = self.get_transform("world", self.frame)
-            if transform:
-                position, quaternion, t = transform
-                target_world = PoseStamped()
-                target_world.header.stamp = t.to_msg()
-                target_world.header.frame_id = "world"
-                target_world.pose = self.goal
 
-                target_drone = do_transform_pose(target_world, transform)
 
-                quaternion = (
-                    target_drone.pose.orientation.x,
-                    target_drone.pose.orientation.y,
-                    target_drone.pose.orientation.z,
-                    target_drone.pose.orientation.w)
-                euler = self.euler_from_quaternion(quaternion)
+        if self.state == Controller.Automatic:
+            # PID control logic
+            ex = self.goal.position.x - self.current_pose.position.x
+            ey = self.goal.position.y - self.current_pose.position.y
+            ez = self.goal.position.z - self.current_pose.position.z
+            eyaw = self.goal.orientation.z - self.current_pose.orientation.z
 
-                msg = Twist()
-                msg.linear.x = float(self.pid_x.update(0.0, target_drone.pose.position.x))
-                msg.linear.y = float(self.pid_y.update(0.0, target_drone.pose.position.y))
-                msg.linear.z = float(self.pid_z.update(0.0, target_drone.pose.position.z))
-                msg.angular.z = float(self.pid_yaw.update(0.0, euler[2]))
-                self.pub_nav.publish(msg)
-            else:
-                self.get_logger().error(f"Could not transform from world to {self.frame}.")
+            msg.linear.x = float(self.pid_x.update(0.0, ex))*0.01
+            msg.linear.y = float(self.pid_y.update(0.0, ey))*0.01
+            msg.linear.z = float(self.pid_z.update(0.0, ez))*0.01
+            msg.angular.z = 0.0 #float(self.pid_z.update(0.0, eyaw))*0.01
 
-        if self.state == Controller.Idle:
-            msg = Twist()
             self.pub_nav.publish(msg)
 
-    def euler_from_quaternion(self, quaternion):
-        x = quaternion[0]
-        y = quaternion[1]
-        z = quaternion[2]
-        w = quaternion[3]
-
-        sinr_cosp = 2 * (w * x + y * z)
-        cosr_cosp = 1 - 2 * (x * x + y * y)
-        roll = math.atan2(sinr_cosp, cosr_cosp)
-
-        sinp = 2 * (w * y - z * x)
-        pitch = math.asin(sinp)
-
-        siny_cosp = 2 * (w * z + x * y)
-        cosy_cosp = 1 - 2 * (y * y + z * z)
-        yaw = math.atan2(siny_cosp, cosy_cosp)
-
-        return roll, pitch, yaw
+        if self.state == Controller.Idle:
+            self.pub_nav.publish(msg)
 
 def main(args=None):
     rclpy.init(args=args)
-    frame = "bebop"  # You can get this from a parameter if needed
-    controller = Controller(frame)
+    controller = Controller()
     rclpy.spin(controller)
     controller.destroy_node()
     rclpy.shutdown()

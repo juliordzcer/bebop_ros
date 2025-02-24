@@ -27,21 +27,9 @@ from launch_ros.actions import Node
 def generate_launch_description():
 
     pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
-    pkg_ros_gz_sim_demos = get_package_share_directory('bebop2')
+    pkg_ros_gz_sim_demos = get_package_share_directory('bebop_demo')
 
-
-    # # Get the parser plugin convert sdf to urdf using robot_description topic
-    # robot_state_publisher = Node(
-    #     package='robot_state_publisher',
-    #     executable='robot_state_publisher',
-    #     name='robot_state_publisher',
-    #     output='both',
-    #     parameters=[
-    #         {'use_sim_time': True},
-    #         {'robot_description': robot_desc},
-    #     ]
-    # )
-
+    # Gazebo
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')),
