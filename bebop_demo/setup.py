@@ -27,7 +27,8 @@ setup(
     entry_points={
         'console_scripts': [
             "position_control = bebop_demo.position_control:main",
-            "joystick = bebop_demo.joystick:main"
+            "joystick = bebop_demo.joystick:main",
+            "setpoint = bebop_demo.setpoint:main",
         ],
     },
 )

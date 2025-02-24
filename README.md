@@ -73,6 +73,8 @@ rosdep update
 To be able to execute the programs it is necessary to install the following dependencies, executing the following commands in the console
 ```
 sudo apt-get install ros-rolling-joy
+sudo apt-get install ros-rolling-tf-transformations
+sudo pip3 install transforms3d
 ```
 ## Create a catkin workspace
 ```
