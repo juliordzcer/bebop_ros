@@ -1,0 +1,271 @@
+<?xml version="1.0" ?>
+<!--
+  Multicopter velocity controller demo
+
+You can use the velocity controller and command linear velocity and yaw angular velocity in the body frame of the vehicle
+
+  Send commands to the quadcopter to go straight up:
+
+    gz topic -t "/parrot_bebop_2/gazebo/command/twist" -m gz.msgs.Twist -p "linear: {x:0 y: 0 z: 0.1} angular {z: 0}"
+
+  To hover
+
+    gz topic -t "/parrot_bebop_2/gazebo/command/twist" -m gz.msgs.Twist -p " "
+
+  Listen to odometry:
+
+    gz topic -e -t "/model/parrot_bebop_2/odometry"
+
+  Listen to poses:
+
+    gz topic -e -t "/model/parrot_bebop_2/pose"
+
+
+  Send commands to the hexacopter to go straight up:
+
+    gz topic -t "/X4/gazebo/command/twist" -m gz.msgs.Twist -p "linear: {x:0 y: 0 z: 0.1} angular {z: 0}"
+
+  To hover
+
+    gz topic -t "/X4/gazebo/command/twist" -m gz.msgs.Twist -p " "
+
+  Listen to odometry:
+
+    gz topic -e -t "/model/X4/odometry"
+
+-->
+
+<sdf version="1.6">
+  <world name="bebop2">
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.0005</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+    <plugin
+      filename="gz-sim-physics-system"
+      name="gz::sim::systems::Physics">
+    </plugin>
+    <plugin
+      filename="gz-sim-scene-broadcaster-system"
+      name="gz::sim::systems::SceneBroadcaster">
+    </plugin>
+    <plugin
+      filename="gz-sim-user-commands-system"
+      name="gz::sim::systems::UserCommands">
+    </plugin>
+    <plugin
+      filename="gz-sim-sensors-system"
+      name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.8 0.8 0.8 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <specular>0.8 0.8 0.8 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <include>
+      <uri>model://parrot_bebop_2</uri>
+
+      <plugin
+        filename="gz-sim-multicopter-motor-model-system"
+        name="gz::sim::systems::MulticopterMotorModel">
+        <robotNamespace>parrot_bebop_2</robotNamespace>
+        <jointName>propeller_rr_joint</jointName>
+        <linkName>propeller_rr</linkName>
+        <turningDirection>ccw</turningDirection>
+        <timeConstantUp>0.0125</timeConstantUp>
+        <timeConstantDown>0.025</timeConstantDown>
+        <maxRotVelocity>800.0</maxRotVelocity>
+        <motorConstant>8.54858e-06</motorConstant>
+        <momentConstant>0.016</momentConstant>
+        <commandSubTopic>gazebo/command/motor_speed</commandSubTopic>
+        <actuator_number>0</actuator_number>
+        <rotorDragCoefficient>8.06428e-05</rotorDragCoefficient>
+        <rollingMomentCoefficient>1e-06</rollingMomentCoefficient>
+        <motorSpeedPubTopic>motor_speed/0</motorSpeedPubTopic>
+        <rotorVelocitySlowdownSim>10</rotorVelocitySlowdownSim>
+        <motorType>velocity</motorType>
+      </plugin>
+      <plugin
+        filename="gz-sim-multicopter-motor-model-system"
+        name="gz::sim::systems::MulticopterMotorModel">
+        <robotNamespace>parrot_bebop_2</robotNamespace>
+        <jointName>propeller_rl_joint</jointName>
+        <linkName>propeller_rl</linkName>
+        <turningDirection>cw</turningDirection>
+        <timeConstantUp>0.0125</timeConstantUp>
+        <timeConstantDown>0.025</timeConstantDown>
+        <maxRotVelocity>800.0</maxRotVelocity>
+        <motorConstant>8.54858e-06</motorConstant>
+        <momentConstant>0.016</momentConstant>
+        <commandSubTopic>gazebo/command/motor_speed</commandSubTopic>
+        <actuator_number>1</actuator_number>
+        <rotorDragCoefficient>8.06428e-05</rotorDragCoefficient>
+        <rollingMomentCoefficient>1e-06</rollingMomentCoefficient>
+        <motorSpeedPubTopic>motor_speed/2</motorSpeedPubTopic>
+        <rotorVelocitySlowdownSim>10</rotorVelocitySlowdownSim>
+        <motorType>velocity</motorType>
+      </plugin>
+      <plugin
+        filename="gz-sim-multicopter-motor-model-system"
+        name="gz::sim::systems::MulticopterMotorModel">
+        <robotNamespace>parrot_bebop_2</robotNamespace>
+        <jointName>propeller_fr_joint</jointName>
+        <linkName>propeller_fr</linkName>
+        <turningDirection>cw</turningDirection>
+        <timeConstantUp>0.0125</timeConstantUp>
+        <timeConstantDown>0.025</timeConstantDown>
+        <maxRotVelocity>800.0</maxRotVelocity>
+        <motorConstant>8.54858e-06</motorConstant>
+        <momentConstant>0.016</momentConstant>
+        <commandSubTopic>gazebo/command/motor_speed</commandSubTopic>
+        <actuator_number>2</actuator_number>
+        <rotorDragCoefficient>8.06428e-05</rotorDragCoefficient>
+        <rollingMomentCoefficient>1e-06</rollingMomentCoefficient>
+        <motorSpeedPubTopic>motor_speed/1</motorSpeedPubTopic>
+        <rotorVelocitySlowdownSim>10</rotorVelocitySlowdownSim>
+        <motorType>velocity</motorType>
+      </plugin>
+      <plugin
+        filename="gz-sim-multicopter-motor-model-system"
+        name="gz::sim::systems::MulticopterMotorModel">
+        <robotNamespace>parrot_bebop_2</robotNamespace>
+        <jointName>propeller_fl_joint</jointName>
+        <linkName>propeller_fl</linkName>
+        <turningDirection>ccw</turningDirection>
+        <timeConstantUp>0.0125</timeConstantUp>
+        <timeConstantDown>0.025</timeConstantDown>
+        <maxRotVelocity>800.0</maxRotVelocity>
+        <motorConstant>8.54858e-06</motorConstant>
+        <momentConstant>0.016</momentConstant>
+        <commandSubTopic>gazebo/command/motor_speed</commandSubTopic>
+        <actuator_number>3</actuator_number>
+        <rotorDragCoefficient>8.06428e-05</rotorDragCoefficient>
+        <rollingMomentCoefficient>1e-06</rollingMomentCoefficient>
+        <motorSpeedPubTopic>motor_speed/3</motorSpeedPubTopic>
+        <rotorVelocitySlowdownSim>10</rotorVelocitySlowdownSim>
+        <motorType>velocity</motorType>
+      </plugin>
+      <plugin
+        filename="gz-sim-multicopter-control-system"
+        name="gz::sim::systems::MulticopterVelocityControl">
+        <robotNamespace>parrot_bebop_2</robotNamespace>
+        <commandSubTopic>gazebo/command/twist</commandSubTopic>
+        <enableSubTopic>enable</enableSubTopic>
+        <comLinkName>body</comLinkName>
+        <positionGain>3 3 2</positionGain>
+        <velocityGain>2 2 2</velocityGain>
+        <attitudeGain>0.15 0.15 0.15</attitudeGain>
+        <angularRateGain>0.03 0.03 0.05</angularRateGain>
+        <!-- <maximumLinearAcceleration>2 2 2</maximumLinearAcceleration> -->
+        <rotorConfiguration>
+          <rotor>
+            <jointName>propeller_rr_joint</jointName>
+            <forceConstant>8.54858e-06</forceConstant>
+            <momentConstant>0.016</momentConstant>
+            <direction>1</direction>
+          </rotor>
+          <rotor>
+            <jointName>propeller_rl_joint</jointName>
+            <forceConstant>8.54858e-06</forceConstant>
+            <momentConstant>0.016</momentConstant>
+            <direction>-1</direction>
+          </rotor>
+          <rotor>
+            <jointName>propeller_fr_joint</jointName>
+            <forceConstant>8.54858e-06</forceConstant>
+            <momentConstant>0.016</momentConstant>
+            <direction>-1</direction>
+          </rotor>
+          <rotor>
+            <jointName>propeller_fl_joint</jointName>
+            <forceConstant>8.54858e-06</forceConstant>
+            <momentConstant>0.016</momentConstant>
+            <direction>1</direction>
+          </rotor>
+        </rotorConfiguration>
+      </plugin>
+
+
+      <!-- Publicador de odometría -->
+      <plugin
+        filename="gz-sim-odometry-publisher-system"
+        name="gz::sim::systems::OdometryPublisher">
+        <dimensions>3</dimensions>
+      </plugin>
+
+      <!-- Publicador de pose -->
+      <plugin
+        filename="gz-sim-pose-publisher-system"
+        name="gz::sim::systems::PosePublisher">
+        <robotNamespace>parrot_bebop_2</robotNamespace>
+        <posePubTopic>body</posePubTopic>
+      </plugin>
+
+      
+      <!-- Trajectory Follower: Permite seguir una trayectoria predefinida -->
+      <!-- <plugin
+        filename="gz-sim-trajectory-follower-system"
+        name="gz::sim::systems::TrajectoryFollower">
+        <robotNamespace>parrot_bebop_2</robotNamespace>
+        <trajectorySubTopic>trajectory</trajectorySubTopic>
+        <link_name>body</link_name> 
+      </plugin> -->
+
+      <!-- Waypoint Follower: Permite seguir una serie de waypoints -->
+      <!-- <plugin
+        filename="gz-sim-waypoint-follower-system"
+        name="gz::sim::systems::WaypointFollower">
+        <robotNamespace>parrot_bebop_2</robotNamespace>
+        <waypointsSubTopic>waypoints</waypointsSubTopic>
+      </plugin> -->
+
+      <!-- Position Controller: Controla la posición del multicóptero -->
+      <!-- <plugin
+        filename="gz-sim-position-controller-system"
+        name="gz::sim::systems::PositionController">
+        <robotNamespace>parrot_bebop_2</robotNamespace>
+        <positionCommandSubTopic>position_command</positionCommandSubTopic>
+      </plugin> -->
+
+
+    </include>
+  </world>
+</sdf>
