@@ -39,9 +39,9 @@ class Controller(Node):
         self.goal = Pose()
 
         # PID controllers
-        self.pid_x = PID(self, 3.5, 1.0, 0.0, -20.00, 20.00, "x")  
-        self.pid_y = PID(self, 3.5, 1.0, 0.0, -20.00, 20.00, "y")  
-        self.pid_z = PID(self, 4.0, 3.00, 2.00, -100.0, 100.000, "z")  
+        self.pid_x = PID(self, 3.5, 1.0, 0.0, -16.0, 16.0, "x")  
+        self.pid_y = PID(self, 3.5, 1.0, 0.0, -16.0, 16.0, "y")  
+        self.pid_z = PID(self, 4.0, 3.00, 2.00,-6.0, 6.0, "z")  
         self.pid_yaw = PID(self, 5.00, 1.0, 0.20, -200.0, 200.0, "yaw")  
 
         # State of the controller
