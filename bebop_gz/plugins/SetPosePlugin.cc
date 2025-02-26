@@ -2,10 +2,13 @@
 #include <gz/sim/System.hh>
 #include <gz/transport/Node.hh>
 #include <gz/math/Pose3.hh>
+#include <gz/math/Vector3.hh>
+#include <gz/math/Quaternion.hh>
 #include <gz/plugin/Register.hh>
 #include <gz/msgs/pose.pb.h>
-#include <gz/sim/Util.hh>
 #include <gz/common/Console.hh>
+#include <mutex>
+#include <optional>
 
 namespace gz
 {
@@ -17,12 +20,13 @@ namespace systems
 class SetPosePlugin : public System, public ISystemConfigure, public ISystemPreUpdate
 {
 public:
-  void Configure(const Entity &entity, const std::shared_ptr<const sdf::Element> &sdf, EntityComponentManager &ecm, EventManager &eventMgr) override
+  void Configure(const Entity &entity, const std::shared_ptr<const sdf::Element> &sdf,
+                 EntityComponentManager &ecm, EventManager & /*eventMgr*/) override
   {
     this->model = Model(entity);
     if (!this->model.Valid(ecm))
     {
-      gzerr << "SetPosePlugin plugin should be attached to a valid model entity. Failed to initialize." << std::endl;
+      gzerr << "SetPosePlugin debe estar asociado a un modelo válido." << std::endl;
       return;
     }
 
@@ -32,25 +36,28 @@ public:
     }
     else
     {
-      gzerr << "SetPosePlugin missing <topic> element." << std::endl;
+      gzerr << "SetPosePlugin requiere el elemento <topic>." << std::endl;
       return;
     }
 
-    if (!this->node.Subscribe(this->topic, &SetPosePlugin::OnPoseMsg, this))
+    this->node = std::make_unique<gz::transport::Node>();
+
+    if (!this->node->Subscribe(this->topic, &SetPosePlugin::OnPoseMsg, this))
     {
-      gzerr << "Error subscribing to topic [" << this->topic << "]" << std::endl;
+      gzerr << "Error al suscribirse al tópico [" << this->topic << "]." << std::endl;
       return;
     }
 
-    gzmsg << "SetPosePlugin subscribed to topic [" << this->topic << "]" << std::endl;
+    gzmsg << "SetPosePlugin suscrito al tópico [" << this->topic << "]" << std::endl;
   }
 
-  void PreUpdate(const UpdateInfo &info, EntityComponentManager &ecm) override
+  void PreUpdate(const UpdateInfo & /*info*/, EntityComponentManager &ecm) override
   {
     std::lock_guard<std::mutex> lock(this->mutex);
     if (this->newPose)
     {
       this->model.SetWorldPoseCmd(ecm, *this->newPose);
+      gzmsg << "Posición actualizada a: " << this->newPose->Pos() << std::endl;
       this->newPose.reset();
     }
   }
@@ -60,19 +67,16 @@ private:
   {
     std::lock_guard<std::mutex> lock(this->mutex);
     this->newPose = gz::math::Pose3d(
-      msg.position().x(),
-      msg.position().y(),
-      msg.position().z(),
-      msg.orientation().w(),
-      msg.orientation().x(),
-      msg.orientation().y(),
-      msg.orientation().z()
+      gz::math::Vector3d(msg.position().x(), msg.position().y(), msg.position().z()),
+      gz::math::Quaterniond(msg.orientation().w(), msg.orientation().x(), msg.orientation().y(), msg.orientation().z())
     );
+    gzmsg << "Mensaje recibido: posición (" << msg.position().x() << ", "
+          << msg.position().y() << ", " << msg.position().z() << ")" << std::endl;
   }
 
   Model model;
   std::string topic;
-  gz::transport::Node node;
+  std::unique_ptr<gz::transport::Node> node;
   std::optional<gz::math::Pose3d> newPose;
   std::mutex mutex;
 };
