@@ -41,9 +41,10 @@ def generate_launch_description():
     )
 
     # Position Control Node
-    controller = ExecuteProcess(
-        cmd=['ros2', 'run', 'bebop_controller', 'controller_node'],
-        output='screen'
+    controller = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(get_package_share_directory('bebop_controller'), 'launch', 'pid.launch.py')
+        )
     )
      
     # Joy
