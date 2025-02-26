@@ -75,9 +75,9 @@ class DataRecorder(Node):
         self.z_actual.append(msg.pose.pose.position.z)
 
         # Calcular el error en las posiciones
-        self.error_x.append(abs(self.x_deseada_val - msg.pose.pose.position.x))
-        self.error_y.append(abs(self.y_deseada_val - msg.pose.pose.position.y))
-        self.error_z.append(abs(self.z_deseada_val - msg.pose.pose.position.z))
+        self.error_x.append((self.x_deseada_val - msg.pose.pose.position.x))
+        self.error_y.append((self.y_deseada_val - msg.pose.pose.position.y))
+        self.error_z.append((self.z_deseada_val - msg.pose.pose.position.z))
 
         # Extraemos el yaw de la orientación
         q = msg.pose.pose.orientation
@@ -85,7 +85,7 @@ class DataRecorder(Node):
         self.yaw_actual.append(rpy[2])
 
         # Calcular el error de yaw
-        self.error_yaw.append(abs(self.yaw_deseada_val - rpy[2]))
+        self.error_yaw.append((self.yaw_deseada_val - rpy[2]))
 
     def goal_callback(self, msg):
         # Guardamos las posiciones deseadas del goal
