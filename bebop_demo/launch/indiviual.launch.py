@@ -53,11 +53,11 @@ def generate_launch_description():
         output='screen'
     )
 
-    # Graficas
-    Graficas = ExecuteProcess(
-        cmd=['ros2', 'run', 'bebop_demo', 'graficas'],
-        output='screen'
-    )
+    # # Graficas
+    # Graficas = ExecuteProcess(
+    #     cmd=['ros2', 'run', 'bebop_demo', 'graficas'],
+    #     output='screen'
+    # )
 
     return LaunchDescription([
         gz_sim,
@@ -65,5 +65,5 @@ def generate_launch_description():
         setpoint,
         Joystick,
         controller,
-        Graficas
+        # Graficas
     ])
