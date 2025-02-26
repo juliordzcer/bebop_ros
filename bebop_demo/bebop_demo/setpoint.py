@@ -1,3 +1,5 @@
+
+
 #!/usr/bin/env python3
 
 import numpy as np
@@ -17,6 +19,7 @@ class TrajectoryCircle(Node):
         self.h = 0.0
         self.t = 0.0
         self.rt = 50.0  # Frecuencia de publicación
+        self.hd = 0.05075
         self.button_pressed = False
         self.start_time = self.get_clock().now()
 
@@ -40,13 +43,13 @@ class TrajectoryCircle(Node):
         # Obtención de parámetros
         self.xi = self.get_parameter('xi').get_parameter_value().double_value
         self.yi = self.get_parameter('yi').get_parameter_value().double_value
-        self.zi = self.get_parameter('zi').get_parameter_value().double_value + + 0.05075
+        self.zi = self.get_parameter('zi').get_parameter_value().double_value 
         self.altura = self.get_parameter('h').get_parameter_value().double_value
         self.radio = self.get_parameter('r').get_parameter_value().double_value
         self.yawi = self.get_parameter('yawi').get_parameter_value().double_value
 
         # Publicar condiciones iniciales después de un retraso de 2 segundos
-        self.timer = self.create_timer(5.0, self.publish_initial_pose)
+        self.timer = self.create_timer(4.0, self.publish_initial_pose)
 
         # Suscripción al tópico del joystick
         self.joy_sub = self.create_subscription(Joy, 'joy', self.joy_callback, qos)
@@ -64,7 +67,7 @@ class TrajectoryCircle(Node):
         # Asignación de valores al mensaje
         posei_msg.position.x = self.xi
         posei_msg.position.y = self.yi
-        posei_msg.position.z = self.zi 
+        posei_msg.position.z = self.zi + self.hd
         posei_msg.orientation.x = q_i[0]
         posei_msg.orientation.y = q_i[1]
         posei_msg.orientation.z = q_i[2]
