@@ -111,7 +111,7 @@ You can add the necessary environment variables and source file to your `.bashrc
 
 ```bash
 echo "source ~/ws_bebop/install/setup.bash" >> ~/.bashrc
-echo 'export GZ_SIM_RESOURCE_PATH="$HOME/ws_bebop/bebop_gz/worlds:$HOME/ws_bebop/bebop_gz/models"' >> ~/.bashrc
+echo 'export GZ_SIM_RESOURCE_PATH="$HOME/ws_bebop/src/bebop_ros/bebop_gz/worlds:$HOME/ws_bebop/src/bebop_ros/bebop_gz/models"' >> ~/.bashrc
 echo 'export GZ_VERSION=ionic' >> ~/.bashrc
 ```
 
@@ -123,7 +123,7 @@ After updating the `.bashrc`, reload it by running:
 source ~/.bashrc
 ```
 
-### ✍️ **Alternatively, Edit `.bashrc` Manually**
+### **Alternatively, Edit `.bashrc` Manually**
 
 1. Open the `.bashrc` file with `nano`:
 
@@ -135,7 +135,7 @@ nano ~/.bashrc
 
 ```bash
 source ~/ws_bebop/install/setup.bash
-export GZ_SIM_RESOURCE_PATH="$HOME/ws_bebop/bebop_gz/worlds:$HOME/ws_bebop/bebop_gz/models"
+export GZ_SIM_RESOURCE_PATH="$HOME/ws_bebop/src/bebop_ros/bebop_gz/worlds:$HOME/ws_bebop/src/bebop_ros/bebop_gz/models"
 export GZ_VERSION=ionic
 ```
 

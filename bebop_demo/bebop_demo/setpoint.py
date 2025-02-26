@@ -46,7 +46,7 @@ class TrajectoryCircle(Node):
         self.yawi = self.get_parameter('yawi').get_parameter_value().double_value
 
         # Publicar condiciones iniciales después de un retraso de 2 segundos
-        self.timer = self.create_timer(2.0, self.publish_initial_pose)
+        self.timer = self.create_timer(5.0, self.publish_initial_pose)
 
         # Suscripción al tópico del joystick
         self.joy_sub = self.create_subscription(Joy, 'joy', self.joy_callback, qos)
