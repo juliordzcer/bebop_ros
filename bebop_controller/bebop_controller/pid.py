@@ -16,7 +16,7 @@ class PID:
         self.integrator = 0.0
 
         # Log the initial parameters
-        self.node.get_logger().info(f'[{self.axis}] PID initialized with kp: {kp}, kd: {kd}, ki: {ki}, min_output: {min_output}, max_output: {max_output}')
+        # self.node.get_logger().info(f'[{self.axis}] PID initialized with kp: {kp}, kd: {kd}, ki: {ki}, min_output: {min_output}, max_output: {max_output}')
 
     def reset(self):
         self.previous_error = 0.0
@@ -34,6 +34,6 @@ class PID:
         self.previous_error = error
 
         # Añadir logs para depuración
-        self.node.get_logger().info(f'[{self.axis}] Error: {error}, Output: {output}, Setpoint: {setpoint}, Current: {current_value}, kp: {self.kp}, kd: {self.kd}, ki: {self.ki}')
+        # self.node.get_logger().info(f'[{self.axis}] Error: {error}, Output: {output}, Setpoint: {setpoint}, Current: {current_value}, kp: {self.kp}, kd: {self.kd}, ki: {self.ki}')
 
         return output

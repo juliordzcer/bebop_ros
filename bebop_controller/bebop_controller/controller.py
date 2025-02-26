@@ -76,7 +76,7 @@ class Controller(Node):
             self.state = self.State.TAKING_OFF
 
     def create_pid(self, axis):
-        prefix = f'PIDs/{axis}/'
+        prefix = f'PIDs.{axis}.'
         kp = self.get_param_or(prefix + 'kp', 0.0)
         kd = self.get_param_or(prefix + 'kd', 0.0)
         ki = self.get_param_or(prefix + 'ki', 0.0)

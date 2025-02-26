@@ -33,7 +33,7 @@ def generate_launch_description():
             '-p', 'xi:=0.0',
             '-p', 'yi:=0.0',
             '-p', 'zi:=0.0',
-            '-p', 'h:=1.0',
+            '-p', 'h:=0.5',
             '-p', 'r:=1.0',
             '-p', 'yawi:=0.0'
         ],
@@ -53,10 +53,17 @@ def generate_launch_description():
         output='screen'
     )
 
+    # Graficas
+    Graficas = ExecuteProcess(
+        cmd=['ros2', 'run', 'bebop_demo', 'graficas'],
+        output='screen'
+    )
+
     return LaunchDescription([
         gz_sim,
         ros_gz_bridge,
         setpoint,
         Joystick,
-        controller
+        controller,
+        Graficas
     ])
