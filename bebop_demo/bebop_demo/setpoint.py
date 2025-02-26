@@ -27,7 +27,7 @@ class TrajectoryCircle(Node):
         self.pub = self.create_publisher(Pose, '/goal', qos)
 
         # Publicador para el tópico /set_pose
-        self.pubinipos = self.create_publisher(Pose, '/set_pose', qos)
+        self.pubinipos = self.create_publisher(Pose, '/parrot_bebop_2/set_pose', qos)
 
         # Declaración de parámetros
         self.declare_parameter('xi', 0.0)
@@ -40,7 +40,7 @@ class TrajectoryCircle(Node):
         # Obtención de parámetros
         self.xi = self.get_parameter('xi').get_parameter_value().double_value
         self.yi = self.get_parameter('yi').get_parameter_value().double_value
-        self.zi = self.get_parameter('zi').get_parameter_value().double_value
+        self.zi = self.get_parameter('zi').get_parameter_value().double_value + + 0.05075
         self.altura = self.get_parameter('h').get_parameter_value().double_value
         self.radio = self.get_parameter('r').get_parameter_value().double_value
         self.yawi = self.get_parameter('yawi').get_parameter_value().double_value
@@ -64,7 +64,7 @@ class TrajectoryCircle(Node):
         # Asignación de valores al mensaje
         posei_msg.position.x = self.xi
         posei_msg.position.y = self.yi
-        posei_msg.position.z = self.zi + 0.05075
+        posei_msg.position.z = self.zi 
         posei_msg.orientation.x = q_i[0]
         posei_msg.orientation.y = q_i[1]
         posei_msg.orientation.z = q_i[2]
@@ -73,6 +73,11 @@ class TrajectoryCircle(Node):
         # Publicación del mensaje
         self.pubinipos.publish(posei_msg)
         self.get_logger().info(f'Pose inicial publicada: {posei_msg}')
+
+        self.xii = self.xi
+        self.yii = self.yi
+        self.zii = self.zi
+        self.yawii = self.yawi
 
         # Cancelar el temporizador después de la primera ejecución
         self.timer.cancel()
@@ -116,20 +121,20 @@ class TrajectoryCircle(Node):
         w = np.pi / 6  # Frecuencia angular
         p = 15  # Parámetro de suavizado
 
-        x = self.r * (np.arctan(p) + np.arctan(self.t - p)) * np.cos(w * self.t) + self.xi
-        y = self.r * (np.arctan(p) + np.arctan(self.t - p)) * np.sin(w * self.t) + self.yi
-        z = (self.h / 2) * (1 + np.tanh(self.t - 2.5)) + self.zi
-        yaw = self.yawi
+        x = self.r * (np.arctan(p) + np.arctan(self.t - p)) * np.cos(w * self.t)
+        y = self.r * (np.arctan(p) + np.arctan(self.t - p)) * np.sin(w * self.t)
+        z = (self.h / 2) * (1 + np.tanh(self.t - 2.5))
+        yaw = 0.0
         roll = 0.0
         pitch = 0.0
 
         # Conversión de ángulos de Euler a cuaternión
-        q = quaternion_from_euler(roll, pitch, yaw)
+        q = quaternion_from_euler(roll, pitch, yaw + self.yawii)
 
         # Asignación de valores al mensaje
-        pose_msg.position.x = x
-        pose_msg.position.y = y
-        pose_msg.position.z = z
+        pose_msg.position.x = x + self.xii
+        pose_msg.position.y = y + self.yii
+        pose_msg.position.z = z + self.zii
         pose_msg.orientation.x = q[0]
         pose_msg.orientation.y = q[1]
         pose_msg.orientation.z = q[2]
