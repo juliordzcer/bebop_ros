@@ -32,3 +32,10 @@
   gz_type_name: "gz.msgs.Pose"
   lazy: true
   direction: GZ_TO_ROS
+
+# Initial Pose configuration.
+- topic_name: "/set_pose"
+  ros_type_name: "geometry_msgs/msg/Pose"
+  gz_type_name: "gz.msgs.Pose"
+  lazy: true
+  direction: ROS_TO_GZ
