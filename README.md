@@ -109,6 +109,11 @@ Finally run the following command in terminal
 echo "source ~/ws_bebop/install/setup.bash" >> ~/.bashrc
 source ~/.bashrc
 ```
+and 
+```
+export GZ_SIM_RESOURCE_PATH="$HOME/ws_bebop/bebop_gz/worlds:$HOME/ws_bebop/bebop_gz/models"
+export GZ_VERSION=ionic
+```
 ## Usage
 There are three packages included: bebop_controller, bebop_demo and bebop_ros_gz.
 
