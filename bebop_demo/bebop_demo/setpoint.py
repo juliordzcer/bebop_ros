@@ -6,9 +6,7 @@ from rclpy.node import Node
 from geometry_msgs.msg import Pose
 from sensor_msgs.msg import Joy
 from rclpy.qos import QoSProfile
-import time
 from tf_transformations import quaternion_from_euler
-
 
 class TrajectoryCircle(Node):
     def __init__(self):
@@ -19,7 +17,6 @@ class TrajectoryCircle(Node):
         self.h = 0.0
         self.t = 0.0
         self.rt = 50.0  # Frecuencia de publicación
-        # self.gr = 0
         self.button_pressed = False
         self.start_time = self.get_clock().now()
 
@@ -28,6 +25,9 @@ class TrajectoryCircle(Node):
 
         # Publicador para el tópico /goal
         self.pub = self.create_publisher(Pose, '/goal', qos)
+
+        # Publicador para el tópico /set_pose
+        self.pubinipos = self.create_publisher(Pose, '/parrot_bebop_2/set_pose', qos)
 
         # Declaración de parámetros
         self.declare_parameter('xi', 0.0)
@@ -40,22 +40,49 @@ class TrajectoryCircle(Node):
         # Obtención de parámetros
         self.xi = self.get_parameter('xi').get_parameter_value().double_value
         self.yi = self.get_parameter('yi').get_parameter_value().double_value
-        self.zi = self.get_parameter('zi').get_parameter_value().double_value
+        self.zi = self.get_parameter('zi').get_parameter_value().double_value + + 0.05075
         self.altura = self.get_parameter('h').get_parameter_value().double_value
         self.radio = self.get_parameter('r').get_parameter_value().double_value
         self.yawi = self.get_parameter('yawi').get_parameter_value().double_value
+
+        # Publicar condiciones iniciales después de un retraso de 2 segundos
+        self.timer = self.create_timer(2.0, self.publish_initial_pose)
 
         # Suscripción al tópico del joystick
         self.joy_sub = self.create_subscription(Joy, 'joy', self.joy_callback, qos)
         self.get_logger().info('Nodo inicializado y suscrito al tópico /joy')
 
         # Iniciar el bucle de la trayectoria
-        self.timer = self.create_timer(1.0 / self.rt, self.trajectory_circle)
+        self.trajectory_timer = self.create_timer(1.0 / self.rt, self.trajectory_circle)
+
+    def publish_initial_pose(self):
+        # Condiciones iniciales
+        posei_msg = Pose()
+        # Conversión de ángulos de Euler a cuaternión
+        q_i = quaternion_from_euler(0, 0, self.yawi)
+
+        # Asignación de valores al mensaje
+        posei_msg.position.x = self.xi
+        posei_msg.position.y = self.yi
+        posei_msg.position.z = self.zi 
+        posei_msg.orientation.x = q_i[0]
+        posei_msg.orientation.y = q_i[1]
+        posei_msg.orientation.z = q_i[2]
+        posei_msg.orientation.w = q_i[3]
+
+        # Publicación del mensaje
+        self.pubinipos.publish(posei_msg)
+        self.get_logger().info(f'Pose inicial publicada: {posei_msg}')
+
+        self.xii = self.xi
+        self.yii = self.yi
+        self.zii = self.zi
+        self.yawii = self.yawi
+
+        # Cancelar el temporizador después de la primera ejecución
+        self.timer.cancel()
 
     def joy_callback(self, joy_msg):
-        # self.get_logger().info(f'Estado de los botones: {joy_msg.buttons}')
-        # self.get_logger().info(f'Estado de button_pressed: {self.button_pressed}')
-
         # Iniciar trayectoria si se presiona el botón 2
         if joy_msg.buttons[2] == 1 and not self.button_pressed:
             self.get_logger().info('Botón 2 presionado: Iniciando trayectoria')
@@ -63,7 +90,6 @@ class TrajectoryCircle(Node):
             self.r = self.radio
             self.h = self.altura
             self.t = 0.0
-            # self.gr = 10
             self.start_time = self.get_clock().now()
 
         # Reiniciar trayectoria si se presiona el botón 10
@@ -72,7 +98,6 @@ class TrajectoryCircle(Node):
             self.r = 0.0
             self.h = 0.0
             self.t = 0.0
-            # self.gr = 0
             self.button_pressed = False
             self.start_time = self.get_clock().now()
 
@@ -96,29 +121,27 @@ class TrajectoryCircle(Node):
         w = np.pi / 6  # Frecuencia angular
         p = 15  # Parámetro de suavizado
 
-        x = self.r * (np.arctan(p) + np.arctan(self.t - p)) * np.cos(w * self.t) + self.xi
-        y = self.r * (np.arctan(p) + np.arctan(self.t - p)) * np.sin(w * self.t) + self.yi
-        z = (self.h / 2) * (1 + np.tanh(self.t - 2.5)) + self.zi
-        yaw = self.yawi
+        x = self.r * (np.arctan(p) + np.arctan(self.t - p)) * np.cos(w * self.t)
+        y = self.r * (np.arctan(p) + np.arctan(self.t - p)) * np.sin(w * self.t)
+        z = (self.h / 2) * (1 + np.tanh(self.t - 2.5))
+        yaw = 0.0
         roll = 0.0
         pitch = 0.0
 
         # Conversión de ángulos de Euler a cuaternión
-        q = quaternion_from_euler(roll, pitch, yaw)
+        q = quaternion_from_euler(roll, pitch, yaw + self.yawii)
 
         # Asignación de valores al mensaje
-        pose_msg.position.x = x
-        pose_msg.position.y = y
-        pose_msg.position.z = z
+        pose_msg.position.x = x + self.xii
+        pose_msg.position.y = y + self.yii
+        pose_msg.position.z = z + self.zii
         pose_msg.orientation.x = q[0]
         pose_msg.orientation.y = q[1]
         pose_msg.orientation.z = q[2]
         pose_msg.orientation.w = q[3]
 
         # Publicación del mensaje
-        # self.get_logger().info(f'Publicando mensaje: {pose_msg}')
         self.pub.publish(pose_msg)
-
 
 def main(args=None):
     rclpy.init(args=args)
@@ -126,7 +149,6 @@ def main(args=None):
     rclpy.spin(traj_circle)
     traj_circle.destroy_node()
     rclpy.shutdown()
-
 
 if __name__ == '__main__':
     main()
