@@ -147,13 +147,7 @@ export GZ_VERSION=ionic
 source ~/.bashrc
 ```
 
----
 **The environment should now be configured correctly. You can proceed to run your Bebop2 drone simulations in Gazebo.**
-```
-
-
-
-
 
 ## Usage
 There are three packages included: bebop_controller, bebop_demo and bebop_ros_gz.
