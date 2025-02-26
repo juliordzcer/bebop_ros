@@ -30,8 +30,8 @@ def generate_launch_description():
         cmd=[
             'ros2', 'run', 'bebop_demo', 'setpoint',
             '--ros-args', 
-            '-p', 'xi:=0.0',
-            '-p', 'yi:=0.0',
+            '-p', 'xi:=0.3',
+            '-p', 'yi:=0.5',
             '-p', 'zi:=0.0',
             '-p', 'h:=0.5',
             '-p', 'r:=1.0',

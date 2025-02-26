@@ -47,7 +47,7 @@ class DataRecorder(Node):
         self.start_time = self.get_clock().now().seconds_nanoseconds()[0]
         self.get_logger().info("Comenzando a guardar los datos...")
         # Iniciar el temporizador para guardar datos cada 0.001 segundos
-        self.timer = self.create_timer(0.001, self.record_data)
+        self.timer = self.create_timer(0.01, self.record_data)
         # Detener la grabación después de `recording_time` segundos
         Timer(self.recording_time, self.stop_recording).start()
 
