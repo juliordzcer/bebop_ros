@@ -103,17 +103,58 @@ Use `colcon build` on your workspace to compile.
 cd ws_bebop
 colcon build
 ```
+## **Setup Instructions**
 
-Finally run the following command in terminal
-```
+### **Add Environment Variables and Source Setup File**
+
+You can add the necessary environment variables and source file to your `.bashrc` file using the following commands:
+
+```bash
 echo "source ~/ws_bebop/install/setup.bash" >> ~/.bashrc
+echo 'export GZ_SIM_RESOURCE_PATH="$HOME/ws_bebop/bebop_gz/worlds:$HOME/ws_bebop/bebop_gz/models"' >> ~/.bashrc
+echo 'export GZ_VERSION=ionic' >> ~/.bashrc
+```
+
+### **Reload the `.bashrc` File**
+
+After updating the `.bashrc`, reload it by running:
+
+```bash
 source ~/.bashrc
 ```
-and 
+
+### ✍️ **Alternatively, Edit `.bashrc` Manually**
+
+1. Open the `.bashrc` file with `nano`:
+
+```bash
+nano ~/.bashrc
 ```
+
+2. Add the following lines at the end of the file:
+
+```bash
+source ~/ws_bebop/install/setup.bash
 export GZ_SIM_RESOURCE_PATH="$HOME/ws_bebop/bebop_gz/worlds:$HOME/ws_bebop/bebop_gz/models"
 export GZ_VERSION=ionic
 ```
+
+3. Save the file by pressing `Ctrl+O`, then press `Enter`.
+4. Exit `nano` by pressing `Ctrl+X`.
+5. Finally, reload the `.bashrc`:
+
+```bash
+source ~/.bashrc
+```
+
+---
+**The environment should now be configured correctly. You can proceed to run your Bebop2 drone simulations in Gazebo.**
+```
+
+
+
+
+
 ## Usage
 There are three packages included: bebop_controller, bebop_demo and bebop_ros_gz.
 
