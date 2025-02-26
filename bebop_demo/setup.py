@@ -29,6 +29,7 @@ setup(
             "position_control = bebop_demo.position_control:main",
             "joystick = bebop_demo.joystick:main",
             "setpoint = bebop_demo.setpoint:main",
+            "graficas = bebop_demo.graficas:main",
         ],
     },
 )

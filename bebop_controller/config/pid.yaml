@@ -2,25 +2,25 @@ bebop_controller:
   ros__parameters:
     PIDs:
       X:
-        kp: 50.0
-        kd: 25.0
-        ki: 5.0
+        kp: 5.0
+        kd: 2.5
+        ki: 0.5
         minOutput: -10.0
         maxOutput: 10.0
         integratorMin: -0.1
         integratorMax: 0.1
       Y:
-        kp: 50.0
-        kd: 25.0
-        ki: 5.0
+        kp: 5.0
+        kd: 2.5
+        ki: 0.5
         minOutput: -10.0
         maxOutput: 10.0
         integratorMin: -0.1
         integratorMax: 0.1
       Z:
-        kp: 60.0
-        kd: 70.0
-        ki: 40.0
+        kp: 6.0
+        kd: 7.0
+        ki: 4.0
         minOutput: -6.0
         maxOutput:  6.0
         integratorMin: -10.0
