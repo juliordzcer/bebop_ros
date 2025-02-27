@@ -5,6 +5,7 @@ import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Pose
 from nav_msgs.msg import Odometry
+from sensor_msgs.msg import Joy  # Mensaje para el control de Xbox
 from scipy import io
 from tf_transformations import euler_from_quaternion
 from threading import Timer
@@ -12,10 +13,6 @@ from threading import Timer
 class DataRecorder(Node):
     def __init__(self):
         super().__init__('data_recorder')
-
-        # Obtener el parámetro desde ROS
-        self.declare_parameter('recording_time', 60)  # Valor por defecto de 60 segundos
-        self.recording_time = self.get_parameter('recording_time').get_parameter_value().integer_value
 
         # Variables para guardar las posiciones, errores y tiempo
         self.time = []
@@ -28,6 +25,7 @@ class DataRecorder(Node):
         self.error_z = []
         self.error_yaw = []
         self.is_saving_data = False
+        self.recording_started = False  # Para evitar múltiples inicios
         
         # Inicializar las posiciones deseadas
         self.x_deseada_val = 0.0
@@ -35,27 +33,42 @@ class DataRecorder(Node):
         self.z_deseada_val = 0.0
         self.yaw_deseada_val = 0.0
 
-        # Suscripción a la odometría y la meta (goal)
+        # Suscripción a la odometría, la meta (goal) y el control de Xbox (Joy)
         self.create_subscription(Odometry, '/model/parrot_bebop_2/odometry', self.odometry_callback, 10)
         self.create_subscription(Pose, '/goal', self.goal_callback, 10)
+        self.create_subscription(Joy, '/joy', self.joy_callback, 10)  # Suscripción al tópico /joy
 
-        # Iniciar la grabación de datos
-        self.start_recording()
+        self.get_logger().info("Esperando a que se presione el botón X del control de Xbox...")
+
+    def joy_callback(self, msg):
+        # El botón X del control de Xbox generalmente es el índice 0 en el arreglo de botones
+        if len(msg.buttons) > 0 and msg.buttons[2] == 1:  # Botón X presionado
+            if not self.recording_started:  # Evitar múltiples inicios
+                self.start_recording()
 
     def start_recording(self):
+        self.recording_started = True
         self.is_saving_data = True
         self.start_time = self.get_clock().now().seconds_nanoseconds()[0]
         self.get_logger().info("Comenzando a guardar los datos...")
-        # Iniciar el temporizador para guardar datos cada 0.001 segundos
-        self.timer = self.create_timer(0.01, self.record_data)
-        # Detener la grabación después de `recording_time` segundos
-        Timer(self.recording_time, self.stop_recording).start()
+        
+        # Iniciar el temporizador para guardar datos cada 0.01 segundos
+        self.timer = self.create_timer(0.001, self.record_data)
+        
+        # Detener la grabación después de 60 segundos
+        self.stop_timer = Timer(60.0, self.stop_recording)
+        self.stop_timer.start()
 
     def stop_recording(self):
-        self.is_saving_data = False
-        self.timer.cancel()
-        self.get_logger().info("Tiempo de grabación completado. Dejando de guardar los datos...")
-        self.save_data()
+        if self.is_saving_data:
+            self.is_saving_data = False
+            self.recording_started = False
+            if self.timer:
+                self.timer.cancel()
+            if self.stop_timer:
+                self.stop_timer.cancel()
+            self.get_logger().info("Tiempo de grabación completado. Dejando de guardar los datos...")
+            self.save_data()
 
     def record_data(self):
         if not self.is_saving_data:
