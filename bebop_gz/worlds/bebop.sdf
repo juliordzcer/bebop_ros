@@ -264,5 +264,6 @@
         <dimensions>3</dimensions>
       </plugin>
     </include>
+    
   </world>
 </sdf>

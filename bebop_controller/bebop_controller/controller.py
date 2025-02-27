@@ -61,6 +61,11 @@ class Controller(Node):
         self.current_pose = Pose()  # Inicializar current_pose
         self.enable = False
 
+        self.x_d = 0.0
+        self.y_d = 0.0
+        self.z_d = 0.0
+        self.yaw_d = 0.0
+
         timer_period = 1.0 / self.frequency
         self.timer = self.create_timer(timer_period, self.iteration)
 
@@ -140,8 +145,11 @@ class Controller(Node):
             self.cmd_enable.publish(Bool(data=self.enable))
 
         elif self.state == self.State.LANDING:
-            self.goal.position.z = 0.05 
-            if self.current_pose.position.z <= 0.05:
+            z_d = 0.0  
+            msg = Twist()
+            msg.linear.z = float(self.pid_z.update(self.current_pose.position.z, z_d)) * 0.1
+            self.cmd_pub.publish(msg)
+            if self.current_pose.position.z <= 0.08:
                 self.state = self.State.IDLE
                 self.enable = False
                 self.cmd_enable.publish(Bool(data=self.enable))

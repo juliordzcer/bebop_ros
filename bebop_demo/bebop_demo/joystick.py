@@ -10,7 +10,7 @@ class JoystickNode(Node):
         super().__init__('joystick_node')
 
         # Publisher para enviar comandos de movimiento
-        self.publisher_ = self.create_publisher(Twist, '/parrot_bebop_2/gazebo/command/twist', 10)
+        self.publisher_ = self.create_publisher(Twist, '/parrot_bebop_2/cmd_vel', 10)
 
         # Subscriber para leer los datos del joystick
         self.subscription = self.create_subscription(

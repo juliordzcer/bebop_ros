@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sdf version="1.6">
+    <model name="nb_park">
+        <static>true</static>
+        <link name="base_link">
+            <pose>100.3 -1056.8 -27.2 0 0 0</pose>
+            <collision name="base_collision">
+                <geometry>
+                    <mesh>
+                        <uri>meshes/nb_park.dae</uri>
+                        <submesh>
+                            <name>Road</name>
+                            <center>false</center>
+                        </submesh>
+                    </mesh>
+                </geometry>
+            </collision>
+            <visual name="Road_visual">
+                <geometry>
+                    <mesh>
+                        <uri>meshes/nb_park.dae</uri>
+                        <submesh>
+                            <name>Road</name>
+                            <center>false</center>
+                        </submesh>
+                    </mesh>
+                </geometry>
+                <material>
+                    <diffuse>1.0 1.0 1.0</diffuse>
+                    <specular>0.06 0.06 0.06</specular>
+                    <pbr>
+                        <metal>
+                            <albedo_map>materials/textures/Road_Albedo.png</albedo_map>
+                            <normal_map>materials/textures/Road_Normal.png</normal_map>
+                            <roughness_map>materials/textures/Road_Roughness.png</roughness_map>
+                            <environment_map>materials/textures/EnvMap.dds</environment_map>
+                        </metal>
+                    </pbr>
+                </material>
+            </visual>
+            <visual name="Wall_visual">
+                <geometry>
+                    <mesh>
+                        <uri>meshes/nb_park.dae</uri>
+                        <submesh>
+                            <name>Wall</name>
+                            <center>false</center>
+                        </submesh>
+                    </mesh>
+                </geometry>
+                <material>
+                    <diffuse>1.0 1.0 1.0</diffuse>
+                    <specular>0.06 0.06 0.06</specular>
+                    <pbr>
+                        <metal>
+                            <albedo_map>materials/textures/Wall_Albedo.png</albedo_map>
+                            <normal_map>materials/textures/Wall_Normal.png</normal_map>
+                            <roughness_map>materials/textures/Wall_Roughness.png</roughness_map>
+                            <environment_map>materials/textures/EnvMap.dds</environment_map>
+                        </metal>
+                    </pbr>
+                </material>
+            </visual>
+            <visual name="Dock_visual">
+                <geometry>
+                    <mesh>
+                        <uri>meshes/nb_park.dae</uri>
+                        <submesh>
+                            <name>Dock</name>
+                            <center>false</center>
+                        </submesh>
+                    </mesh>
+                </geometry>
+                <material>
+                    <diffuse>1.0 1.0 1.0</diffuse>
+                    <specular>0.06 0.06 0.06</specular>
+                    <pbr>
+                        <metal>
+                            <albedo_map>materials/textures/Dock_Albedo.png</albedo_map>
+                            <normal_map>materials/textures/Dock_Normal.png</normal_map>
+                            <roughness_map>materials/textures/Dock_Roughness.png</roughness_map>
+                            <environment_map>materials/textures/EnvMap.dds</environment_map>
+                        </metal>
+                    </pbr>
+                </material>
+            </visual>
+            <visual name="Concrete_visual">
+                <geometry>
+                    <mesh>
+                        <uri>meshes/nb_park.dae</uri>
+                        <submesh>
+                            <name>Concrete</name>
+                            <center>false</center>
+                        </submesh>
+                    </mesh>
+                </geometry>
+                <material>
+                    <diffuse>1.0 1.0 1.0</diffuse>
+                    <specular>0.06 0.06 0.06</specular>
+                    <pbr>
+                        <metal>
+                            <albedo_map>materials/textures/Concrete_Albedo.png</albedo_map>
+                            <normal_map>materials/textures/Concrete_Normal.png</normal_map>
+                            <roughness_map>materials/textures/Concrete_Roughness.png</roughness_map>
+                            <environment_map>materials/textures/EnvMap.dds</environment_map>
+                        </metal>
+                    </pbr>
+                </material>
+            </visual>
+            <visual name="Railing_visual">
+                <geometry>
+                    <mesh>
+                        <uri>meshes/nb_park.dae</uri>
+                        <submesh>
+                            <name>Railing</name>
+                            <center>false</center>
+                        </submesh>
+                    </mesh>
+                </geometry>
+                <material>
+                    <diffuse>1.0 1.0 1.0</diffuse>
+                    <specular>1.0 1.0 1.0</specular>
+                    <pbr>
+                        <metal>
+                            <albedo_map>materials/textures/Railing_Albedo.png</albedo_map>
+                            <metalness_map>materials/textures/Railing_Metalness.png</metalness_map>
+                            <roughness_map>materials/textures/Railing_Roughness.png</roughness_map>
+                            <environment_map>materials/textures/EnvMap.dds</environment_map>
+                        </metal>
+                    </pbr>
+                </material>
+            </visual>
+            <visual name="DoorWindow_visual">
+                <geometry>
+                    <mesh>
+                        <uri>meshes/nb_park.dae</uri>
+                        <submesh>
+                            <name>DoorWindow</name>
+                            <center>false</center>
+                        </submesh>
+                    </mesh>
+                </geometry>
+                <material>
+                    <diffuse>1.0 1.0 1.0</diffuse>
+                    <specular>1.0 1.0 1.0</specular>
+                    <pbr>
+                        <metal>
+                            <albedo_map>materials/textures/DoorWindow_Albedo.png</albedo_map>
+                        </metal>
+                    </pbr>
+                </material>
+            </visual>
+            <visual name="Windows_visual">
+                <geometry>
+                    <mesh>
+                        <uri>meshes/nb_park.dae</uri>
+                        <submesh>
+                            <name>Windows</name>
+                            <center>false</center>
+                        </submesh>
+                    </mesh>
+                </geometry>
+                <material>
+                    <diffuse>1.0 1.0 1.0</diffuse>
+                    <specular>1.0 1.0 1.0</specular>
+                    <pbr>
+                        <metal>
+                            <albedo_map>materials/textures/Window_Albedo.png</albedo_map>
+                            <normal_map>materials/textures/Wall_Normal.png</normal_map>
+                            <roughness_map>materials/textures/Window_Roughness.png</roughness_map>
+                            <environment_map>materials/textures/EnvMap.dds</environment_map>
+                        </metal>
+                    </pbr>
+                </material>
+            </visual>
+            <visual name="Roof_visual">
+                <geometry>
+                    <mesh>
+                        <uri>meshes/nb_park.dae</uri>
+                        <submesh>
+                            <name>Roof</name>
+                            <center>false</center>
+                        </submesh>
+                    </mesh>
+                </geometry>
+                <material>
+                    <diffuse>1.0 1.0 1.0</diffuse>
+                    <specular>1.0 1.0 1.0</specular>
+                    <pbr>
+                        <metal>
+                            <albedo_map>materials/textures/Roof_Albedo.png</albedo_map>
+                            <normal_map>materials/textures/Roof_Normal.png</normal_map>
+                            <roughness_map>materials/textures/Roof_Roughness.png</roughness_map>
+                        </metal>
+                    </pbr>
+                </material>
+            </visual>
+            <visual name="PalmTree_visual">
+                <geometry>
+                    <mesh>
+                        <uri>meshes/nb_park.dae</uri>
+                        <submesh>
+                            <name>PalmTree</name>
+                            <center>false</center>
+                        </submesh>
+                    </mesh>
+                </geometry>
+                <material>
+                    <diffuse>1.0 1.0 1.0</diffuse>
+                    <specular>1.0 1.0 1.0</specular>
+                    <pbr>
+                        <metal>
+                            <albedo_map>materials/textures/PalmTree_Albedo.png</albedo_map>
+                            <normal_map>materials/textures/PalmTree_Normal.png</normal_map>
+                            <roughness>1</roughness>
+                        </metal>
+                    </pbr>
+                </material>
+            </visual>
+            <visual name="Asphalt_visual">
+                <geometry>
+                    <mesh>
+                        <uri>meshes/nb_park.dae</uri>
+                        <submesh>
+                            <name>Asphalt</name>
+                            <center>false</center>
+                        </submesh>
+                    </mesh>
+                </geometry>
+                <material>
+                    <diffuse>1.0 1.0 1.0</diffuse>
+                    <specular>0.06 0.06 0.06</specular>
+                    <pbr>
+                        <metal>
+                            <albedo_map>materials/textures/Asphalt_Albedo.png</albedo_map>
+                            <normal_map>materials/textures/Asphalt_Normal.png</normal_map>
+                            <roughness_map>materials/textures/Asphalt_Roughness.png</roughness_map>
+                            <environment_map>materials/textures/EnvMap.dds</environment_map>
+                        </metal>
+                    </pbr>
+                </material>
+            </visual>
+            <visual name="Trees_visual">
+                <geometry>
+                    <mesh>
+                        <uri>meshes/nb_park.dae</uri>
+                        <submesh>
+                            <name>Trees</name>
+                            <center>false</center>
+                        </submesh>
+                    </mesh>
+                </geometry>
+                <material>
+                    <diffuse>1.0 1.0 1.0</diffuse>
+                    <specular>1.0 1.0 1.0</specular>
+                    <pbr>
+                        <metal>
+                            <albedo_map>materials/textures/Tree_Albedo.png</albedo_map>
+                            <roughness>1</roughness>
+                        </metal>
+                    </pbr>
+                </material>
+            </visual>
+        </link>
+        <link name="heightmap">
+            <visual name="heightmap_visual">
+                <geometry>
+                    <heightmap>
+                        <use_terrain_paging>false</use_terrain_paging>
+                        <texture>
+                            <diffuse>materials/textures/Sand_Albedo.png</diffuse>
+                            <normal>materials/textures/flat_normal.png</normal>
+                            <size>10</size>
+                        </texture>
+                        <texture>
+                            <diffuse>materials/textures/Grass_Albedo.jpg</diffuse>
+                            <normal>materials/textures/flat_normal.png</normal>
+                            <size>10</size>
+                        </texture>
+                        <blend>
+                            <min_height>4</min_height>
+                            <fade_dist>1</fade_dist>
+                        </blend>
+                        <uri>materials/textures/Heightmap.png</uri>
+                        <size>1724.5 3449 7</size>
+                        <pos>100.3 -1056.8 -29.748</pos>
+                    </heightmap>
+                </geometry>
+            </visual>
+        </link>
+    </model>
+</sdf>
