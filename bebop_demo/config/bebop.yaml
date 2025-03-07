@@ -39,3 +39,25 @@
   gz_type_name: "gz.msgs.Pose"
   lazy: true
   direction: ROS_TO_GZ
+
+# Simulation Clock 
+- topic_name: "/clock"
+  ros_type_name: "rosgraph_msgs/msg/Clock"
+  gz_type_name: "gz.msgs.Clock"
+  lazy: true
+  direction: GZ_TO_ROS
+
+# rgbd_camera_bridge configuration.
+
+
+- topic_name: "/camera/image"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  lazy: true
+  direction: GZ_TO_ROS
+
+- topic_name: "/camera/camera_info"
+  ros_type_name: "sensor_msgs/msg/CameraInfo"
+  gz_type_name: "gz.msgs.CameraInfo"
+  lazy: true
+  direction: GZ_TO_ROS
