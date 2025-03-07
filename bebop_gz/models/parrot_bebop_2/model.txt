@@ -69,34 +69,23 @@
     <link name="rgb_camera_link">
       <pose>0.113 0 0 0 0 0</pose>
 
-      <!-- Definir una inercia mínima para evitar problemas en Gazebo -->
-      <inertial>
-        <mass>1e-6</mass>  <!-- Masa casi cero para evitar problemas en la simulación -->
-        <inertia>
-          <ixx>1e-6</ixx>
-          <iyy>1e-6</iyy>
-          <izz>1e-6</izz>
-        </inertia>
-      </inertial>
-
-      <!-- Sensor de cámara -->
       <sensor name="rgb_camera_sensor" type="camera">
         <always_on>1</always_on>
         <update_rate>30</update_rate>
         <camera>
-          <horizontal_fov>1.5</horizontal_fov> <!-- Aproximadamente 86 grados -->
+          <horizontal_fov>1.5</horizontal_fov> <!-- Aproximadamente 86 grados (en radianes es ~1.5) -->
           <image>
-            <width>1280</width>  <!-- Baja la resolución para mejorar rendimiento -->
-            <height>720</height>
-            <format>R8G8B8</format>
+            <width>1920</width>   <!-- Puedes bajar a 1280x720 o 640x480 si quieres mejor rendimiento -->
+            <height>1080</height>
+            <format>R8G8B8</format>  <!-- Formato típico de imagen RGB -->
           </image>
           <clip>
             <near>0.1</near>
-            <far>50</far>
+            <far>50</far> <!-- Ajusta según el tamaño de tu mundo -->
           </clip>
         </camera>
-        <visualize>false</visualize>  <!-- Desactiva si solo necesitas el feed en ROS -->
-        <topic>camera/image</topic>
+        <visualize>true</visualize>  <!-- Puedes ponerlo en false si solo la quieres en ROS -->
+        <topic>camera/image</topic>  <!-- Tópico en ROS 2 -->
       </sensor>
     </link>
 
@@ -104,9 +93,8 @@
     <joint name="rgb_camera_joint" type="fixed">
       <parent>body</parent>
       <child>rgb_camera_link</child>
-      <pose>0 0 0 0 0 0</pose>
+      <pose>0.113 0 0 0 0 0</pose>
     </joint>
-
 
 
     <link name='propeller_rr'>
