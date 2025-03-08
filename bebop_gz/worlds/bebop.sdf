@@ -109,6 +109,19 @@
       </link>
     </model>
 
+    <!-- <include>
+      <name>Interior</name>
+      <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/Ionic interior</uri>
+      <plugin filename="gz-sim-detachable-joint-system"
+          name="gz::sim::systems::DetachableJoint">
+        <parent_link>base_link</parent_link>
+        <child_model>steak_set</child_model>
+        <child_link>link_0</child_link>
+        <detach_topic>/food/detach</detach_topic>
+        <attach_topic>/food/attach</attach_topic>
+      </plugin>
+    </include> -->
+
     <!-- Inclusión del modelo del dron -->
     <include>
       <uri>model://parrot_bebop_2</uri>

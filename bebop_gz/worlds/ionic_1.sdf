@@ -2,10 +2,11 @@
 
 <sdf version="1.10">
   <world name="default">
-    <physics name="fast" type="ignored">
+    <physics name="default_physics" type="dart">
       <max_step_size>0.001</max_step_size>
-      <real_time_factor>1</real_time_factor>
+      <real_time_factor>1.0</real_time_factor>
     </physics>
+
     <gui fullscreen="0">
       <plugin filename="MinimalScene" name="3D View">
         <gz-gui>
@@ -39,6 +40,7 @@
         <anisotropic>true</anisotropic>
         <bounceCount>9</bounceCount>
       </plugin>
+
       <plugin filename="EntityContextMenuPlugin" name="Entity context menu">
         <gz-gui>
           <property key="state" type="string">floating</property>
@@ -47,6 +49,7 @@
           <property key="showTitleBar" type="bool">false</property>
         </gz-gui>
       </plugin>
+
       <plugin filename="GzSceneManager" name="Scene Manager">
         <gz-gui>
           <property key="resizable" type="bool">false</property>
@@ -56,6 +59,7 @@
           <property key="showTitleBar" type="bool">false</property>
         </gz-gui>
       </plugin>
+
       <plugin filename="InteractiveViewControl" name="Interactive view control">
         <gz-gui>
           <property key="resizable" type="bool">false</property>
@@ -65,6 +69,7 @@
           <property key="showTitleBar" type="bool">false</property>
         </gz-gui>
       </plugin>
+
       <plugin filename="CameraTracking" name="Camera Tracking">
         <gz-gui>
           <property key="resizable" type="bool">false</property>
@@ -74,6 +79,7 @@
           <property key="showTitleBar" type="bool">false</property>
         </gz-gui>
       </plugin>
+
       <plugin filename="MarkerManager" name="Marker manager">
         <gz-gui>
           <property key="resizable" type="bool">false</property>
@@ -83,6 +89,7 @@
           <property key="showTitleBar" type="bool">false</property>
         </gz-gui>
       </plugin>
+
       <plugin filename="SelectEntities" name="Select Entities">
         <gz-gui>
           <anchors target="Select entities">
@@ -96,6 +103,7 @@
           <property key="showTitleBar" type="bool">false</property>
         </gz-gui>
       </plugin>
+
       <plugin filename="VisualizationCapabilities" name="Visualization Capabilities">
         <gz-gui>
           <property key="resizable" type="bool">false</property>
@@ -394,22 +402,7 @@
       </plugin>
     </include>
 
-    <!--
-        bullet-featherstone auto-deactivation demo.
-
-        Run the demo with bullet-featherstone physics plugin
-
-        Detach joints to make the breakfast_menu and steak_set meshes dynamic:
-
-            gz topic -t "/food/detach" -m gz.msgs.Empty -p "unused: true"
-
-        These models will become dynamic, which impacts physics
-        and causes RTF to drop (change max_step_size to 0.001 to make the
-        effect more evidient). After the collisions settle, the RTF should
-        come back up.
-    -->
-
-    <include>
+    <!-- <include>
       <static>false</static>
       <name>steak_set</name>
       <pose>7.35 0.05 0.864 0 0 0.0</pose>
@@ -422,9 +415,9 @@
         <detach_topic>/food/detach</detach_topic>
         <attach_topic>/food/attach</attach_topic>
       </plugin>
-    </include>
+    </include> -->
 
-    <include>
+    <!-- <include>
       <static>false</static>
       <name>steak_set_2</name>
       <pose>7.85 0.05 0.864 0 0 0.0</pose>
@@ -437,9 +430,9 @@
         <detach_topic>/food/detach</detach_topic>
         <attach_topic>/food/attach</attach_topic>
       </plugin>
-    </include>
+    </include> -->
 
-    <include>
+    <!-- <include>
       <static>false</static>
       <name>steak_set_3</name>
       <pose>8.35 0.05 0.864 0 0 0.0</pose>
@@ -452,10 +445,10 @@
         <detach_topic>/food/detach</detach_topic>
         <attach_topic>/food/attach</attach_topic>
       </plugin>
-    </include>
+    </include> -->
 
 
-    <include>
+    <!-- <include>
       <static>false</static>
       <name>steak_set_4</name>
       <pose>8.85 0.05 0.864 0 0 0.0</pose>
@@ -468,9 +461,9 @@
         <detach_topic>/food/detach</detach_topic>
         <attach_topic>/food/attach</attach_topic>
       </plugin>
-    </include>
+    </include> -->
 
-    <include>
+    <!-- <include>
       <static>false</static>
       <name>steak_set_5</name>
       <pose>9.35 0.05 0.864 0 0 0.0</pose>
@@ -483,9 +476,9 @@
         <detach_topic>/food/detach</detach_topic>
         <attach_topic>/food/attach</attach_topic>
       </plugin>
-    </include>
+    </include> -->
 
-    <include>
+    <!-- <include>
       <static>false</static>
       <name>steak_set_6</name>
       <pose>7.85 0.40 0.864 0 0 3.14</pose>
@@ -498,9 +491,9 @@
         <detach_topic>/food/detach</detach_topic>
         <attach_topic>/food/attach</attach_topic>
       </plugin>
-    </include>
+    </include> -->
 
-    <include>
+    <!-- <include>
       <static>false</static>
       <name>steak_set_7</name>
       <pose>8.35 0.40 0.864 0 0 3.14</pose>
@@ -513,9 +506,9 @@
         <detach_topic>/food/detach</detach_topic>
         <attach_topic>/food/attach</attach_topic>
       </plugin>
-    </include>
+    </include> -->
 
-    <include>
+    <!-- <include>
       <static>false</static>
       <name>steak_set_8</name>
       <pose>8.85 0.4 0.862 0 0 3.14</pose>
@@ -529,9 +522,9 @@
         <attach_topic>/food/attach</attach_topic>
       </plugin>
 
-    </include>
+    </include> -->
 
-    <include>
+    <!-- <include>
       <static>false</static>
       <name>steak_set_9</name>
       <pose>9.35 0.4 0.862 0 0 3.14</pose>
@@ -544,11 +537,11 @@
         <detach_topic>/food/detach</detach_topic>
         <attach_topic>/food/attach</attach_topic>
       </plugin>
-    </include>
+    </include> -->
 
     <!-- breakfast menus - 1 original, 1 convex decomposed, and
          1 convex decomposed (low res) -->
-
+<!-- 
     <include>
       <static>false</static>
       <name>breakfast_menu</name>
@@ -563,9 +556,9 @@
         <attach_topic>/food/attach</attach_topic>
       </plugin>
 
-    </include>
+    </include> -->
 
-    <include>
+    <!-- <include>
       <static>false</static>
       <name>breakfast_menu_decomposed</name>
       <pose>-1.73 2.623 0.751 0 0 0.0</pose>
@@ -578,26 +571,26 @@
         <detach_topic>/food/detach</detach_topic>
         <attach_topic>/food/attach</attach_topic>
       </plugin>
-    </include>
+    </include> -->
 
-    <include>
+    <!-- <include>
       <static>false</static>
       <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/Breakfast Menu Convex Hull</uri>
       <pose>-1.73 2.85 0.751 0 0 0.0</pose>
       <uri>breakfast_menu_convex_hull</uri>
-    </include>
+    </include> -->
 
-    <include>
+    <!-- <include>
       <name>Ionic Mascot</name>
       <pose>3.67 0.35 1.18 0 0 3.14</pose>
       <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/Ionic Mascot</uri>
-    </include>
+    </include> -->
 
 
-        <!-- Inclusión del modelo del dron -->
+    <!-- Inclusión del modelo del dron -->
     <include>
       <uri>model://parrot_bebop_2</uri>
-      <pose>0.02 1 0.3 0 0 0</pose> <!-- Posición inicial por defecto -->
+      <pose>0 0 0 0 0 0</pose> <!-- Posición inicial por defecto -->
 
       <!-- Plugin para actualizar la posición -->
       <plugin name="gz::sim::systems::SetPosePlugin" filename="/home/jr/gz_sim/plugins/build/libSetPosePlugin.so">
@@ -740,8 +733,9 @@
         name="gz::sim::systems::PosePublisher">
         <dimensions>3</dimensions>
       </plugin>
-    </include>
 
+      
+    </include>
 
   </world>
 </sdf>
