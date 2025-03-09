@@ -16,6 +16,7 @@ setup(
         (os.path.join('share', package_name, 'models'), glob('models/****/***/**/*')),
         (os.path.join('share', package_name, 'worlds'), glob('worlds/*')),
         (os.path.join('share', package_name, 'urdf'), glob('urdf/*')),
+        (os.path.join('share', package_name, 'meshes'), glob('meshes/*')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
