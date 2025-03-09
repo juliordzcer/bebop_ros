@@ -1,0 +1,247 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 2015 Fadri Furrer, ASL, ETH Zurich, Switzerland
+  Copyright 2015 Michael Burri, ASL, ETH Zurich, Switzerland
+  Copyright 2015 Mina Kamel, ASL, ETH Zurich, Switzerland
+  Copyright 2015 Janosch Nikolic, ASL, ETH Zurich, Switzerland
+  Copyright 2015 Markus Achtelik, ASL, ETH Zurich, Switzerland
+
+  Copyright 2018 Eric Goubault, Cosynus, LIX, France
+  Copyright 2018 Sylve Putot, Cosynus, LIX, France
+  Copyright 2018 Franck Djeumou, Cosynus, LIX, France
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <!-- Main multirotor link -->
+  <xacro:macro name="multirotor_base_macro"
+    params="robot_namespace mass body_width body_height mesh_file mesh_scale *inertia">
+    <link name="base_link"></link>
+
+    <joint name="base_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <parent link="base_link" />
+      <child link="base_link_inertia" />
+    </joint>
+
+    <link name="base_link_inertia">
+      <inertial>
+        <mass value="${mass}" />  <!-- [kg] -->
+        <origin xyz="0 0 0" />
+        <xacro:insert_block name="inertia" />
+      </inertial>
+
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="$(arg rotors_description_dir)/meshes/${mesh_file}"
+            scale="${mesh_scale}" />
+          <!-- <box size="${body_width} ${body_width} ${body_height}"/> --> <!-- [m] [m] [m] -->
+        </geometry>
+      </visual>
+
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="${body_width} ${body_width} ${body_height}" /> <!-- [m] [m] [m] -->
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- attach multirotor_base_plugin to the base_link -->
+    <gazebo>
+      <plugin filename="librotors_gazebo_multirotor_base_plugin.so" name="rosbag">
+        <robotNamespace>${robot_namespace}</robotNamespace>
+        <linkName>base_link</linkName>
+        <rotorVelocitySlowdownSim>${rotor_velocity_slowdown_sim}</rotorVelocitySlowdownSim>
+      </plugin>
+    </gazebo>
+    <gazebo reference="base_link">
+      <collision name='base_link_inertia_collision'>
+        <surface>
+          <xacro:if value="$(arg allow_collision)">
+            <contact>
+              <ode>
+                <min_depth>0.001</min_depth>
+                <max_vel>0.0</max_vel>
+              </ode>
+            </contact>
+            <friction>
+              <ode/>
+            </friction>
+          </xacro:if>
+          <xacro:unless value="$(arg allow_collision)">
+            <contact>
+              <collide_without_contact>true</collide_without_contact>
+            </contact>
+          </xacro:unless>
+        </surface>
+      </collision>
+   </gazebo>
+  </xacro:macro>
+
+  <!-- Rotor joint and link -->
+  <xacro:macro name="vertical_rotor"
+    params="robot_namespace suffix direction motor_constant moment_constant parent mass_rotor radius_rotor time_constant_up time_constant_down max_rot_velocity motor_number rotor_drag_coefficient rolling_moment_coefficient color mesh mesh_scale use_own_mesh *origin *inertia">
+    <joint name="rotor_${motor_number}_joint" type="continuous">
+      <xacro:insert_block name="origin" />
+      <axis xyz="0 0 1" />
+      <!-- TODO(ff): not currently set because it's not yet supported -->
+      <!-- <limit effort="2000" velocity="${max_rot_velocity}" /> -->
+      <parent link="${parent}" />
+      <child link="rotor_${motor_number}" />
+
+    </joint>
+    <!-- TODO(ff): not currently set because it's not yet supported -->
+    <!-- <gazebo reference="rotor_${motor_number}_joint"> <axis> <xyz>0 0 1</xyz>
+      <limit> <velocity> ${max_rot_velocity} </velocity> </limit> </axis> </gazebo> -->
+    <link name="rotor_${motor_number}">
+      <inertial>
+        <mass value="${mass_rotor}" /> <!-- [kg] -->
+        <xacro:insert_block name="inertia" />
+      </inertial>
+      <visual>
+        <geometry>
+          <!-- <cylinder length="0.005" radius="${radius_rotor}"/> --> <!-- [m] -->
+          <!-- <mesh filename="package://rotors_description/meshes/propeller_${direction}.dae" -->
+          <xacro:if value="${use_own_mesh}">
+            <mesh filename="$(arg rotors_description_dir)/meshes/${mesh}"
+              scale="${mesh_scale}" />
+          </xacro:if>
+          <xacro:unless value="${use_own_mesh}">
+            <mesh filename="$(arg rotors_description_dir)/meshes/${mesh}_${direction}.dae" scale="${mesh_scale}" />
+          </xacro:unless>
+          <!-- <box size="${2*radius_rotor} 0.01 0.005"/> -->
+        </geometry>
+      </visual>
+      <!--<collision>
+        <geometry>
+          <cylinder length="0.005" radius="${radius_rotor}" />
+        </geometry>
+      </collision> -->
+    </link>
+    <gazebo>
+      <plugin name="${suffix}_motor_model" filename="librotors_gazebo_motor_model.so">
+        <robotNamespace>${robot_namespace}</robotNamespace>
+        <jointName>rotor_${motor_number}_joint</jointName>
+        <linkName>rotor_${motor_number}</linkName>
+        <turningDirection>${direction}</turningDirection>
+        <timeConstantUp>${time_constant_up}</timeConstantUp>
+        <timeConstantDown>${time_constant_down}</timeConstantDown>
+        <maxRotVelocity>${max_rot_velocity}</maxRotVelocity>
+        <motorConstant>${motor_constant}</motorConstant>
+        <momentConstant>${moment_constant}</momentConstant>
+        <commandSubTopic>${motorsSpeedTopic}</commandSubTopic>
+        <motorNumber>${motor_number}</motorNumber>
+        <rotorDragCoefficient>${rotor_drag_coefficient}</rotorDragCoefficient>
+        <rollingMomentCoefficient>${rolling_moment_coefficient}</rollingMomentCoefficient>
+        <motorSpeedPubTopic>/motor_speed/${motor_number}</motorSpeedPubTopic>
+        <rotorVelocitySlowdownSim>${rotor_velocity_slowdown_sim}</rotorVelocitySlowdownSim>
+      </plugin>
+    </gazebo>
+    <gazebo reference="rotor_${motor_number}">
+      <material>Gazebo/${color}</material>
+    </gazebo>
+  </xacro:macro>
+
+    <!-- Multi-ranger deck plane -->
+  <xacro:macro name="multiranger_deck_base" params="robot_namespace expansion_deck_offset mr_deck_width mr_deck_length mr_deck_height mr_deck_color">
+    <joint name="base_mr_joint" type="fixed">
+      <origin xyz="0 0 ${expansion_deck_offset}" rpy="0 0 0" />
+      <parent link="base_link"/>
+      <child link="multi_ranger_deck_plane_link"/>
+    </joint>
+
+    <link name="multi_ranger_deck_plane_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="${mr_deck_width} ${mr_deck_length} ${mr_deck_height}"/>
+        </geometry>
+      </visual>
+    </link>
+    <gazebo reference="multi_ranger_deck_plane_link">
+      <material>Gazebo/${mr_deck_color}</material>
+    </gazebo>
+  </xacro:macro>
+
+  <!-- Multi-ranger range sensor -->
+  <!-- https://github.com/ros-simulation/gazebo_ros_pkgs/wiki/ROS-2-Migration:-Ray-sensors -->
+  <xacro:macro name="mr_range_sensor" params="robot_namespace sensor_location sensor_box_offset sensor_box_yaw trans_x trans_y sensor_length sensor_width sensor_height sensor_offset mr_sensor_color visualize_ray">
+    <joint name="mr_sensor_${sensor_location}_joint" type="fixed">
+      <!-- <origin xyz="${trans_x} ${trans_y} ${sensor_box_offset}+${sensor_offset}" rpy="0 0 ${sensor_box_yaw}" /> -->
+      <origin xyz="${trans_x} ${trans_y} ${sensor_box_offset}" rpy="0 0 ${sensor_box_yaw}" />
+      <parent link="multi_ranger_deck_plane_link"/>
+      <child link="mr_sensor_${sensor_location}_link"/>
+    </joint>
+
+    <link name="mr_sensor_${sensor_location}_link">
+      <!-- To avoid that the sensor interferes with the link we disable the collision -->
+      <!-- <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="${sensor_length} ${sensor_width} ${sensor_height}"/>
+        </geometry>
+      </collision> -->
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="${sensor_length} ${sensor_width} ${sensor_height}"/>
+        </geometry>
+      </visual>
+    </link>
+    <gazebo reference="mr_sensor_${sensor_location}_link">
+      <material>Gazebo/${mr_sensor_color}</material>
+    </gazebo>
+    <gazebo reference="mr_sensor_${sensor_location}_link">
+      <sensor type="ray" name="head_hokuyo_sensor_${sensor_location}">
+          <pose>0 0 0 0 0 0</pose>
+          <visualize>${visualize_ray}</visualize>
+          <ray>
+            <scan>
+                <horizontal>
+                  <samples>1</samples>
+                  <resolution>1.0</resolution>
+                  <min_angle>-0.01</min_angle>
+                  <max_angle>0.01</max_angle>
+                </horizontal>
+                <vertical>
+                  <samples>1</samples>
+                  <resolution>1</resolution>
+                  <min_angle>-0.01</min_angle>
+                  <max_angle>0.01</max_angle>
+                </vertical>
+            </scan>
+            <range>
+                <min>0.05</min>
+                <max>4.00</max>
+                <resolution>0.02</resolution>
+            </range>
+          </ray>
+          <update_rate>15</update_rate>
+          <plugin filename="libgazebo_ros_ray_sensor.so" name="gazebo_ros_range_${namespace}_${sensor_location}">
+            <ros>
+              <namespace>/${namespace}/${sensor_location}</namespace>
+              <remapping>~/out:=range</remapping>
+            </ros>
+            <output_type>sensor_msgs/Range</output_type>
+            <gaussianNoise>0.005</gaussianNoise>
+            <radiation_type>infrared</radiation_type>
+            <alwaysOn>true</alwaysOn>
+            <fov>0.02</fov>
+          </plugin>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+</robot>

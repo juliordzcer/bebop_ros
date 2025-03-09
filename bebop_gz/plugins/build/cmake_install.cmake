@@ -1,4 +1,4 @@
-# Install script for directory: /home/jr/gz_sim/plugins
+# Install script for directory: /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -49,7 +49,7 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libSetPosePlugin.so"
          RPATH "")
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE SHARED_LIBRARY FILES "/home/jr/gz_sim/plugins/build/libSetPosePlugin.so")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE SHARED_LIBRARY FILES "/home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/libSetPosePlugin.so")
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libSetPosePlugin.so" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libSetPosePlugin.so")
     file(RPATH_CHANGE
@@ -66,7 +66,7 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  include("/home/jr/gz_sim/plugins/build/CMakeFiles/SetPosePlugin.dir/install-cxx-module-bmi-noconfig.cmake" OPTIONAL)
+  include("/home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/CMakeFiles/SetPosePlugin.dir/install-cxx-module-bmi-noconfig.cmake" OPTIONAL)
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
@@ -77,5 +77,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/jr/gz_sim/plugins/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format2.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="2">
-
   <name>bebop_ros_gz</name>
   <version>0.0.1</version>
   <description>Meta-package containing interfaces for using ROS 2 with <a href="https://gazebosim.org">Gazebo</a> simulation.</description>
@@ -12,10 +11,12 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
+  <!-- Dependencias de ejecución -->
   <exec_depend>bebop_demo</exec_depend>
   <exec_depend>bebop_controller</exec_depend>
-  <exec_depend>bebop_demo</exec_depend>
+  <exec_depend>bebop_gz</exec_depend>
 
+  <!-- Dependencias de prueba -->
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
 

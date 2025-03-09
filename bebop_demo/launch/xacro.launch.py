@@ -7,11 +7,11 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     # Ruta al archivo Xacro
-    pkg_share = get_package_share_directory('bebop_demo')
-    xacro_file = os.path.join(pkg_share, 'urdf', 'crazyflie.urdf.xacro')
+    pkg_share = get_package_share_directory('bebop_gz')
+    xacro_file = os.path.join(pkg_share, 'urdf', 'bebop2.xacro')
 
     # Convertir Xacro a URDF
-    urdf_file = os.path.join(pkg_share, 'urdf', 'crazyflie.urdf')
+    urdf_file = os.path.join(pkg_share, 'urdf', 'bebop2.urdf')
     if not os.path.exists(urdf_file):
         os.system(f'xacro {xacro_file} -o {urdf_file}')
 
@@ -27,7 +27,7 @@ def generate_launch_description():
     spawn_entity = Node(
         package='ros_gz_sim',
         executable='create',
-        arguments=['-file', urdf_file, '-name', 'crazyflie'],
+        arguments=['-file', urdf_file, '-name', 'bebop2'],
         output='screen'
     )
 

@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<!--
+    Copyright 2018 Eric Goubault, Cosynus, LIX, France
+    Copyright 2018 Sylve Putot, Cosynus, LIX, France
+    Copyright 2018 Franck Djeumou, Cosynus, LIX, France
+-->
+
+<robot name="crazyflie" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:arg name='name' default='crazyflie' />
+  <xacro:arg name='enable_wind' default='$(arg enable_wind)' />
+
+  <!-- The following causes segfault with multiple vehicles if defaults to true!!! -->
+  <xacro:arg name='enable_logging' default='false' />
+  <xacro:arg name='log_file' default='crazyflie' />
+  <xacro:arg name='allow_collision' default='true' />
+
+  <xacro:property name="enable_ground_truth" value="$(arg enable_ground_truth)" />
+  <xacro:property name="enable_mr_deck" value="$(arg enable_mr_deck)" />
+
+  <xacro:include filename="$(arg rotors_description_dir)/urdf/component_snippets.xacro"/>
+
+  <!-- Instantiate crazyflie "mechanics" -->
+  <xacro:include filename="$(arg rotors_description_dir)/urdf/crazyflie.xacro" />
+
+  <!-- Parameter for including wind -->
+  <xacro:if value="$(arg enable_wind)">
+    <xacro:wind_plugin_macro
+        namespace="${namespace}"
+        wind_direction="0 0 1"
+        wind_force_mean="0.7"
+        xyz_offset="1 0 0"
+        wind_gust_direction="0 0 0"
+        wind_gust_duration="0"
+        wind_gust_start="0"
+        wind_gust_force_mean="0"
+        />
+  </xacro:if>
+
+  <xacro:cf_handler_plugin_macro
+    namespace="${namespace}">
+  </xacro:cf_handler_plugin_macro>
+
+  <!-- MPU-6500 IMU obtained from  experiments and match datasheets-->
+  <xacro:imu_plugin_macro
+    namespace="${namespace}"
+    imu_suffix=""
+    parent_link="base_link"
+    imu_topic="${imu_topic}"
+    mass_imu_sensor="0.00001"
+    rate="1000"
+    gyroscope_noise_density="1.7667e-4"
+    gyroscope_random_walk="9.2542e-06"
+    gyroscope_bias_correlation_time="1000.0"
+    gyroscope_turn_on_bias_sigma="0.03"
+    accelerometer_noise_density="0.0032"
+    accelerometer_random_walk="1.3524e-04"
+    accelerometer_bias_correlation_time="300.0"
+    accelerometer_turn_on_bias_sigma="0.1">
+    <inertia ixx="0.0000000001" ixy="0.0" ixz="0.0" iyy="0.0000000001" iyz="0.0" izz="0.0000000001" />
+    <origin xyz="0 0 0" rpy="0 0 0" />
+  </xacro:imu_plugin_macro>
+
+  <!-- HMC5883L Magnetometer. -->
+  <xacro:magnetometer_plugin_macro
+    namespace="${namespace}"
+    magnetometer_suffix=""
+    parent_link="base_link"
+    magnetometer_topic="${mag_topic}"
+    rate="10"
+    mass_magnetometer_sensor="0.00001"
+    ref_mag_north="0.000021493"
+    ref_mag_east="0.000000815"
+    ref_mag_down="0.000042795"
+    noise_normal="7.07868618e-07 6.73106045e-07 7.28724033e-07"
+    noise_uniform_initial_bias="0.0000004 0.0000004 0.0000004">
+    <inertia ixx="0.0000000001" ixy="0.0" ixz="0.0" iyy="0.0000000001" iyz="0.0" izz="0.0000000001" />
+    <origin xyz="0 0 0" rpy="0 0 0" />
+  </xacro:magnetometer_plugin_macro>
+
+  <!-- LPS25H pressure sensor (TODO update params) -->
+  <xacro:pressure_sensor_plugin_macro
+    namespace="${namespace}"
+    pressure_sensor_suffix=""
+    parent_link="base_link"
+    pressure_topic="${pressure_topic}"
+    rate="10"
+    mass_pressure_sensor="0.00001"
+    reference_altitude="500.0"
+    pressure_variance="3.99143626e2">
+    <inertia ixx="0.0000000001" ixy="0.0" ixz="0.0" iyy="0.0000000001" iyz="0.0" izz="0.0000000001" />
+    <origin xyz="0 0 0" rpy="0 0 0" />
+  </xacro:pressure_sensor_plugin_macro>
+
+  <xacro:lps_plugin_macro
+    namespace="${namespace}"
+    lps_std_dev="0.0"
+    rate="100">
+  </xacro:lps_plugin_macro>
+
+  <xacro:if value="${enable_mr_deck}">
+    <xacro:mr_plugin_macro
+      namespace="${namespace}"
+      rate="100">
+    </xacro:mr_plugin_macro>
+  </xacro:if>
+
+  <xacro:if value="${enable_ground_truth}">
+    <!-- Odometry Sensor -->
+    <xacro:odometry_plugin_macro
+      namespace=""
+      odometry_sensor_suffix="gt"
+      parent_link="base_link"
+      pose_topic="ground_thruth/pose"
+      pose_with_covariance_topic="ground_thruth/pose_with_covariance"
+      position_topic="ground_thruth/position"
+      transform_topic="ground_thruth/transform"
+      odometry_topic="ground_thruth/odometry"
+      parent_frame_id="world"
+      child_frame_id="base_link"
+      mass_odometry_sensor="0.00001"
+      measurement_divisor="1"
+      measurement_delay="0"
+      unknown_delay="0.0"
+      noise_normal_position="0 0 0"
+      noise_normal_quaternion="0 0 0"
+      noise_normal_linear_velocity="0 0 0"
+      noise_normal_angular_velocity="0 0 0"
+      noise_uniform_position="0 0 0"
+      noise_uniform_quaternion="0 0 0"
+      noise_uniform_linear_velocity="0 0 0"
+      noise_uniform_angular_velocity="0 0 0"
+      enable_odometry_map="false"
+      odometry_map=""
+      image_scale="">
+      <inertia ixx="0.0000000001" ixy="0.0" ixz="0.0" iyy="0.0000000001" iyz="0.0" izz="0.0000000001" /> <!-- [kg m^2] [kg m^2] [kg m^2] [kg m^2] [kg m^2] [kg m^2] -->
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+    </xacro:odometry_plugin_macro>
+  </xacro:if>
+
+</robot>
