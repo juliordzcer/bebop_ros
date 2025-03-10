@@ -28,18 +28,31 @@ class Controller(Node):
         
         # Parámetros
         self.declare_parameter('frequency', 50.0)
-        
+        self.declare_parameter('robot_name', 'bebop2') 
+
         self.frequency = self.get_parameter('frequency').get_parameter_value().double_value
+        robot_name = self.get_parameter('robot_name').get_parameter_value().string_value
+
+        # Validar que el nombre del robot no esté vacío
+        if not robot_name.strip():
+            self.get_logger().error('El parámetro "robot_name" está vacío. Se usará "bebop2" por defecto.')
+            robot_name = 'bebop2'
+
+        # Tópico dinámico
+        cmd_vel_topic = f"/{robot_name}/cmd_vel"
+        cmd_enable_topic  = f"/{robot_name}/enable"
+        sub_odo_topic = f"/model/{robot_name}/odometry"
+
 
         qos_profile = QoSProfile(depth=10)
 
         # Publisher de comando de velocidad y activacion de drone
-        self.cmd_pub = self.create_publisher(Twist, '/parrot_bebop_2/cmd_vel', qos_profile)
-        self.cmd_enable = self.create_publisher(Bool, '/parrot_bebop_2/enable', qos_profile)
+        self.publisher_ = self.create_publisher(Twist, cmd_vel_topic, 10)
+        self.cmd_enable = self.create_publisher(Bool, cmd_enable_topic, qos_profile)
 
         # Suscriptor de setpoint y odometria
         self.goal_sub = self.create_subscription(Pose, 'goal', self.goal_changed, qos_profile)
-        self.pos_sub  = self.create_subscription(Odometry, '/model/parrot_bebop_2/odometry', self.pos_changed, qos_profile)
+        self.pos_sub  = self.create_subscription(Odometry, sub_odo_topic, self.pos_changed, qos_profile)
         self.joy_sub = self.create_subscription(Joy, 'joy', self.joy_callback, 10)
 
         # Servicios de despegue y aterrizaje

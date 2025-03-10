@@ -17,6 +17,12 @@ def generate_launch_description():
         default_value='["bebop1", "bebop2"]',  # Pasa los nombres como una lista de cadenas
         description='List of robots to show images from'
     )
+
+    declare_lider_1_names = DeclareLaunchArgument(
+        'lider_1',
+        default_value='bebop2',  # Pasa los nombres como una lista de cadenas
+        description='lider 1'
+    )
     
     # Declarar el parámetro 'world_name'
     declare_world_name = DeclareLaunchArgument(
@@ -30,7 +36,7 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(
             os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')),
         launch_arguments={
-            'gz_args': '-r -z 1000000 bebop.sdf'
+            'gz_args': '-r -s -z 1000000 bebop.sdf'
         }.items(),
     )
 
@@ -45,7 +51,7 @@ def generate_launch_description():
         package='bebop_demo',
         executable='joystick_swarm',
         name='joystick_swarm',
-        parameters=[{'robot_name': 'bebop2'}],  # Seleccionar el robot aquí
+        parameters=[{'robot_name': LaunchConfiguration('lider_1')}],  # Seleccionar el robot aquí
         output='screen'
     )
 
@@ -71,5 +77,6 @@ def generate_launch_description():
         ros_gz_bridge,
         position_control,
         joystick,
-        imagenes
+        imagenes,
+        declare_lider_1_names
     ])

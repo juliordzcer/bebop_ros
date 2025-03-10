@@ -29,8 +29,21 @@ class TrajectoryCircle(Node):
         # Publicador para el tópico /goal
         self.pub = self.create_publisher(Pose, '/goal', qos)
 
+        self.declare_parameter('robot_name', 'bebop2')
+        robot_name = self.get_parameter('robot_name').get_parameter_value().string_value
+  
+        # Validar que el nombre del robot no esté vacío
+        if not robot_name.strip():
+            self.get_logger().error('El parámetro "robot_name" está vacío. Se usará "bebop2" por defecto.')
+            robot_name = 'bebop2'
+
+        # Tópico dinámico
+        cmd_set_pose_topic = f"/{robot_name}/set_pose"
+
+
+
         # Publicador para el tópico /set_pose
-        self.pubinipos = self.create_publisher(Pose, '/parrot_bebop_2/set_pose', qos)
+        self.pubinipos = self.create_publisher(Pose, cmd_set_pose_topic, qos)
 
         # Declaración de parámetros
         self.declare_parameter('xi', 0.0)
