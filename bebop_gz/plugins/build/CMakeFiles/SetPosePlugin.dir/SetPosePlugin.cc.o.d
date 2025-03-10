@@ -1,5 +1,6 @@
 CMakeFiles/SetPosePlugin.dir/SetPosePlugin.cc.o: \
- /home/jr/gz_sim/plugins/SetPosePlugin.cc /usr/include/stdc-predef.h \
+ /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/SetPosePlugin.cc \
+ /usr/include/stdc-predef.h \
  /opt/ros/rolling/opt/gz_sim_vendor/include/gz/sim9/gz/sim/Model.hh \
  /usr/include/c++/13/memory /usr/include/c++/13/bits/memoryfwd.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
@@ -350,6 +351,7 @@ CMakeFiles/SetPosePlugin.dir/SetPosePlugin.cc.o: \
  /opt/ros/rolling/opt/gz_utils_vendor/include/gz/utils3/gz/utils/log/Export.hh \
  /opt/ros/rolling/opt/gz_utils_vendor/include/gz/utils3/gz/utils/log/detail/Export.hh \
  /opt/ros/rolling/opt/gz_math_vendor/include/gz/math8/gz/math/graph/Graph.hh \
+ /opt/ros/rolling/opt/gz_math_vendor/include/gz/math8/gz/math/detail/Error.hh \
  /opt/ros/rolling/opt/gz_math_vendor/include/gz/math8/gz/math/graph/Edge.hh \
  /opt/ros/rolling/opt/gz_math_vendor/include/gz/math8/gz/math/graph/Vertex.hh \
  /opt/ros/rolling/opt/gz_utils_vendor/include/gz/utils3/gz/utils/NeverDestroyed.hh \

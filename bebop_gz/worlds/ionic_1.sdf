@@ -734,7 +734,13 @@
         <dimensions>3</dimensions>
       </plugin>
 
-      
+      <plugin name="camera_plugin" filename="libgazebo_ros_camera.so">
+        <ros>
+          <namespace>/bebop/camera</namespace>
+          <remapping>image_raw:=/bebop/image_raw</remapping>
+        </ros>
+        <update_rate>10</update_rate>
+      </plugin>
     </include>
 
   </world>
