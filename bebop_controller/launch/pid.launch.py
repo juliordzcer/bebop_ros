@@ -1,7 +1,9 @@
 from launch import LaunchDescription
 from launch_ros.actions import Node
+from launch.actions import DeclareLaunchArgument
 
 def generate_launch_description():
+    # Declara los parámetros para el PID
     pid_params = {
         'PIDs.X.kp': 1.2,
         'PIDs.X.kd': 0.4,
@@ -33,12 +35,18 @@ def generate_launch_description():
         'PIDs.Yaw.integratorMax': 0.0,
     }
 
+    frequency = DeclareLaunchArgument('frequency', default_value='50.0', description='Frequency of control loop')
+    robot_name = DeclareLaunchArgument('robot_name', default_value='bebop2', description='Name of the robot')
+
     return LaunchDescription([
+        frequency,
+        robot_name,
         Node(
             package='bebop_controller',
             executable='controller_node',
             name='controller',
             output='screen',
-            parameters=[pid_params]
-        )
+            parameters=[pid_params],
+            remappings=[]
+        ),
     ])

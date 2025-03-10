@@ -47,7 +47,7 @@ class Controller(Node):
         qos_profile = QoSProfile(depth=10)
 
         # Publisher de comando de velocidad y activacion de drone
-        self.publisher_ = self.create_publisher(Twist, cmd_vel_topic, 10)
+        self.cmd_pub = self.create_publisher(Twist, cmd_vel_topic, 10)
         self.cmd_enable = self.create_publisher(Bool, cmd_enable_topic, qos_profile)
 
         # Suscriptor de setpoint y odometria

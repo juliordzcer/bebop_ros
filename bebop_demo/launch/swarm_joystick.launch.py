@@ -11,32 +11,16 @@ def generate_launch_description():
     pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
     pkg_ros_gz_sim_demos = get_package_share_directory('bebop_demo')
 
-    # Declarar el parámetro 'robot_names' como una lista de cadenas
-    declare_robot_names = DeclareLaunchArgument(
-        'robot_names',
-        default_value='["bebop1", "bebop2"]',  # Pasa los nombres como una lista de cadenas
-        description='List of robots to show images from'
-    )
-
-    declare_lider_1_names = DeclareLaunchArgument(
-        'lider_1',
-        default_value='bebop2',  # Pasa los nombres como una lista de cadenas
-        description='lider 1'
-    )
-    
-    # Declarar el parámetro 'world_name'
-    declare_world_name = DeclareLaunchArgument(
-        'world_name',
-        default_value='bebop',  # Nombre del mundo
-        description='Name of the world to load'
-    )
+    lider_1 = "bebop2"
+    world_name = "bebop"
+    robot_names = '["bebop1", "bebop2"]'
 
     # Gazebo
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')),
         launch_arguments={
-            'gz_args': '-r -s -z 1000000 bebop.sdf'
+            'gz_args': '-r -z 1000000 bebop.sdf'
         }.items(),
     )
 
@@ -46,14 +30,31 @@ def generate_launch_description():
         config_file=os.path.join(pkg_ros_gz_sim_demos, 'config', 'bebop_swarm.yaml'),
     )
 
-    # Position Control Node (Usando el primer robot de la lista)
-    position_control = Node(
-        package='bebop_demo',
-        executable='joystick_swarm',
-        name='joystick_swarm',
-        parameters=[{'robot_name': LaunchConfiguration('lider_1')}],  # Seleccionar el robot aquí
+    # joystick
+    joystick_controller = ExecuteProcess(
+        cmd=[
+            'ros2', 'run', 'bebop_demo', 'joystick',
+            '--ros-args',
+            '-p', f'robot_name:={lider_1}',
+            ],
         output='screen'
     )
+
+    setpoint = ExecuteProcess(
+        cmd=[
+            'ros2', 'run', 'bebop_demo', 'setpoint',
+            '--ros-args', 
+            '-p', 'xi:=1.0',
+            '-p', 'yi:=1.0',
+            '-p', 'zi:=0.0',
+            '-p', 'h:=0.5',
+            '-p', 'r:=1.0',
+            '-p', 'yawi:=0.0',
+            '-p', f'robot_name:={lider_1}',
+        ],
+        output='screen'
+    )
+
 
     # Joy Node
     joystick = ExecuteProcess(
@@ -61,22 +62,33 @@ def generate_launch_description():
         output='screen'
     )
 
-    # Visor de imágenes para múltiples robots
-    imagenes = Node(
-        package='bebop_demo',
-        executable='imagenes',
-        name='imagenes',
-        parameters=[{'robot_names': LaunchConfiguration('robot_names')}],  # Usar LaunchConfiguration para obtener el valor
-        output='screen'
+    # # Visor de imagenes
+    # imagenes = ExecuteProcess(
+    #     cmd=[
+    #         'ros2', 'run', 'bebop_demo', 'imagenes',
+    #         '--ros-args',
+    #         '-p', f'robot_name:={robot_names}',
+    #         '-p', f'world_name:={world_name}',           
+    #         ],
+    #     output='screen'
+    # )
+
+    # Position Control Node
+    controller_leader = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(get_package_share_directory('bebop_controller'), 'launch', 'pid.launch.py')
+        ),
+        launch_arguments={
+            'robot_name': f'{lider_1}'
+        }.items()
     )
 
     return LaunchDescription([
-        declare_robot_names,  # Declarar el parámetro para los robots
-        declare_world_name,
         gz_sim,
         ros_gz_bridge,
-        position_control,
+        joystick_controller,
         joystick,
-        imagenes,
-        declare_lider_1_names
+        # imagenes,
+        setpoint,
+        controller_leader
     ])
