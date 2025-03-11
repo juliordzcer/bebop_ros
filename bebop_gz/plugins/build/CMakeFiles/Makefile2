@@ -54,10 +54,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/jr/gz_sim/plugins
+CMAKE_SOURCE_DIR = /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/jr/gz_sim/plugins/build
+CMAKE_BINARY_DIR = /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build
 
 #=============================================================================
 # Directory level rules for the build root directory
@@ -81,14 +81,14 @@ clean: CMakeFiles/SetPosePlugin.dir/clean
 CMakeFiles/SetPosePlugin.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/SetPosePlugin.dir/build.make CMakeFiles/SetPosePlugin.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/SetPosePlugin.dir/build.make CMakeFiles/SetPosePlugin.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/jr/gz_sim/plugins/build/CMakeFiles --progress-num=1,2 "Built target SetPosePlugin"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/CMakeFiles --progress-num=1,2 "Built target SetPosePlugin"
 .PHONY : CMakeFiles/SetPosePlugin.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/SetPosePlugin.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/jr/gz_sim/plugins/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/CMakeFiles 2
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/SetPosePlugin.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/jr/gz_sim/plugins/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/CMakeFiles 0
 .PHONY : CMakeFiles/SetPosePlugin.dir/rule
 
 # Convenience name for target.

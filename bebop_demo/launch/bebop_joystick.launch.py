@@ -20,7 +20,7 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(
             os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')),
         launch_arguments={
-            'gz_args': '-r -z 1000000 bebop.sdf'
+            'gz_args': '-r -z 1000000 bebop_wh.sdf'
         }.items(),
     )
 
@@ -42,9 +42,16 @@ def generate_launch_description():
         output='screen'
     )
 
+    # Visor de imagenes
+    imagenes = ExecuteProcess(
+        cmd=['ros2', 'run', 'bebop_demo', 'imagenes'],
+        output='screen'
+    )
+
     return LaunchDescription([
         gz_sim,
         ros_gz_bridge,
         position_control,
-        Joystick
+        Joystick,
+        imagenes
     ])

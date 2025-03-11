@@ -1,0 +1,170 @@
+
+material UrbanTile/ROOF_Diffuse
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture ROOF_Albedo.png
+        }
+      }
+    }
+  }
+material UrbanTile/WALLS_Diffuse
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture WALLS_Albedo.png
+        }
+      }
+    }
+  }
+material UrbanTile/PILLERS_Diffuse
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture PILLERS_Albedo.png
+        }
+      }
+    }
+  }
+material UrbanTile/FAN_Diffuse
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture FANS_Albedo.png
+        }
+      }
+    }
+  }
+material UrbanTile/WINDOW_Diffuse
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture Window_WINDOW_BaseColor.png
+        }
+      }
+    }
+  }
+material UrbanTile/Forklift_Diffuse
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture Forklift_Forklift_BaseColor.png
+        }
+      }
+    }
+  }
+material UrbanTile/INTERCOM_Diffuse
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture INTERCOM_Albedo.png
+        }
+      }
+    }
+  }
+material UrbanTile/FireAlarm_Diffuse
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture FireAlarm_Albedo.png
+        }
+      }
+    }
+  }
+material UrbanTile/FireAlarmPole
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture FireAlarmPole_Albedo.png
+        }
+      }
+    }
+  }
+material UrbanTile/Pipes_Diffuse
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture Pipes_Albedo.png
+        }
+      }
+    }
+  }
+material UrbanTile/STAIRS_Diffuse
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture STAIRS_Albedo.png
+        }
+      }
+    }
+  }
+material UrbanTile/BOXSET_Diffuse
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture BOXSET_Albedo.png
+        }
+      }
+    }
+  }
+material UrbanTile/FLOOR_Diffuse
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture FLOOR_Albedo.png
+        }
+      }
+    }
+  }

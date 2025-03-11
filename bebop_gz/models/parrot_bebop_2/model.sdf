@@ -78,27 +78,29 @@
           <izz>1e-6</izz>
         </inertia>
       </inertial>
-
+      
       <!-- Sensor de cámara -->
       <sensor name="rgb_camera_sensor" type="camera">
         <always_on>1</always_on>
-        <update_rate>30</update_rate>
+        <update_rate>15</update_rate>
         <camera>
-          <horizontal_fov>1.5</horizontal_fov> <!-- Aproximadamente 86 grados -->
+          <horizontal_fov>1.2</horizontal_fov>
           <image>
-            <width>1280</width>  <!-- Baja la resolución para mejorar rendimiento -->
-            <height>720</height>
+            <width>640</width>
+            <height>480</height>
             <format>R8G8B8</format>
           </image>
           <clip>
             <near>0.1</near>
-            <far>50</far>
+            <far>20</far>
           </clip>
         </camera>
-        <visualize>false</visualize>  <!-- Desactiva si solo necesitas el feed en ROS -->
-        <topic>camera/image</topic>
+        <visualize>false</visualize>
+        <!-- <topic>camera/image</topic> Tópico relativo al namespace -->
       </sensor>
     </link>
+
+
 
     <!-- Articulación fija para la cámara -->
     <joint name="rgb_camera_joint" type="fixed">
