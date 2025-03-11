@@ -56,7 +56,7 @@ Up to now you have installed what you need to run the core ROS packages. To crea
 
 To install this tool and other dependencies for building ROS packages, run:
 ```
-sudo apt install python3-rosdep python3-rosinstall python3-rosinstall-generator python3-wstool build-essential
+sudo apt install python3-rosdep python3-rosinstall-generator build-essential
 ```
 ##### Initialize rosdep
 Before you can use many ROS tools, you will need to initialize rosdep. rosdep enables you to easily install system dependencies for source you want to compile and is required to run some core components in ROS. If you have not yet installed rosdep, do so as follows.
@@ -74,7 +74,7 @@ To be able to execute the programs it is necessary to install the following depe
 ```
 sudo apt-get install ros-rolling-joy
 sudo apt-get install ros-rolling-tf-transformations
-sudo pip3 install transforms3d
+sudo pip3 install transforms3d --break-system-packages
 ```
 ## Create a catkin workspace
 ```
