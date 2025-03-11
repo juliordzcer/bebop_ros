@@ -15,6 +15,12 @@ from sensor_msgs.msg import Joy
 # Suponiendo que tienes una clase PID similar en Python
 from .pid import PID
 
+class JoystickButtons:
+    """Enumeración para los botones del joystick."""
+    A = 0
+    B = 1
+    Y = 3
+
 class Controller(Node):
     class State:
         IDLE = 0
@@ -29,9 +35,13 @@ class Controller(Node):
         # Parámetros
         self.declare_parameter('frequency', 50.0)
         self.declare_parameter('robot_name', 'bebop2') 
+        self.declare_parameter('takeoff_threshold', 0.05)
+        self.declare_parameter('landing_threshold', 0.08)
 
-        self.frequency = self.get_parameter('frequency').get_parameter_value().double_value
-        robot_name = self.get_parameter('robot_name').get_parameter_value().string_value
+        self.frequency = self.get_parameter('frequency').value
+        robot_name = self.get_parameter('robot_name').value
+        self.takeoff_threshold = self.get_parameter('takeoff_threshold').value
+        self.landing_threshold = self.get_parameter('landing_threshold').value
 
         # Validar que el nombre del robot no esté vacío
         if not robot_name.strip():
@@ -42,7 +52,6 @@ class Controller(Node):
         cmd_vel_topic = f"/{robot_name}/cmd_vel"
         cmd_enable_topic  = f"/{robot_name}/enable"
         sub_odo_topic = f"/model/{robot_name}/odometry"
-
 
         qos_profile = QoSProfile(depth=10)
 
@@ -83,17 +92,19 @@ class Controller(Node):
         self.timer = self.create_timer(timer_period, self.iteration)
 
     def joy_callback(self, msg):        
-        if msg.buttons[0] == 1:  # A button
+        """Callback para el tópico /joy. Inicia o reinicia la trayectoria según los botones presionados."""
+        if msg.buttons[JoystickButtons.A] == 1:  # A button
             self.get_logger().info("Landing initiated")
             self.state = self.State.LANDING
-        elif msg.buttons[1] == 1:  # B button
+        elif msg.buttons[JoystickButtons.B] == 1:  # B button
             self.get_logger().info("Emergency stop activated!")
             self.state = self.State.EMERGENCY_STOP
-        elif msg.buttons[3] == 1:  # Y button
+        elif msg.buttons[JoystickButtons.Y] == 1:  # Y button
             self.get_logger().info("Takeoff initiated")
             self.state = self.State.TAKING_OFF
 
     def create_pid(self, axis):
+        """Crea un controlador PID para un eje específico."""
         prefix = f'PIDs.{axis}.'
         kp = self.get_param_or(prefix + 'kp', 0.0)
         kd = self.get_param_or(prefix + 'kd', 0.0)
@@ -119,37 +130,44 @@ class Controller(Node):
         )
 
     def get_param_or(self, name, default):
+        """Obtiene un parámetro o usa un valor por defecto si no está definido."""
         self.declare_parameter(name, default)
         param = self.get_parameter(name)
         self.get_logger().info(f'Parameter {name}: {param.get_parameter_value().double_value}')
         return param.get_parameter_value().double_value
 
     def goal_changed(self, msg):
+        """Callback para el tópico /goal."""
         self.goal = msg
 
     def pos_changed(self, msg):
+        """Callback para el tópico /odometry."""
         self.current_pose.position = msg.pose.pose.position
         self.current_pose.orientation = msg.pose.pose.orientation
 
     def takeoff_callback(self, request, response):
+        """Callback para el servicio de despegue."""
         self.get_logger().info('Takeoff requested!')
         self.state = self.State.TAKING_OFF
         return response
 
     def land_callback(self, request, response):
+        """Callback para el servicio de aterrizaje."""
         self.get_logger().info('Landing requested!')
         self.state = self.State.LANDING
         return response
 
     def pid_reset(self):
+        """Reinicia los controladores PID."""
         self.pid_x.reset()
         self.pid_y.reset()
         self.pid_z.reset()
         self.pid_yaw.reset()
 
     def iteration(self):
+        """Iteración principal del controlador."""
         if self.state == self.State.TAKING_OFF:
-            if self.current_pose.position.z > 0.05:
+            if self.current_pose.position.z > self.takeoff_threshold:
                 self.pid_reset()
                 self.state = self.State.AUTOMATIC
                 self.enable = True
@@ -162,7 +180,7 @@ class Controller(Node):
             msg = Twist()
             msg.linear.z = float(self.pid_z.update(self.current_pose.position.z, z_d)) * 0.1
             self.cmd_pub.publish(msg)
-            if self.current_pose.position.z <= 0.08:
+            if self.current_pose.position.z <= self.landing_threshold:
                 self.state = self.State.IDLE
                 self.enable = False
                 self.cmd_enable.publish(Bool(data=self.enable))

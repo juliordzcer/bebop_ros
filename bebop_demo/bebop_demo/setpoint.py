@@ -1,5 +1,3 @@
-
-
 #!/usr/bin/env python3
 
 import numpy as np
@@ -10,6 +8,11 @@ from sensor_msgs.msg import Joy
 from rclpy.qos import QoSProfile
 from tf_transformations import quaternion_from_euler
 
+class JoystickButtons:
+    """Enumeración para los botones del joystick."""
+    BUTTON_2 = 2
+    BUTTON_10 = 10
+
 class TrajectoryCircle(Node):
     def __init__(self):
         super().__init__('trajectory_circle')
@@ -19,31 +22,18 @@ class TrajectoryCircle(Node):
         self.h = 0.0
         self.t = 0.0
         self.rt = 50.0  # Frecuencia de publicación
-        self.hd = 0.05075
+        
         self.button_pressed = False
         self.start_time = self.get_clock().now()
+
+        # Bandera para almacenar valores iniciales solo una vez
+        self.initial_values_stored = False
 
         # Configuración de QoS
         qos = QoSProfile(depth=10)
 
         # Publicador para el tópico /goal
         self.pub = self.create_publisher(Pose, '/goal', qos)
-
-        self.declare_parameter('robot_name', 'bebop2')
-        robot_name = self.get_parameter('robot_name').get_parameter_value().string_value
-  
-        # Validar que el nombre del robot no esté vacío
-        if not robot_name.strip():
-            self.get_logger().error('El parámetro "robot_name" está vacío. Se usará "bebop2" por defecto.')
-            robot_name = 'bebop2'
-
-        # Tópico dinámico
-        cmd_set_pose_topic = f"/{robot_name}/set_pose"
-
-
-
-        # Publicador para el tópico /set_pose
-        self.pubinipos = self.create_publisher(Pose, cmd_set_pose_topic, qos)
 
         # Declaración de parámetros
         self.declare_parameter('xi', 0.0)
@@ -52,17 +42,29 @@ class TrajectoryCircle(Node):
         self.declare_parameter('h', 0.0)
         self.declare_parameter('r', 0.0)
         self.declare_parameter('yawi', 0.0)  # Ángulo de yaw inicial
+        self.declare_parameter('angular_frequency', np.pi / 6)
+        self.declare_parameter('smoothing_parameter', 15.0)
 
         # Obtención de parámetros
-        self.xi = self.get_parameter('xi').get_parameter_value().double_value
-        self.yi = self.get_parameter('yi').get_parameter_value().double_value
-        self.zi = self.get_parameter('zi').get_parameter_value().double_value 
-        self.altura = self.get_parameter('h').get_parameter_value().double_value
-        self.radio = self.get_parameter('r').get_parameter_value().double_value
-        self.yawi = self.get_parameter('yawi').get_parameter_value().double_value
+        self.xi = self.get_parameter('xi').value
+        self.yi = self.get_parameter('yi').value
+        self.zi = self.get_parameter('zi').value 
+        self.altura = self.get_parameter('h').value
+        self.radio = self.get_parameter('r').value
+        self.yawi = self.get_parameter('yawi').value
+        self.w = self.get_parameter('angular_frequency').value
+        self.p = self.get_parameter('smoothing_parameter').value
 
-        # Publicar condiciones iniciales después de un retraso de 2 segundos
-        self.timer = self.create_timer(2.0, self.publish_initial_pose)
+        # Validación de parámetros
+        if self.radio < 0 or self.altura < 0:
+            self.get_logger().error("El radio y la altura deben ser valores positivos.")
+            raise ValueError("Parámetros inválidos.")
+
+        # Variables para almacenar los valores iniciales
+        self.xii = 0.0
+        self.yii = 0.0
+        self.zii = 0.0
+        self.yawii = 0.0
 
         # Suscripción al tópico del joystick
         self.joy_sub = self.create_subscription(Joy, 'joy', self.joy_callback, qos)
@@ -71,36 +73,9 @@ class TrajectoryCircle(Node):
         # Iniciar el bucle de la trayectoria
         self.trajectory_timer = self.create_timer(1.0 / self.rt, self.trajectory_circle)
 
-    def publish_initial_pose(self):
-        # Condiciones iniciales
-        posei_msg = Pose()
-        # Conversión de ángulos de Euler a cuaternión
-        q_i = quaternion_from_euler(0, 0, self.yawi)
-
-        # Asignación de valores al mensaje
-        posei_msg.position.x = self.xi
-        posei_msg.position.y = self.yi
-        posei_msg.position.z = self.zi + self.hd
-        posei_msg.orientation.x = q_i[0]
-        posei_msg.orientation.y = q_i[1]
-        posei_msg.orientation.z = q_i[2]
-        posei_msg.orientation.w = q_i[3]
-
-        # Publicación del mensaje
-        self.pubinipos.publish(posei_msg)
-        self.get_logger().info(f'Pose inicial publicada: {posei_msg}')
-
-        self.xii = self.xi
-        self.yii = self.yi
-        self.zii = self.zi
-        self.yawii = self.yawi
-
-        # Cancelar el temporizador después de la primera ejecución
-        self.timer.cancel()
-
     def joy_callback(self, joy_msg):
-        # Iniciar trayectoria si se presiona el botón 2
-        if joy_msg.buttons[2] == 1 and not self.button_pressed:
+        """Callback para el tópico /joy. Inicia o reinicia la trayectoria según los botones presionados."""
+        if joy_msg.buttons[JoystickButtons.BUTTON_2] == 1 and not self.button_pressed:
             self.get_logger().info('Botón 2 presionado: Iniciando trayectoria')
             self.button_pressed = True
             self.r = self.radio
@@ -108,8 +83,17 @@ class TrajectoryCircle(Node):
             self.t = 0.0
             self.start_time = self.get_clock().now()
 
+            # Almacenar valores iniciales solo la primera vez
+            if not self.initial_values_stored:
+                self.xii = self.xi
+                self.yii = self.yi
+                self.zii = self.zi
+                self.yawii = self.yawi
+                self.initial_values_stored = True
+                self.get_logger().info(f'Valores iniciales almacenados: x={self.xii}, y={self.yii}, z={self.zii}, yaw={self.yawii}')
+
         # Reiniciar trayectoria si se presiona el botón 10
-        elif joy_msg.buttons[10] == 1 and self.button_pressed:
+        elif joy_msg.buttons[JoystickButtons.BUTTON_10] == 1 and self.button_pressed:
             self.get_logger().info('Botón 10 presionado: Reiniciando trayectoria')
             self.r = 0.0
             self.h = 0.0
@@ -118,6 +102,7 @@ class TrajectoryCircle(Node):
             self.start_time = self.get_clock().now()
 
     def trajectory_circle(self):
+        """Publica la trayectoria circular en el tópico /goal."""
         if not self.button_pressed:
             return
 
@@ -134,11 +119,8 @@ class TrajectoryCircle(Node):
 
         # Cálculo de la trayectoria circular
         self.t = elapsed_time
-        w = np.pi / 6  # Frecuencia angular
-        p = 15  # Parámetro de suavizado
-
-        x = self.r * (np.arctan(p) + np.arctan(self.t - p)) * np.cos(w * self.t)
-        y = self.r * (np.arctan(p) + np.arctan(self.t - p)) * np.sin(w * self.t)
+        x = self.r * (np.arctan(self.p) + np.arctan(self.t - self.p)) * np.cos(self.w * self.t)
+        y = self.r * (np.arctan(self.p) + np.arctan(self.t - self.p)) * np.sin(self.w * self.t)
         z = (self.h / 2) * (1 + np.tanh(self.t - 2.5))
         yaw = 0.0
         roll = 0.0

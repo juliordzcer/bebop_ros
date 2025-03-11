@@ -32,6 +32,7 @@ setup(
             "joystick_swarm = bebop_demo.joystick_swarm:main",
             "graficas = bebop_demo.graficas:main",
             "imagenes = bebop_demo.image_viewer:main",
+            "set_pose = bebop_demo.set_pose:main",
         ],
     },
 )

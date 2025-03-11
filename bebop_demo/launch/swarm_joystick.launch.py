@@ -1,65 +1,89 @@
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, ExecuteProcess
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, TextSubstitution
 from ros_gz_bridge.actions import RosGzBridge
 from launch_ros.actions import Node
 import os
 from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
+    # Obtener rutas de los paquetes
     pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
     pkg_ros_gz_sim_demos = get_package_share_directory('bebop_demo')
 
-    lider_1 = "bebop2"
-    world_name = "bebop"
-    robot_names = '["bebop1", "bebop2"]'
+    # Definir nombres de robots y condiciones iniciales como cadenas JSON
+    robot_names = '["bebop1", "bebop2"]'  # Cadena JSON
+    initial_conditions = '[[1.0, 0.0, 0.0, 0.0], [-1.0, 0.0, 0.0, 0.0]]'  # Cadena JSON
 
-    # Gazebo
+    # Lanzar Gazebo
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')),
+            os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')
+        ),
         launch_arguments={
             'gz_args': '-r -z 1000000 bebop.sdf'
         }.items(),
     )
 
-    # Bridge
+    # Lanzar el puente ROS-Gazebo
     ros_gz_bridge = RosGzBridge(
         bridge_name='ros_gz_bridge',
         config_file=os.path.join(pkg_ros_gz_sim_demos, 'config', 'bebop_swarm.yaml'),
     )
 
-    # joystick
-    joystick_controller = ExecuteProcess(
-        cmd=[
-            'ros2', 'run', 'bebop_demo', 'joystick',
-            '--ros-args',
-            '-p', f'robot_name:={lider_1}',
-            ],
-        output='screen'
-    )
+    # # Lanzar el controlador de joystick
+    # joystick_controller = ExecuteProcess(
+    #     cmd=[
+    #         'ros2', 'run', 'bebop_demo', 'joystick_swarm',
+    #         '--ros-args',
+    #         '-p', 'robot_name:=bebop2',
+    #     ],
+    #     output='screen'
+    # )
 
+    # Lanzar el nodo de setpoint
     setpoint = ExecuteProcess(
         cmd=[
             'ros2', 'run', 'bebop_demo', 'setpoint',
-            '--ros-args', 
+            '--ros-args',
             '-p', 'xi:=1.0',
-            '-p', 'yi:=1.0',
+            '-p', 'yi:=0.0',
             '-p', 'zi:=0.0',
             '-p', 'h:=0.5',
             '-p', 'r:=1.0',
             '-p', 'yawi:=0.0',
-            '-p', f'robot_name:={lider_1}',
+            '-p', 'robot_name:=bebop2',
         ],
         output='screen'
     )
 
-
-    # Joy Node
+    # Lanzar el nodo de joystick
     joystick = ExecuteProcess(
         cmd=['ros2', 'run', 'joy', 'joy_node'],
         output='screen'
+    )
+
+    # Lanzar el nodo MultiRobotPosePublisher
+    set_pose = Node(
+        package='bebop_demo',
+        executable='set_pose',  # Nombre del ejecutable
+        name='set_pose',
+        output='screen',
+        parameters=[
+            {'robot_names': robot_names},
+            {'initial_conditions': initial_conditions}
+        ]
+    )
+
+    # Lanzar el controlador PID
+    controller_leader = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(get_package_share_directory('bebop_controller'), 'launch', 'pid.launch.py')
+        ),
+        launch_arguments={
+            'robot_name': 'bebop2'
+        }.items()
     )
 
     # # Visor de imagenes
@@ -73,22 +97,12 @@ def generate_launch_description():
     #     output='screen'
     # )
 
-    # Position Control Node
-    controller_leader = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(get_package_share_directory('bebop_controller'), 'launch', 'pid.launch.py')
-        ),
-        launch_arguments={
-            'robot_name': f'{lider_1}'
-        }.items()
-    )
-
     return LaunchDescription([
         gz_sim,
         ros_gz_bridge,
-        joystick_controller,
-        joystick,
-        # imagenes,
+        # joystick_controller,
         setpoint,
+        joystick,
+        set_pose,
         controller_leader
     ])
