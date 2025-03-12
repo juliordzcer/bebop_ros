@@ -129,7 +129,6 @@ source ~/ws_bebop/install/setup.bash
 export GZ_SIM_RESOURCE_PATH="$HOME/ws_bebop/src/bebop_ros/bebop_gz/worlds:$HOME/ws_bebop/src/>
 export GAZEBO_PLUGIN_PATH="$HOME/ws_bebop/src/bebop_ros/bebop_gz/plugins/build"
 export GZ_VERSION=ionic
-export WS_PATH=~/ws_bebop
 ```
 
 ### **Reload the `.bashrc` File**
