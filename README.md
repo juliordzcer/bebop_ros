@@ -124,9 +124,12 @@ colcon build
 You can add the necessary environment variables and source file to your `.bashrc` file using the following commands:
 
 ```bash
-echo "source ~/ws_bebop/install/setup.bash" >> ~/.bashrc
-echo 'export GZ_SIM_RESOURCE_PATH="$HOME/ws_bebop/src/bebop_ros/bebop_gz/worlds:$HOME/ws_bebop/src/bebop_ros/bebop_gz/models"' >> ~/.bashrc
-echo 'export GZ_VERSION=ionic' >> ~/.bashrc
+source /opt/ros/rolling/setup.bash
+source ~/ws_bebop/install/setup.bash
+export GZ_SIM_RESOURCE_PATH="$HOME/ws_bebop/src/bebop_ros/bebop_gz/worlds:$HOME/ws_bebop/src/>
+export GAZEBO_PLUGIN_PATH="$HOME/ws_bebop/src/bebop_ros/bebop_gz/plugins/build"
+export GZ_VERSION=ionic
+export WS_PATH=~/ws_bebop
 ```
 
 ### **Reload the `.bashrc` File**
