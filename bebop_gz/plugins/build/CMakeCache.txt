@@ -160,7 +160,7 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=SetPosePlugin
+CMAKE_PROJECT_NAME:STATIC=GazeboPlugins
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib
@@ -242,15 +242,21 @@ CURL_LIBRARY_DEBUG:FILEPATH=CURL_LIBRARY_DEBUG-NOTFOUND
 //Path to a library.
 CURL_LIBRARY_RELEASE:FILEPATH=/usr/lib/x86_64-linux-gnu/libcurl.so
 
-//Dependencies for the target
-CameraPublisherPlugin_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;general;gz-transport14::gz-transport14;general;gz-msgs11::gz-msgs11;general;gz-math8::gz-math8;general;gz-plugin3::gz-plugin3;
-
 //The directory containing a CMake configuration file for Eigen3.
 Eigen3_DIR:PATH=/usr/share/eigen3/cmake
 
 //Compile with a sanitizer. Options are: Address, Memory, MemoryWithOrigins,
 // Undefined, Thread, Leak, 'Address;Undefined', CFI
 GZ_SANITIZER:STRING=
+
+//Value Computed by CMake
+GazeboPlugins_BINARY_DIR:STATIC=/home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build
+
+//Value Computed by CMake
+GazeboPlugins_IS_TOP_LEVEL:STATIC=ON
+
+//Value Computed by CMake
+GazeboPlugins_SOURCE_DIR:STATIC=/home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins
 
 //Path to a library.
 JSONCPP_LIBRARY_jsoncpp:FILEPATH=/usr/lib/x86_64-linux-gnu/libjsoncpp.so
@@ -297,6 +303,9 @@ PKG_CONFIG_ARGN:STRING=
 //pkg-config executable
 PKG_CONFIG_EXECUTABLE:FILEPATH=/usr/bin/pkg-config
 
+//Dependencies for the target
+PPosePlugin_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;general;gz-transport14::gz-transport14;general;gz-msgs11::gz-msgs11;general;gz-plugin3::gz-plugin3;general;gz-math8::gz-math8;
+
 //The directory containing a CMake configuration file for Protobuf.
 Protobuf_DIR:PATH=Protobuf_DIR-NOTFOUND
 
@@ -323,15 +332,6 @@ Protobuf_PROTOC_LIBRARY_DEBUG:FILEPATH=/usr/lib/x86_64-linux-gnu/libprotoc.so
 
 //Path to a library.
 Protobuf_PROTOC_LIBRARY_RELEASE:FILEPATH=/usr/lib/x86_64-linux-gnu/libprotoc.so
-
-//Value Computed by CMake
-PublisherPlugins_BINARY_DIR:STATIC=/home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build
-
-//Value Computed by CMake
-PublisherPlugins_IS_TOP_LEVEL:STATIC=ON
-
-//Value Computed by CMake
-PublisherPlugins_SOURCE_DIR:STATIC=/home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins
 
 //The directory containing a CMake configuration file for Qt5Core.
 Qt5Core_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/Qt5Core
@@ -366,17 +366,8 @@ Qt5_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/Qt5
 //Path to a library.
 SWSCALE_LIBRARY_swscale:FILEPATH=/usr/lib/x86_64-linux-gnu/libswscale.so
 
-//Value Computed by CMake
-SetPosePlugin_BINARY_DIR:STATIC=/home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build
-
-//Value Computed by CMake
-SetPosePlugin_IS_TOP_LEVEL:STATIC=ON
-
 //Dependencies for the target
-SetPosePlugin_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;general;gz-transport14::gz-transport14;general;gz-msgs11::gz-msgs11;general;gz-math8::gz-math8;general;gz-plugin3::gz-plugin3;
-
-//Value Computed by CMake
-SetPosePlugin_SOURCE_DIR:STATIC=/home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins
+SetPosePlugin_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;general;gz-transport14::gz-transport14;general;gz-msgs11::gz-msgs11;general;gz-plugin3::gz-plugin3;general;gz-math8::gz-math8;
 
 //Path to a library.
 TINYXML2_LIBRARY_tinyxml2:FILEPATH=/usr/lib/x86_64-linux-gnu/libtinyxml2.so

@@ -69,6 +69,33 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
   include("/home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/CMakeFiles/SetPosePlugin.dir/install-cxx-module-bmi-noconfig.cmake" OPTIONAL)
 endif()
 
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libPPosePlugin.so" AND
+     NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libPPosePlugin.so")
+    file(RPATH_CHECK
+         FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libPPosePlugin.so"
+         RPATH "")
+  endif()
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE SHARED_LIBRARY FILES "/home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/libPPosePlugin.so")
+  if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libPPosePlugin.so" AND
+     NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libPPosePlugin.so")
+    file(RPATH_CHANGE
+         FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libPPosePlugin.so"
+         OLD_RPATH "/opt/ros/rolling/opt/gz_sim_vendor/lib:/opt/ros/rolling/opt/gz_fuel_tools_vendor/lib:/opt/ros/rolling/opt/gz_gui_vendor/lib:/opt/ros/rolling/opt/gz_plugin_vendor/lib:/opt/ros/rolling/opt/gz_physics_vendor/lib:/opt/ros/rolling/opt/gz_rendering_vendor/lib:/opt/ros/rolling/opt/gz_common_vendor/lib:/opt/ros/rolling/opt/gz_utils_vendor/lib:/opt/ros/rolling/opt/gz_transport_vendor/lib:/opt/ros/rolling/opt/gz_msgs_vendor/lib:/opt/ros/rolling/opt/sdformat_vendor/lib:/opt/ros/rolling/opt/gz_math_vendor/lib:"
+         NEW_RPATH "")
+    if(CMAKE_INSTALL_DO_STRIP)
+      execute_process(COMMAND "/usr/bin/strip" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libPPosePlugin.so")
+    endif()
+  endif()
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  include("/home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/CMakeFiles/PPosePlugin.dir/install-cxx-module-bmi-noconfig.cmake" OPTIONAL)
+endif()
+
 if(CMAKE_INSTALL_COMPONENT)
   set(CMAKE_INSTALL_MANIFEST "install_manifest_${CMAKE_INSTALL_COMPONENT}.txt")
 else()

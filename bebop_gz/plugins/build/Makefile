@@ -174,6 +174,43 @@ SetPosePlugin/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/SetPosePlugin.dir/build.make CMakeFiles/SetPosePlugin.dir/build
 .PHONY : SetPosePlugin/fast
 
+#=============================================================================
+# Target rules for targets named PPosePlugin
+
+# Build rule for target.
+PPosePlugin: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 PPosePlugin
+.PHONY : PPosePlugin
+
+# fast build rule for target.
+PPosePlugin/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PPosePlugin.dir/build.make CMakeFiles/PPosePlugin.dir/build
+.PHONY : PPosePlugin/fast
+
+PPosePlugin.o: PPosePlugin.cc.o
+.PHONY : PPosePlugin.o
+
+# target to build an object file
+PPosePlugin.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PPosePlugin.dir/build.make CMakeFiles/PPosePlugin.dir/PPosePlugin.cc.o
+.PHONY : PPosePlugin.cc.o
+
+PPosePlugin.i: PPosePlugin.cc.i
+.PHONY : PPosePlugin.i
+
+# target to preprocess a source file
+PPosePlugin.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PPosePlugin.dir/build.make CMakeFiles/PPosePlugin.dir/PPosePlugin.cc.i
+.PHONY : PPosePlugin.cc.i
+
+PPosePlugin.s: PPosePlugin.cc.s
+.PHONY : PPosePlugin.s
+
+# target to generate assembly for a file
+PPosePlugin.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PPosePlugin.dir/build.make CMakeFiles/PPosePlugin.dir/PPosePlugin.cc.s
+.PHONY : PPosePlugin.cc.s
+
 SetPosePlugin.o: SetPosePlugin.cc.o
 .PHONY : SetPosePlugin.o
 
@@ -210,7 +247,11 @@ help:
 	@echo "... install/strip"
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
+	@echo "... PPosePlugin"
 	@echo "... SetPosePlugin"
+	@echo "... PPosePlugin.o"
+	@echo "... PPosePlugin.i"
+	@echo "... PPosePlugin.s"
 	@echo "... SetPosePlugin.o"
 	@echo "... SetPosePlugin.i"
 	@echo "... SetPosePlugin.s"
