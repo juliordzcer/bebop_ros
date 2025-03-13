@@ -14,7 +14,7 @@ def generate_launch_description():
 
     # Definir nombres de robots y condiciones iniciales como cadenas JSON
     robot_names = '["bebop1", "bebop2"]'  # Cadena JSON
-    initial_conditions = '[[5.0, -5.0, 0.0, 0.0], [-6.0, 2.0, 0.0, 0.0]]'  # Cadena JSON
+    initial_conditions = '[[2.5, -3.5, 0.0, 0.0], [-5.0, 2.0, 0.0, 0.0]]'  # Cadena JSON
     formation = initial_conditions #'[[1.0, 0.0, 0.0, 0.0], [-1.0, 0.0, 0.0, 0.0]]'  # Cadena JSON
     lider = 'bebop2'
     world_name = 'bebop'
@@ -25,7 +25,7 @@ def generate_launch_description():
             os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')
         ),
         launch_arguments={
-            'gz_args': '-r -s -z  1000000 bebop_swarm2.sdf'
+            'gz_args': '-r -z  1000000 bebop_swarm2.sdf'
         }.items(),
     )
 
