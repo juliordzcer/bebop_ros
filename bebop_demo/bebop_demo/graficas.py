@@ -9,6 +9,8 @@ from sensor_msgs.msg import Joy  # Mensaje para el control de Xbox
 from scipy import io
 from tf_transformations import euler_from_quaternion
 from threading import Timer
+from rclpy.qos import QoSProfile
+
 
 class DataRecorder(Node):
     def __init__(self):
@@ -33,10 +35,12 @@ class DataRecorder(Node):
         self.z_deseada_val = 0.0
         self.yaw_deseada_val = 0.0
 
+        qos = QoSProfile(depth=10)
+
         # Suscripción a la odometría, la meta (goal) y el control de Xbox (Joy)
-        self.create_subscription(Odometry, '/model/parrot_bebop_2/odometry', self.odometry_callback, 10)
-        self.create_subscription(Pose, '/goal', self.goal_callback, 10)
-        self.create_subscription(Joy, '/joy', self.joy_callback, 10)  # Suscripción al tópico /joy
+        self.create_subscription(Odometry, '/bebop2/pose', self.odometry_callback, qos)
+        self.create_subscription(Pose, '/goal', self.goal_callback, qos)
+        self.create_subscription(Joy, '/joy', self.joy_callback, qos)  # Suscripción al tópico /joy
 
         self.get_logger().info("Esperando a que se presione el botón X del control de Xbox...")
 

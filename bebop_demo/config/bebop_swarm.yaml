@@ -20,15 +20,8 @@
   lazy: true
   direction: ROS_TO_GZ
 
-# Odometry state configuration.
-- topic_name: "/model/bebop1/odometry"
-  ros_type_name: "nav_msgs/msg/Odometry"
-  gz_type_name: "gz.msgs.Odometry"
-  lazy: true
-  direction: GZ_TO_ROS
-
 # Pose state configuration.
-- topic_name: "/model/bebop1/pose"
+- topic_name: "/bebop1/pose"
   ros_type_name: "geometry_msgs/msg/Pose"
   gz_type_name: "gz.msgs.Pose"
   lazy: true
@@ -76,15 +69,8 @@
   lazy: true
   direction: ROS_TO_GZ
 
-# Odometry state configuration.
-- topic_name: "/model/bebop2/odometry"
-  ros_type_name: "nav_msgs/msg/Odometry"
-  gz_type_name: "gz.msgs.Odometry"
-  lazy: true
-  direction: GZ_TO_ROS
-
 # Pose state configuration.
-- topic_name: "/model/bebop2/pose"
+- topic_name: "/bebop2/pose"
   ros_type_name: "geometry_msgs/msg/Pose"
   gz_type_name: "gz.msgs.Pose"
   lazy: true

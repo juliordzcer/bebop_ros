@@ -135,9 +135,9 @@
         <topic>bebop1/set_pose</topic>
       </plugin>
 
-      <!-- <plugin name="gz::sim::systems::PosePlugin" filename="libPosePlugin.so"> -->
-      <plugin name="gz::sim::systems::PosePlugin" filename="/home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/libPPosePlugin.so">
-
+      <!-- <plugin name="gz::sim::systems::RobotPosePublisher" filename="libRobotPosePublisher.so"> -->
+      <plugin name="gz::sim::systems::RobotPosePublisher" filename="/home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/libRobotPosePublisher.so">
+        <robotNamespace>bebop1</robotNamespace>
         <topic>bebop1/pose</topic>
       </plugin>
       
@@ -287,10 +287,11 @@
 
       <pose>-1 0 0 0 0 0</pose> <!-- Posición inicial por defecto -->
 
-      <!-- <plugin name="gz::sim::systems::PosePlugin" filename="/home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/libPPosePlugin.so">
-          <topic>bebop2/pose</topic>
-      </plugin> -->
-
+      <!-- <plugin name="gz::sim::systems::RobotPosePublisher" filename="libRobotPosePublisher.so"> -->
+      <plugin name="gz::sim::systems::RobotPosePublisher" filename="/home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/libRobotPosePublisher.so">
+        <robotNamespace>bebop2</robotNamespace>
+        <topic>bebop2/pose</topic>
+      </plugin>
 
       <!-- Plugin para actualizar la posición -->
       <plugin name="gz::sim::systems::SetPosePlugin" filename="/home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/libSetPosePlugin.so">        
@@ -420,23 +421,8 @@
         </rotorConfiguration>
       </plugin>
 
-      <!-- Publicador de odometría -->
-      <plugin
-        filename="gz-sim-odometry-publisher-system"
-        name="gz::sim::systems::OdometryPublisher">
-        <dimensions>3</dimensions>
-        <topic>bebop2/odometria</topic>
-      </plugin>
-
-      <!-- Publicador de pose -->
-      <plugin
-        filename="libgz-sim-pose-publisher-system.so"
-        name="gz::sim::systems::PosePublisher">
-        <topic>bebop2/pose</topic>
-      </plugin>
-
-
-
     </include>
+
+    
   </world>
 </sdf>

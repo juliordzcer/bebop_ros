@@ -7,7 +7,7 @@ def generate_launch_description():
     # Declarar argumentos
     frequency = DeclareLaunchArgument('frequency', default_value='50.0', description='Frequency of control loop')
     robot_name = DeclareLaunchArgument('robot_name', default_value='bebop1', description='Name of the robot')
-    goal_name = DeclareLaunchArgument('goal_name', default_value='goal', description='Name of the robot')
+    lider_name = DeclareLaunchArgument('lider_name', default_value='bebop2', description='Name of the leader')
 
     # Parámetros PID
     pid_params = {
@@ -44,15 +44,15 @@ def generate_launch_description():
     return LaunchDescription([
         frequency,
         robot_name,
-        goal_name,
+        lider_name,
         Node(
             package='bebop_controller',
-            executable='controller_node',
+            executable='controller_follower',
             name='controller',
             output='screen',
             parameters=[pid_params, {
                 'robot_name': LaunchConfiguration('robot_name'),
-                'goal_name': LaunchConfiguration('goal_name')
+                'lider_name': LaunchConfiguration('lider_name')
             }],
             remappings=[]
         ),

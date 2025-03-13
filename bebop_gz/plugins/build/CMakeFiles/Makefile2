@@ -64,7 +64,7 @@ CMAKE_BINARY_DIR = /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build
 
 # The main recursive "all" target.
 all: CMakeFiles/SetPosePlugin.dir/all
-all: CMakeFiles/PPosePlugin.dir/all
+all: CMakeFiles/RobotPosePublisher.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -73,7 +73,7 @@ preinstall:
 
 # The main recursive "clean" target.
 clean: CMakeFiles/SetPosePlugin.dir/clean
-clean: CMakeFiles/PPosePlugin.dir/clean
+clean: CMakeFiles/RobotPosePublisher.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -103,30 +103,30 @@ CMakeFiles/SetPosePlugin.dir/clean:
 .PHONY : CMakeFiles/SetPosePlugin.dir/clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/PPosePlugin.dir
+# Target rules for target CMakeFiles/RobotPosePublisher.dir
 
 # All Build rule for target.
-CMakeFiles/PPosePlugin.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/PPosePlugin.dir/build.make CMakeFiles/PPosePlugin.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/PPosePlugin.dir/build.make CMakeFiles/PPosePlugin.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/CMakeFiles --progress-num=1,2 "Built target PPosePlugin"
-.PHONY : CMakeFiles/PPosePlugin.dir/all
+CMakeFiles/RobotPosePublisher.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RobotPosePublisher.dir/build.make CMakeFiles/RobotPosePublisher.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RobotPosePublisher.dir/build.make CMakeFiles/RobotPosePublisher.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/CMakeFiles --progress-num=1,2 "Built target RobotPosePublisher"
+.PHONY : CMakeFiles/RobotPosePublisher.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/PPosePlugin.dir/rule: cmake_check_build_system
+CMakeFiles/RobotPosePublisher.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/PPosePlugin.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/RobotPosePublisher.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/CMakeFiles 0
-.PHONY : CMakeFiles/PPosePlugin.dir/rule
+.PHONY : CMakeFiles/RobotPosePublisher.dir/rule
 
 # Convenience name for target.
-PPosePlugin: CMakeFiles/PPosePlugin.dir/rule
-.PHONY : PPosePlugin
+RobotPosePublisher: CMakeFiles/RobotPosePublisher.dir/rule
+.PHONY : RobotPosePublisher
 
 # clean rule for target.
-CMakeFiles/PPosePlugin.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/PPosePlugin.dir/build.make CMakeFiles/PPosePlugin.dir/clean
-.PHONY : CMakeFiles/PPosePlugin.dir/clean
+CMakeFiles/RobotPosePublisher.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RobotPosePublisher.dir/build.make CMakeFiles/RobotPosePublisher.dir/clean
+.PHONY : CMakeFiles/RobotPosePublisher.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

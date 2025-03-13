@@ -175,41 +175,41 @@ SetPosePlugin/fast:
 .PHONY : SetPosePlugin/fast
 
 #=============================================================================
-# Target rules for targets named PPosePlugin
+# Target rules for targets named RobotPosePublisher
 
 # Build rule for target.
-PPosePlugin: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 PPosePlugin
-.PHONY : PPosePlugin
+RobotPosePublisher: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 RobotPosePublisher
+.PHONY : RobotPosePublisher
 
 # fast build rule for target.
-PPosePlugin/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/PPosePlugin.dir/build.make CMakeFiles/PPosePlugin.dir/build
-.PHONY : PPosePlugin/fast
+RobotPosePublisher/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RobotPosePublisher.dir/build.make CMakeFiles/RobotPosePublisher.dir/build
+.PHONY : RobotPosePublisher/fast
 
-PPosePlugin.o: PPosePlugin.cc.o
-.PHONY : PPosePlugin.o
+RobotPosePublisher.o: RobotPosePublisher.cc.o
+.PHONY : RobotPosePublisher.o
 
 # target to build an object file
-PPosePlugin.cc.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/PPosePlugin.dir/build.make CMakeFiles/PPosePlugin.dir/PPosePlugin.cc.o
-.PHONY : PPosePlugin.cc.o
+RobotPosePublisher.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RobotPosePublisher.dir/build.make CMakeFiles/RobotPosePublisher.dir/RobotPosePublisher.cc.o
+.PHONY : RobotPosePublisher.cc.o
 
-PPosePlugin.i: PPosePlugin.cc.i
-.PHONY : PPosePlugin.i
+RobotPosePublisher.i: RobotPosePublisher.cc.i
+.PHONY : RobotPosePublisher.i
 
 # target to preprocess a source file
-PPosePlugin.cc.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/PPosePlugin.dir/build.make CMakeFiles/PPosePlugin.dir/PPosePlugin.cc.i
-.PHONY : PPosePlugin.cc.i
+RobotPosePublisher.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RobotPosePublisher.dir/build.make CMakeFiles/RobotPosePublisher.dir/RobotPosePublisher.cc.i
+.PHONY : RobotPosePublisher.cc.i
 
-PPosePlugin.s: PPosePlugin.cc.s
-.PHONY : PPosePlugin.s
+RobotPosePublisher.s: RobotPosePublisher.cc.s
+.PHONY : RobotPosePublisher.s
 
 # target to generate assembly for a file
-PPosePlugin.cc.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/PPosePlugin.dir/build.make CMakeFiles/PPosePlugin.dir/PPosePlugin.cc.s
-.PHONY : PPosePlugin.cc.s
+RobotPosePublisher.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RobotPosePublisher.dir/build.make CMakeFiles/RobotPosePublisher.dir/RobotPosePublisher.cc.s
+.PHONY : RobotPosePublisher.cc.s
 
 SetPosePlugin.o: SetPosePlugin.cc.o
 .PHONY : SetPosePlugin.o
@@ -247,11 +247,11 @@ help:
 	@echo "... install/strip"
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
-	@echo "... PPosePlugin"
+	@echo "... RobotPosePublisher"
 	@echo "... SetPosePlugin"
-	@echo "... PPosePlugin.o"
-	@echo "... PPosePlugin.i"
-	@echo "... PPosePlugin.s"
+	@echo "... RobotPosePublisher.o"
+	@echo "... RobotPosePublisher.i"
+	@echo "... RobotPosePublisher.s"
 	@echo "... SetPosePlugin.o"
 	@echo "... SetPosePlugin.i"
 	@echo "... SetPosePlugin.s"

@@ -25,6 +25,7 @@ setup(
     entry_points={
         'console_scripts': [
             'controller_node = bebop_controller.controller:main',
+            'controller_follower = bebop_controller.controller_follower:main',
         ],
     },
 )

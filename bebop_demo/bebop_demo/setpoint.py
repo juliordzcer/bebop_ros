@@ -6,7 +6,7 @@ from rclpy.node import Node
 from geometry_msgs.msg import Pose
 from sensor_msgs.msg import Joy
 from rclpy.qos import QoSProfile
-from tf_transformations import quaternion_from_euler
+from tf_transformations import quaternion_from_euler, euler_from_quaternion
 
 class JoystickButtons:
     """Enumeración para los botones del joystick."""
@@ -29,11 +29,15 @@ class TrajectoryCircle(Node):
         # Bandera para almacenar valores iniciales solo una vez
         self.initial_values_stored = False
 
+        self.declare_parameter('lider_name', 'bebop2')
+        self.lider_name = self.get_parameter('lider_name').value.strip()
+
         # Configuración de QoS
         qos = QoSProfile(depth=10)
 
         # Publicador para el tópico /goal
         self.pub = self.create_publisher(Pose, '/goal', qos)
+        self.ini_pos_sub = self.create_subscription(Pose, f"/{self.lider_name}/set_pose", self.pos_changed, qos)
 
         # Declaración de parámetros
         self.declare_parameter('xi', 0.0)
@@ -42,7 +46,7 @@ class TrajectoryCircle(Node):
         self.declare_parameter('h', 0.0)
         self.declare_parameter('r', 0.0)
         self.declare_parameter('yawi', 0.0)  # Ángulo de yaw inicial
-        self.declare_parameter('angular_frequency', np.pi / 6)
+        self.declare_parameter('angular_frequency', np.pi / 5)
         self.declare_parameter('smoothing_parameter', 15.0)
 
         # Obtención de parámetros
@@ -73,6 +77,9 @@ class TrajectoryCircle(Node):
         # Iniciar el bucle de la trayectoria
         self.trajectory_timer = self.create_timer(1.0 / self.rt, self.trajectory_circle)
 
+    def pos_changed(self, msg):
+        self.initial_pose = msg
+
     def joy_callback(self, joy_msg):
         """Callback para el tópico /joy. Inicia o reinicia la trayectoria según los botones presionados."""
         if joy_msg.buttons[JoystickButtons.BUTTON_2] == 1 and not self.button_pressed:
@@ -85,10 +92,19 @@ class TrajectoryCircle(Node):
 
             # Almacenar valores iniciales solo la primera vez
             if not self.initial_values_stored:
-                self.xii = self.xi
-                self.yii = self.yi
-                self.zii = self.zi
-                self.yawii = self.yawi
+                self.xii = self.initial_pose.position.x
+                self.yii = self.initial_pose.position.y
+                self.zii = self.initial_pose.position.z
+
+                euler_angles = euler_from_quaternion([
+                    self.initial_pose.orientation.x,
+                    self.initial_pose.orientation.y,
+                    self.initial_pose.orientation.z,
+                    self.initial_pose.orientation.w
+                ])
+
+                self.yawii = euler_angles[2]
+
                 self.initial_values_stored = True
                 self.get_logger().info(f'Valores iniciales almacenados: x={self.xii}, y={self.yii}, z={self.zii}, yaw={self.yawii}')
 
@@ -122,12 +138,10 @@ class TrajectoryCircle(Node):
         x = self.r * (np.arctan(self.p) + np.arctan(self.t - self.p)) * np.cos(self.w * self.t)
         y = self.r * (np.arctan(self.p) + np.arctan(self.t - self.p)) * np.sin(self.w * self.t)
         z = (self.h / 2) * (1 + np.tanh(self.t - 2.5))
-        yaw = 0.0
-        roll = 0.0
-        pitch = 0.0
+        yaw = 0 # np.sin(self.w * self.t)
 
         # Conversión de ángulos de Euler a cuaternión
-        q = quaternion_from_euler(roll, pitch, yaw + self.yawii)
+        q = quaternion_from_euler(0, 0, yaw + self.yawii)
 
         # Asignación de valores al mensaje
         pose_msg.position.x = x + self.xii
