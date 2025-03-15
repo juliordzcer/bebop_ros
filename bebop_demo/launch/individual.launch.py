@@ -38,12 +38,9 @@ def generate_launch_description():
         cmd=[
             'ros2', 'run', 'bebop_demo', 'setpoint',
             '--ros-args',
-            '-p', 'xi:=1.0',
-            '-p', 'yi:=0.0',
-            '-p', 'zi:=0.0',
-            '-p', 'h:=0.5',
-            '-p', 'r:=1.0',
-            '-p', 'yawi:=0.0',
+            '-p', 'h:=1.2',
+            '-p', 'r:=0.5',
+            '-p', f'lider_name:=bebop1',
         ],
         output='screen'
     )
@@ -79,7 +76,8 @@ def generate_launch_description():
             os.path.join(get_package_share_directory('bebop_controller'), 'launch', 'pid.launch.py')
         ),
         launch_arguments={
-            'robot_name': 'bebop1'
+            'robot_name': 'bebop1',
+            'goal_name': 'goal'
         }.items()
     )
 
@@ -101,5 +99,6 @@ def generate_launch_description():
         setpoint,
         joystick,
         set_pose,
-        controller_leader
+        controller_leader,
+        DATA,
     ])

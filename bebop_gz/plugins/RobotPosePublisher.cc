@@ -109,22 +109,45 @@ void RobotPosePublisher::Configure(const Entity &_entity,
         std::chrono::duration_cast<std::chrono::steady_clock::duration>(period);
   }
 
-  // Read the custom topic from the SDF
-  if (_sdf->HasElement("topic"))
-  {
-    this->dataPtr->customTopic = _sdf->Get<std::string>("topic");
-  }
-  else
-  {
-    // Default topic if not specified
-    this->dataPtr->customTopic = topicFromScopedName(_entity, _ecm, true) + "/pose";
-    if (this->dataPtr->customTopic.empty())
-    {
-      this->dataPtr->customTopic = "/pose";
-      gzerr << "Empty pose topic generated for pose_publisher system. "
-             << "Setting to " << this->dataPtr->customTopic << std::endl;
-    }
-  }
+  this->dataPtr->customTopic = this->dataPtr->model.Name(_ecm) + "/pose";
+
+  
+  // if (_sdf->HasElement("topic"))
+  // {
+  //     this->dataPtr->customTopic = _sdf->Get<std::string>("topic");
+  // }
+  // else
+  // {
+  //     // Construir el topic de pose basado en el nombre del modelo
+  //     this->dataPtr->customTopic = "/model/" + this->dataPtr->model.Name(_ecm) + "/pose";
+
+  //     if (this->dataPtr->customTopic.empty())
+  //     {
+  //         this->dataPtr->customTopic = "/pose";
+  //         gzerr << "Empty pose topic generated for pose_publisher system. "
+  //               << "Setting to " << this->dataPtr->customTopic << std::endl;
+  //     }
+  // }
+
+
+
+
+  // // Read the custom topic from the SDF
+  // if (_sdf->HasElement("topic"))
+  // {
+  //   this->dataPtr->customTopic = _sdf->Get<std::string>("topic");
+  // }
+  // else
+  // {
+  //   // Default topic if not specified
+  //   this->dataPtr->customTopic = topicFromScopedName(_entity, _ecm, true) + "/pose";
+  //   if (this->dataPtr->customTopic.empty())
+  //   {
+  //     this->dataPtr->customTopic = "/pose";
+  //     gzerr << "Empty pose topic generated for pose_publisher system. "
+  //            << "Setting to " << this->dataPtr->customTopic << std::endl;
+  //   }
+  // }
 
   // Create publisher
   if (this->dataPtr->usePoseV)

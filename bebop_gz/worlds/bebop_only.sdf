@@ -27,13 +27,13 @@
 
     <!-- Configuración de la física actualizada -->
     <physics name="ode_physics" type="ode">
-      <max_step_size>0.001</max_step_size>
+      <max_step_size>0.002</max_step_size>
       <real_time_factor>1.0</real_time_factor>
-      <real_time_update_rate>1000</real_time_update_rate>
+      <real_time_update_rate>500</real_time_update_rate>
       <ode>
         <solver>
-          <type>quick</type>
-          <iters>50</iters>
+          <type>world</type>
+          <iters>100</iters>
           <sor>1.4</sor>
         </solver>
         <constraints>
@@ -108,19 +108,6 @@
         </visual>
       </link>
     </model>
-
-    <!-- <include>
-      <name>Interior</name>
-      <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/Ionic interior</uri>
-      <plugin filename="gz-sim-detachable-joint-system"
-          name="gz::sim::systems::DetachableJoint">
-        <parent_link>base_link</parent_link>
-        <child_model>steak_set</child_model>
-        <child_link>link_0</child_link>
-        <detach_topic>/food/detach</detach_topic>
-        <attach_topic>/food/attach</attach_topic>
-      </plugin>
-    </include> -->
 
     <!-- Inclusión del modelo del dron -->
     <include>
@@ -232,9 +219,9 @@
         <commandSubTopic>cmd_vel</commandSubTopic>
         <enableSubTopic>enable</enableSubTopic>
         <comLinkName>body</comLinkName>
-        <positionGain>3 3 2</positionGain>
+        <positionGain>5 5 3</positionGain>
         <velocityGain>2 2 2</velocityGain>
-        <attitudeGain>0.15 0.15 0.15</attitudeGain>
+        <attitudeGain>0.2 0.2 0.2</attitudeGain>
         <angularRateGain>0.03 0.03 0.05</angularRateGain>
         <rotorConfiguration>
           <rotor>
@@ -263,6 +250,7 @@
           </rotor>
         </rotorConfiguration>
       </plugin>
+      
       
     </include>
 

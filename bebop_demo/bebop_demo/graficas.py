@@ -7,6 +7,7 @@ import numpy as np
 import time
 from tf_transformations import euler_from_quaternion
 from collections import deque
+from scipy.io import savemat  # Importar la función para guardar archivos .mat
 
 class RealTimePlotter(Node):
     def __init__(self):
@@ -112,16 +113,34 @@ class RealTimePlotter(Node):
                 ax.grid(True)
 
             plt.draw()
-            plt.pause(0.0001)  # Reducir la frecuencia de actualización
+            plt.pause(0.001)  # Reducir la frecuencia de actualización
 
         except Exception as e:
             self.get_logger().error(f"Error al graficar: {str(e)}")
 
+    def save_data_to_mat(self, filename):
+        """Guarda los datos en un archivo .mat."""
+        data = {
+            'pose_history_bebop1': np.array(self.pose_history['bebop1']),
+            'pose_history_bebop2': np.array(self.pose_history['bebop2']),
+            'setpoint_history_bebop1': np.array(self.setpoint_history['bebop1']),
+            'setpoint_history_bebop2': np.array(self.setpoint_history['bebop2']),
+            'error_history_bebop1': {k: np.array(v) for k, v in self.error_history['bebop1'].items()},
+            'error_history_bebop2': {k: np.array(v) for k, v in self.error_history['bebop2'].items()},
+        }
+        savemat(filename, data)  # Guardar los datos en un archivo .mat
+        self.get_logger().info(f"Datos guardados en {filename}")
+
     def run(self):
         """Bucle principal para actualizar los gráficos."""
-        while rclpy.ok():
-            rclpy.spin_once(self, timeout_sec=0.1)
-            self.plot_data()
+        try:
+            while rclpy.ok():
+                rclpy.spin_once(self, timeout_sec=0.001)  # Reducir el tiempo de espera
+                self.plot_data()
+        except KeyboardInterrupt:
+            # Guardar los datos al finalizar el programa
+            self.save_data_to_mat('datos_drones.mat')
+            self.get_logger().info("Programa finalizado. Datos guardados.")
 
 def main():
     rclpy.init()

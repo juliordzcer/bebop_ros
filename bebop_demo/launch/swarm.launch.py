@@ -14,8 +14,8 @@ def generate_launch_description():
 
     # Definir nombres de robots y condiciones iniciales como cadenas JSON
     robot_names = '["bebop1", "bebop2"]'  # Cadena JSON
-    initial_conditions = '[[2.5, -3.5, 0.0, 0.0], [-5.0, 2.0, 0.0, 0.0]]'  # Cadena JSON
-    formation = initial_conditions #'[[1.0, 0.0, 0.0, 0.0], [-1.0, 0.0, 0.0, 0.0]]'  # Cadena JSON
+    initial_conditions = '[[1.5, -1.5, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]]'  # Cadena JSON
+    formation = '[[1.5, -1.5, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]]'  # Cadena JSON
     lider = 'bebop2'
     world_name = 'bebop'
 
@@ -50,7 +50,7 @@ def generate_launch_description():
         cmd=[
             'ros2', 'run', 'bebop_demo', 'setpoint',
             '--ros-args',
-            '-p', 'h:=1.2',
+            '-p', 'h:=2.0',
             '-p', 'r:=0.5',
             '-p', f'lider_name:={lider}',
         ],
