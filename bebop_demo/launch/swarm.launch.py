@@ -14,8 +14,8 @@ def generate_launch_description():
 
     # Definir nombres de robots y condiciones iniciales como cadenas JSON
     robot_names = '["bebop1", "bebop2", "bebop3"]'  # Cadena JSON
-    initial_conditions = '[[1.0, -1.0, 0.0, 0.0], [1.0, 1.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]]'  # Cadena JSON
-    formation = '[[1.0, -1.0, 0.0, 0.0], [1.0, 1.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]]'  # Cadena JSON
+    initial_conditions = '[[0.5, -0.5, 0.0, 0.0], [0.5, 0.5, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]]'  # Cadena JSON
+    formation = '[[0.5, -0.5, 0.0, 0.0], [0.5, 0.5, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]]'  # Cadena JSON
     lider = 'bebop3'
     world_name = 'bebop'
 
@@ -25,7 +25,7 @@ def generate_launch_description():
             os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')
         ),
         launch_arguments={
-            'gz_args': '-r -s -z  2000000 bebop.sdf'
+            'gz_args': '-r -z  2000000 bebop.sdf'
         }.items(),
     )
     # Lanzar el puente ROS-Gazebo
@@ -148,6 +148,6 @@ def generate_launch_description():
         controller_follower_1,
         controller_follower_2,
         setpoint_followers,
-        DATA,
-        imagenes
+        # DATA,
+        # imagenes
     ])
