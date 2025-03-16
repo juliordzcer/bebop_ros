@@ -174,6 +174,43 @@ SetPosePlugin/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/SetPosePlugin.dir/build.make CMakeFiles/SetPosePlugin.dir/build
 .PHONY : SetPosePlugin/fast
 
+#=============================================================================
+# Target rules for targets named RobotPosePublisher
+
+# Build rule for target.
+RobotPosePublisher: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 RobotPosePublisher
+.PHONY : RobotPosePublisher
+
+# fast build rule for target.
+RobotPosePublisher/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RobotPosePublisher.dir/build.make CMakeFiles/RobotPosePublisher.dir/build
+.PHONY : RobotPosePublisher/fast
+
+RobotPosePublisher.o: RobotPosePublisher.cc.o
+.PHONY : RobotPosePublisher.o
+
+# target to build an object file
+RobotPosePublisher.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RobotPosePublisher.dir/build.make CMakeFiles/RobotPosePublisher.dir/RobotPosePublisher.cc.o
+.PHONY : RobotPosePublisher.cc.o
+
+RobotPosePublisher.i: RobotPosePublisher.cc.i
+.PHONY : RobotPosePublisher.i
+
+# target to preprocess a source file
+RobotPosePublisher.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RobotPosePublisher.dir/build.make CMakeFiles/RobotPosePublisher.dir/RobotPosePublisher.cc.i
+.PHONY : RobotPosePublisher.cc.i
+
+RobotPosePublisher.s: RobotPosePublisher.cc.s
+.PHONY : RobotPosePublisher.s
+
+# target to generate assembly for a file
+RobotPosePublisher.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RobotPosePublisher.dir/build.make CMakeFiles/RobotPosePublisher.dir/RobotPosePublisher.cc.s
+.PHONY : RobotPosePublisher.cc.s
+
 SetPosePlugin.o: SetPosePlugin.cc.o
 .PHONY : SetPosePlugin.o
 
@@ -210,7 +247,11 @@ help:
 	@echo "... install/strip"
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
+	@echo "... RobotPosePublisher"
 	@echo "... SetPosePlugin"
+	@echo "... RobotPosePublisher.o"
+	@echo "... RobotPosePublisher.i"
+	@echo "... RobotPosePublisher.s"
 	@echo "... SetPosePlugin.o"
 	@echo "... SetPosePlugin.i"
 	@echo "... SetPosePlugin.s"

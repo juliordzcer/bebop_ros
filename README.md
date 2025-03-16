@@ -56,7 +56,7 @@ Up to now you have installed what you need to run the core ROS packages. To crea
 
 To install this tool and other dependencies for building ROS packages, run:
 ```
-sudo apt install python3-rosdep python3-rosinstall python3-rosinstall-generator python3-wstool build-essential
+sudo apt install python3-rosdep python3-rosinstall-generator build-essential
 ```
 ##### Initialize rosdep
 Before you can use many ROS tools, you will need to initialize rosdep. rosdep enables you to easily install system dependencies for source you want to compile and is required to run some core components in ROS. If you have not yet installed rosdep, do so as follows.
@@ -72,10 +72,24 @@ rosdep update
 ### Install dependencies.
 To be able to execute the programs it is necessary to install the following dependencies, executing the following commands in the console
 ```
-sudo apt-get install ros-rolling-joy
-sudo apt-get install ros-rolling-tf-transformations
-sudo pip3 install transforms3d
+sudo apt-get install ros-rolling-desktop sudo apt-get install ros-rolling-ros-gz ros-rolling-joy ros-rolling-tf-transformations ros-rolling-ament-lint-auto ros-rolling-ament-cmake
+sudo pip3 install transforms3d --break-system-packages
 ```
+
+## Install Gazebo Ionic
+First install some necessary tools:
+```
+sudo apt-get update
+sudo apt-get install lsb-release gnupg
+```
+Then install Gazebo Ionic:
+```
+sudo curl https://packages.osrfoundation.org/gazebo.gpg --output /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null
+sudo apt-get update
+sudo apt-get install gz-ionic
+```
+
 ## Create a catkin workspace
 ```
 mkdir -p ~/ws_bebop/src
@@ -110,9 +124,11 @@ colcon build
 You can add the necessary environment variables and source file to your `.bashrc` file using the following commands:
 
 ```bash
-echo "source ~/ws_bebop/install/setup.bash" >> ~/.bashrc
-echo 'export GZ_SIM_RESOURCE_PATH="$HOME/ws_bebop/src/bebop_ros/bebop_gz/worlds:$HOME/ws_bebop/src/bebop_ros/bebop_gz/models"' >> ~/.bashrc
-echo 'export GZ_VERSION=ionic' >> ~/.bashrc
+source /opt/ros/rolling/setup.bash
+source ~/ws_bebop/install/setup.bash
+export GZ_SIM_RESOURCE_PATH="$HOME/ws_bebop/src/bebop_ros/bebop_gz/worlds:$HOME/ws_bebop/src/>
+export GAZEBO_PLUGIN_PATH="$HOME/ws_bebop/src/bebop_ros/bebop_gz/plugins/build"
+export GZ_VERSION=ionic
 ```
 
 ### **Reload the `.bashrc` File**

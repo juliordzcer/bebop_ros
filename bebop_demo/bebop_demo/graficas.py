@@ -5,57 +5,52 @@ import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Pose
 from nav_msgs.msg import Odometry
-from sensor_msgs.msg import Joy  # Mensaje para el control de Xbox
+from sensor_msgs.msg import Joy
 from scipy import io
 from tf_transformations import euler_from_quaternion
 from threading import Timer
+from rclpy.qos import QoSProfile
 
 class DataRecorder(Node):
     def __init__(self):
         super().__init__('data_recorder')
 
-        # Variables para guardar las posiciones, errores y tiempo
+        # Variables para almacenar datos
         self.time = []
-        self.x_actual = []
-        self.y_actual = []
-        self.z_actual = []
-        self.yaw_actual = []
-        self.error_x = []
-        self.error_y = []
-        self.error_z = []
-        self.error_yaw = []
+        self.pose_1 = {'x': [], 'y': [], 'z': [], 'yaw': []}
+        self.pose_2 = {'x': [], 'y': [], 'z': [], 'yaw': []}
+        self.setpoint_1 = {'x': [], 'y': [], 'z': [], 'yaw': []}
+        self.setpoint_2 = {'x': [], 'y': [], 'z': [], 'yaw': []}
+
         self.is_saving_data = False
-        self.recording_started = False  # Para evitar múltiples inicios
-        
-        # Inicializar las posiciones deseadas
-        self.x_deseada_val = 0.0
-        self.y_deseada_val = 0.0
-        self.z_deseada_val = 0.0
-        self.yaw_deseada_val = 0.0
+        self.recording_started = False  
 
-        # Suscripción a la odometría, la meta (goal) y el control de Xbox (Joy)
-        self.create_subscription(Odometry, '/model/parrot_bebop_2/odometry', self.odometry_callback, 10)
-        self.create_subscription(Pose, '/goal', self.goal_callback, 10)
-        self.create_subscription(Joy, '/joy', self.joy_callback, 10)  # Suscripción al tópico /joy
+        # Inicializar posiciones y velocidades deseadas
+        self.x_d1, self.y_d1, self.z_d1, self.yaw_d1 = 0.0, 0.0, 0.0, 0.0
+        self.x_d2, self.y_d2, self.z_d2, self.yaw_d2 = 0.0, 0.0, 0.0, 0.0
 
-        self.get_logger().info("Esperando a que se presione el botón X del control de Xbox...")
+        qos_profile = QoSProfile(depth=10)
+        # Suscripciones
+        self.create_subscription(Pose, '/bebop1/pose', self.pose1_callback, qos_profile)
+        self.create_subscription(Pose, '/bebop2/pose', self.pose2_callback, qos_profile)
+        self.create_subscription(Pose, '/bebop1/setpointG', self.goal1_callback, qos_profile)
+        self.create_subscription(Pose, '/bebop2/setpointG', self.goal2_callback, qos_profile)
+        self.create_subscription(Joy, '/joy', self.joy_callback, qos_profile)
+
+        self.get_logger().info("Esperando botón X del control de Xbox para iniciar...")
 
     def joy_callback(self, msg):
-        # El botón X del control de Xbox generalmente es el índice 0 en el arreglo de botones
         if len(msg.buttons) > 0 and msg.buttons[2] == 1:  # Botón X presionado
-            if not self.recording_started:  # Evitar múltiples inicios
+            if not self.recording_started:
                 self.start_recording()
 
     def start_recording(self):
         self.recording_started = True
         self.is_saving_data = True
         self.start_time = self.get_clock().now().seconds_nanoseconds()[0]
-        self.get_logger().info("Comenzando a guardar los datos...")
-        
-        # Iniciar el temporizador para guardar datos cada 0.01 segundos
-        self.timer = self.create_timer(0.001, self.record_data)
-        
-        # Detener la grabación después de 60 segundos
+        self.get_logger().info("Grabación iniciada...")
+
+        self.timer = self.create_timer(0.001, self.record_data)  
         self.stop_timer = Timer(60.0, self.stop_recording)
         self.stop_timer.start()
 
@@ -63,107 +58,103 @@ class DataRecorder(Node):
         if self.is_saving_data:
             self.is_saving_data = False
             self.recording_started = False
-            if self.timer:
+            if hasattr(self, 'timer') and self.timer:
                 self.timer.cancel()
-            if self.stop_timer:
+            if hasattr(self, 'stop_timer') and self.stop_timer:
                 self.stop_timer.cancel()
-            self.get_logger().info("Tiempo de grabación completado. Dejando de guardar los datos...")
+            self.get_logger().info("Grabación finalizada. Guardando datos...")
             self.save_data()
 
     def record_data(self):
         if not self.is_saving_data:
             return
 
-        # Extraemos el tiempo desde que comenzó la grabación
         current_time = self.get_clock().now().seconds_nanoseconds()[0] - self.start_time
         self.time.append(current_time)
 
-    def odometry_callback(self, msg):
+        self.setpoint_1['x'].append(self.x_d1)
+        self.setpoint_1['y'].append(self.y_d1)
+        self.setpoint_1['z'].append(self.z_d1)
+        self.setpoint_1['yaw'].append(self.yaw_d1)
+
+        self.setpoint_2['x'].append(self.x_d2)
+        self.setpoint_2['y'].append(self.y_d2)
+        self.setpoint_2['z'].append(self.z_d2)
+        self.setpoint_2['yaw'].append(self.yaw_d2)
+
+    def pose1_callback(self, msg):
         if not self.is_saving_data:
             return
 
-        # Extraemos las posiciones actuales
-        self.x_actual.append(msg.pose.pose.position.x)
-        self.y_actual.append(msg.pose.pose.position.y)
-        self.z_actual.append(msg.pose.pose.position.z)
+        self.pose_1['x'].append(msg.position.x)
+        self.pose_1['y'].append(msg.position.y)
+        self.pose_1['z'].append(msg.position.z)
 
-        # Calcular el error en las posiciones
-        self.error_x.append((self.x_deseada_val - msg.pose.pose.position.x))
-        self.error_y.append((self.y_deseada_val - msg.pose.pose.position.y))
-        self.error_z.append((self.z_deseada_val - msg.pose.pose.position.z))
-
-        # Extraemos el yaw de la orientación
-        q = msg.pose.pose.orientation
-        rpy = euler_from_quaternion([q.x, q.y, q.z, q.w])
-        self.yaw_actual.append(rpy[2])
-
-        # Calcular el error de yaw
-        self.error_yaw.append((self.yaw_deseada_val - rpy[2]))
-
-    def goal_callback(self, msg):
-        # Guardamos las posiciones deseadas del goal
-        self.x_deseada_val = msg.position.x
-        self.y_deseada_val = msg.position.y
-        self.z_deseada_val = msg.position.z
-        # Si lo deseas, también puedes obtener el yaw deseado de la orientación del goal
         q = msg.orientation
-        rpy = euler_from_quaternion([q.x, q.y, q.z, q.w])
-        self.yaw_deseada_val = rpy[2]
+        _, _, yaw = euler_from_quaternion([q.x, q.y, q.z, q.w])
+        self.pose_1['yaw'].append(yaw)
+
+    def pose2_callback(self, msg):
+        if not self.is_saving_data:
+            return
+
+        self.pose_2['x'].append(msg.position.x)
+        self.pose_2['y'].append(msg.position.y)
+        self.pose_2['z'].append(msg.position.z)
+
+        q = msg.orientation
+        _, _, yaw = euler_from_quaternion([q.x, q.y, q.z, q.w])
+        self.pose_2['yaw'].append(yaw)
+
+    def goal1_callback(self, msg):
+        self.x_d1 = msg.position.x
+        self.y_d1 = msg.position.y
+        self.z_d1 = msg.position.z
+
+        q = msg.orientation
+        _, _, self.yaw_d1 = euler_from_quaternion([q.x, q.y, q.z, q.w])
+
+    def goal2_callback(self, msg):
+        self.x_d2 = msg.position.x
+        self.y_d2 = msg.position.y
+        self.z_d2 = msg.position.z
+
+        q = msg.orientation
+        _, _, self.yaw_d2 = euler_from_quaternion([q.x, q.y, q.z, q.w])
 
     def save_data(self):
-        # Verificar que se tengan datos para guardar
         if not self.time:
-            self.get_logger().warn("No se han recopilado datos para guardar.")
+            self.get_logger().warn("No hay datos para guardar.")
             return
-        
-        # Asegurarse de que todas las listas tengan la misma longitud
-        min_length = min(len(self.time), len(self.x_actual), len(self.y_actual), len(self.z_actual), len(self.yaw_actual), len(self.error_x), len(self.error_y), len(self.error_z), len(self.error_yaw))
-        self.time = self.time[:min_length]
-        self.x_actual = self.x_actual[:min_length]
-        self.y_actual = self.y_actual[:min_length]
-        self.z_actual = self.z_actual[:min_length]
-        self.yaw_actual = self.yaw_actual[:min_length]
-        self.error_x = self.error_x[:min_length]
-        self.error_y = self.error_y[:min_length]
-        self.error_z = self.error_z[:min_length]
-        self.error_yaw = self.error_yaw[:min_length]
 
-        # Guardar los datos en archivos
+        min_length = min(len(self.time), len(self.pose_1['x']))
+        self.time = self.time[:min_length]
+
         home_dir = os.path.expanduser("~/Experimentos")
         if not os.path.exists(home_dir):
             os.makedirs(home_dir)
-        
+
         data_dict = {
             'time': self.time,
-            'x_actual': self.x_actual,
-            'y_actual': self.y_actual,
-            'z_actual': self.z_actual,
-            'yaw_actual': self.yaw_actual,
-            'x_deseada': [self.x_deseada_val] * len(self.time),
-            'y_deseada': [self.y_deseada_val] * len(self.time),
-            'z_deseada': [self.z_deseada_val] * len(self.time),
-            'yaw_deseada': [self.yaw_deseada_val] * len(self.time),
-            'error_x': self.error_x,
-            'error_y': self.error_y,
-            'error_z': self.error_z,
-            'error_yaw': self.error_yaw
+            'pose1': self.pose_1,
+            'pose2': self.pose_2,
+            'setpoint1': self.setpoint_1,
+            'setpoint2': self.setpoint_2,
         }
 
-        mat_path = os.path.join(home_dir, "dron_data.mat")
+        mat_path = os.path.join(home_dir, "drones_data.mat")
         io.savemat(mat_path, data_dict)
         self.get_logger().info(f"Datos guardados en: {mat_path}")
 
 def main(args=None):
     rclpy.init(args=args)
-    
     recorder = DataRecorder()
-    
+
     try:
         rclpy.spin(recorder)
     except KeyboardInterrupt:
         pass
     finally:
-        # Es posible que ya se haya guardado antes, pero lo dejamos aquí por si acaso
         recorder.save_data()
         rclpy.shutdown()
 
