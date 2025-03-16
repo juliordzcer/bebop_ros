@@ -1,61 +1,80 @@
 import rclpy
 from rclpy.node import Node
+from rclpy.qos import QoSProfile
 from geometry_msgs.msg import Pose
 from tf_transformations import quaternion_from_euler, quaternion_multiply
-from rclpy.qos import QoSProfile
+from sensor_msgs.msg import Joy  # Mensaje del joystick
 import json
+
+class JoystickButtons:
+    """Enumeración para los botones del joystick."""
+    BUTTON_2 = 3  # Botón que iniciará la grabación
+
 
 class SetpointFollowers(Node):
     def __init__(self):
         super().__init__('multi_robot_pose_publisher')
-        
-        # Declarar parámetros
-        self.declare_parameter('robot_names', '["bebop1", "bebop2"]')  # Lista en JSON
-        self.declare_parameter('formation', '[[1.0, 2.0, 0.0, 0.0], [3.0, 4.0, 0.0, 1.57]]')  # Lista en JSON
-        self.declare_parameter('lider_name', 'bebop2')
 
-        # Obtener parámetros
+        # Estado para controlar cuándo iniciar las gráficas
+        self.recording_enabled = False  
+
+        # Declarar parámetros
+        self.declare_parameter('robot_names', '["bebop1", "bebop2", "bebop3"]')
+        self.declare_parameter('formation', '[[1.0, 2.0, 0.0, 0.0], [3.0, 4.0, 0.0, 1.57]], [3.0, 4.0, 0.0, 1.57]]')
+        self.declare_parameter('lider_name', 'bebop3')
+
+        # Obtener y validar parámetros
+        self.load_parameters()
+
+        # Configuración de QoS
+        qos = QoSProfile(depth=10)
+
+        # Suscribirse al joystick
+        self.joy_sub = self.create_subscription(Joy, '/joy', self.joy_callback, qos)
+
+        # Suscribirse a la pose del líder
+        self.pose_leader = None  
+        self.pos_leader_sub = self.create_subscription(Pose, f"/{self.lider_name}/pose", self.pos_changed, qos)
+
+        # Crear publicadores para cada robot seguidor
+        self._publishers = [
+            self.create_publisher(Pose, f'/{name}/setpoint', qos)
+            for name in self.robot_names
+        ]
+
+        # Crear un temporizador para la publicación de setpoints (10 Hz)
+        self.create_timer(0.001, self.publish_setpoint)  
+
+    def load_parameters(self):
+        """ Carga y valida los parámetros desde ROS2 """
         self.lider_name = self.get_parameter('lider_name').value.strip()
         raw_robot_names = self.get_parameter('robot_names').value
         raw_formation = self.get_parameter('formation').value
-        
-        # Parsear JSON
+
         try:
             self.robot_names = json.loads(raw_robot_names)
             self.formation = json.loads(raw_formation)
         except json.JSONDecodeError as e:
             self.get_logger().error(f"ERROR de JSON: {str(e)}")
             raise
-        
-        # Validar datos de formación
+
         if len(self.robot_names) != len(self.formation):
-            # self.get_logger().error("Error: La cantidad de robots y formaciones no coincide.")
-            raise ValueError("La cantidad de robots y formaciones no coincide.")
-        
+            raise ValueError("Error: La cantidad de robots y formaciones no coincide.")
+
         for condition in self.formation:
             if not isinstance(condition, list) or len(condition) != 4:
-                # self.get_logger().error("Error: Los datos de formación deben ser listas de 4 números.")
-                raise ValueError("Formato de formación incorrecto.")
-        
-        # Filtrar la lista de robots para excluir al líder
+                raise ValueError("Error: Los datos de formación deben ser listas de 4 números.")
+
+        # Excluir al líder de la lista de seguidores
         if self.lider_name in self.robot_names:
             self.robot_names.remove(self.lider_name)
 
-        # Configuración de QoS
-        qos = QoSProfile(depth=10)
-
-        # Suscribirse a la pose del líder
-        self.pose_leader = None  # Inicialmente no tenemos datos del líder
-        self.pos_leader_sub = self.create_subscription(Pose, f"/{self.lider_name}/pose", self.pos_changed, qos)
-        
-        # Crear publicadores
-        self._publishers = [
-            self.create_publisher(Pose, f'/{name}/setpoint', qos)
-            for name in self.robot_names
-        ]
-
-        # Crear un temporizador para la publicación de setpoints
-        self.create_timer(0.1, self.publish_setpoint)  # Reducido a 10 Hz
+    def joy_callback(self, msg):
+        """ Callback para recibir los datos del joystick """
+        if len(msg.buttons) > JoystickButtons.BUTTON_2 and msg.buttons[JoystickButtons.BUTTON_2] == 1:
+            if not self.recording_enabled:
+                self.recording_enabled = True  # Habilita la publicación
+                self.get_logger().info("¡Botón 2 presionado! Iniciando gráficas...")
 
     def pos_changed(self, msg):
         """ Callback que actualiza la pose del líder """
@@ -88,15 +107,16 @@ class SetpointFollowers(Node):
 
     def publish_setpoint(self):
         """ Publica las posiciones de los seguidores basadas en el líder """
+        if not self.recording_enabled:
+            return  # No publica hasta que el botón 2 sea presionado
+
         if self.pose_leader is None:
-            # self.get_logger().warn("Aún no se ha recibido la pose del líder. No se publicarán setpoints.")
-            return
+            return  # Aún no se ha recibido la pose del líder
 
         for i, (name, conditions) in enumerate(zip(self.robot_names, self.formation)):
             try:
                 pose = self.calculate_follower_pose(self.pose_leader, conditions)
                 self._publishers[i].publish(pose)
-                # self.get_logger().info(f"Publicado setpoint para {name}: {pose}")
             except Exception as e:
                 self.get_logger().error(f"Error al calcular o publicar la pose para {name}: {str(e)}")
 
@@ -107,10 +127,9 @@ def main(args=None):
         rclpy.spin(node)
     except Exception as e:
         if 'node' in locals() and node is not None:
-             node.get_logger().error(f"ERROR FATAL: {str(e)}")
+            node.get_logger().error(f"ERROR FATAL: {str(e)}")
         else:
             print(f"ERROR FATAL: {str(e)}")
-
     finally:
         if 'node' in locals():
             node.destroy_node()

@@ -6,7 +6,7 @@ from rclpy.parameter import Parameter
 from geometry_msgs.msg import Twist, Pose
 from std_srvs.srv import Empty
 from tf2_ros import Buffer, TransformListener
-from tf_transformations import euler_from_quaternion
+from tf_transformations import euler_from_quaternion,quaternion_from_euler
 from rclpy.qos import QoSProfile
 from nav_msgs.msg import Odometry
 from std_msgs.msg import Bool
@@ -51,11 +51,12 @@ class Controller(Node):
 
         # Definición de tópicos dinámicos
         qos_profile = QoSProfile(depth=10)
-        self.cmd_pub = self.create_publisher(Twist, f"/{self.robot_name}/cmd_vel", 10)
+        self.cmd_pub = self.create_publisher(Twist, f"/{self.robot_name}/cmd_vel", qos_profile)
         self.cmd_enable = self.create_publisher(Bool, f"/{self.robot_name}/enable", qos_profile)
+        self.cmd_des = self.create_publisher(Pose, f"/{self.robot_name}/setpointG", qos_profile)
         self.goal_sub = self.create_subscription(Pose, f"/{self.lider_name}/setpoint", self.goal_changed, qos_profile)
         self.pos_sub = self.create_subscription(Pose, f"/{self.robot_name}/pose", self.pos_changed, qos_profile)
-        self.joy_sub = self.create_subscription(Joy, 'joy', self.joy_callback, 10)
+        self.joy_sub = self.create_subscription(Joy, 'joy', self.joy_callback, qos_profile)
         
         # Servicios
         self.takeoff_srv = self.create_service(Empty, 'takeoff', self.takeoff_callback)
@@ -166,6 +167,23 @@ class Controller(Node):
             msg.linear.z = float(self.pid_z.update(self.current_pose.position.z, z_d))
             msg.angular.z = float(self.pid_z.update(euler_angles_c[2], yaw_d))
             self.cmd_pub.publish(msg)
+
+            msg_goal = Pose()
+            msg_goal.position.x = x_d
+            msg_goal.position.y = y_d
+            msg_goal.position.z = z_d
+
+            # Convertir ángulos de Euler a cuaternión
+            quat = quaternion_from_euler(0, 0, yaw_d)
+
+            # Asignar el cuaternión al mensaje
+            msg_goal.orientation.x = quat[0]
+            msg_goal.orientation.y = quat[1]
+            msg_goal.orientation.z = quat[2]
+            msg_goal.orientation.w = quat[3]
+
+            # Publicar el mensaje
+            self.cmd_des.publish(msg_goal)
 
         elif self.state in [self.State.IDLE, self.State.EMERGENCY_STOP]:
             self.cmd_pub.publish(Twist())

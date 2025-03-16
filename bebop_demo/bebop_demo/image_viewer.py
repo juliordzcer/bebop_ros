@@ -3,13 +3,14 @@ from rclpy.node import Node
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 import cv2
+from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy
 
 class ImageSubscriber(Node):
 
     def __init__(self):
         super().__init__('image_subscriber')
 
-        self.declare_parameter('robot_names', ['bebop1', 'bebop2'])
+        self.declare_parameter('robot_names', ['bebop1', 'bebop2', 'bebop3'])
         self.declare_parameter('world_name', 'bebop')
 
         robot_names_param = self.get_parameter('robot_names').get_parameter_value().string_array_value
@@ -17,24 +18,31 @@ class ImageSubscriber(Node):
         world_name = self.get_parameter('world_name').get_parameter_value().string_value
 
         self.topic_names = [
-            f'/world/{world_name}/model/{robot_name}/link/rgb_camera_link/sensor/rgb_camera_sensor/image'
+            f'/world/{world_name}/model/{robot_name}/link/body/sensor/rgb_camera_sensor/image'
             for robot_name in self.robot_names
         ]
 
         self._subscriptions = []
+        self.cv_images = {robot_name: None for robot_name in self.robot_names}
+        self.bridge = CvBridge()
+        self.frame_counter = 0  # Contador de fotogramas
+        self.display_rate = 5  # Mostrar cada 5 fotogramas
+
+        qos_profile = QoSProfile(
+            reliability=QoSReliabilityPolicy.BEST_EFFORT,
+            history=QoSHistoryPolicy.KEEP_LAST,
+            depth=10
+        )
+
         for topic in self.topic_names:
             subscription = self.create_subscription(
                 Image,
                 topic,
                 lambda msg, topic=topic: self.image_callback(msg, topic),
-                10)
+                qos_profile=qos_profile
+            )
             self._subscriptions.append(subscription)
             self.get_logger().info(f"Subscribed to {topic}")
-
-        self.cv_images = {robot_name: None for robot_name in self.robot_names}
-        self.bridge = CvBridge()
-        self.frame_counter = 0  # Contador de fotogramas
-        self.display_rate = 5  # Mostrar cada 5 fotogramas
 
     def image_callback(self, msg, topic_name):
         try:
@@ -51,8 +59,13 @@ class ImageSubscriber(Node):
 
         except CvBridgeError as e:
             self.get_logger().error(f"Error converting image: {e}")
+        except KeyError as e:
+            self.get_logger().error(f"Robot name not found in topic: {e}")
         except Exception as e:
             self.get_logger().error(f"Unexpected error: {e}")
+
+    def __del__(self):
+        cv2.destroyAllWindows()
 
 def main(args=None):
     rclpy.init(args=args)

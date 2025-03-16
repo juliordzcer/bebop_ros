@@ -10,7 +10,7 @@ from tf_transformations import quaternion_from_euler, euler_from_quaternion
 
 class JoystickButtons:
     """Enumeración para los botones del joystick."""
-    BUTTON_2 = 2
+    BUTTON_2 = 3
     BUTTON_10 = 10
 
 class TrajectoryCircle(Node):
@@ -21,7 +21,7 @@ class TrajectoryCircle(Node):
         self.r = 0.0
         self.h = 0.0
         self.t = 0.0
-        self.rt = 50.0  # Frecuencia de publicación
+        self.rt = 100.0  # Frecuencia de publicación
         
         self.button_pressed = False
         self.start_time = self.get_clock().now()
@@ -46,7 +46,7 @@ class TrajectoryCircle(Node):
         self.declare_parameter('h', 0.0)
         self.declare_parameter('r', 0.0)
         self.declare_parameter('yawi', 0.0)  # Ángulo de yaw inicial
-        self.declare_parameter('angular_frequency', np.pi / 5)
+        self.declare_parameter('angular_frequency', np.pi / 12)
         self.declare_parameter('smoothing_parameter', 15.0)
 
         # Obtención de parámetros

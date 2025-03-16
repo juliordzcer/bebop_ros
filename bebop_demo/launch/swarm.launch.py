@@ -13,10 +13,10 @@ def generate_launch_description():
     pkg_ros_gz_sim_demos = get_package_share_directory('bebop_demo')
 
     # Definir nombres de robots y condiciones iniciales como cadenas JSON
-    robot_names = '["bebop1", "bebop2"]'  # Cadena JSON
-    initial_conditions = '[[1.5, -1.5, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]]'  # Cadena JSON
-    formation = '[[1.5, -1.5, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]]'  # Cadena JSON
-    lider = 'bebop2'
+    robot_names = '["bebop1", "bebop2", "bebop3"]'  # Cadena JSON
+    initial_conditions = '[[1.0, -1.0, 0.0, 0.0], [1.0, 1.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]]'  # Cadena JSON
+    formation = '[[1.0, -1.0, 0.0, 0.0], [1.0, 1.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]]'  # Cadena JSON
+    lider = 'bebop3'
     world_name = 'bebop'
 
     # Lanzar Gazebo
@@ -25,10 +25,9 @@ def generate_launch_description():
             os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')
         ),
         launch_arguments={
-            'gz_args': '-r -z  1000000 bebop_swarm2.sdf'
+            'gz_args': '-r -s -z  2000000 bebop.sdf'
         }.items(),
     )
-
     # Lanzar el puente ROS-Gazebo
     ros_gz_bridge = RosGzBridge(
         bridge_name='ros_gz_bridge',
@@ -98,13 +97,24 @@ def generate_launch_description():
     )
 
     # Lanzar el controlador PID
-    controller_follower = IncludeLaunchDescription(
+    controller_follower_1 = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(get_package_share_directory('bebop_controller'), 'launch', 'pid.launch.py')
         ),
         launch_arguments={
             'robot_name': 'bebop1',
             'goal_name': 'bebop1/setpoint'
+        }.items()
+    )
+
+    # Lanzar el controlador PID
+    controller_follower_2 = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(get_package_share_directory('bebop_controller'), 'launch', 'pid.launch.py')
+        ),
+        launch_arguments={
+            'robot_name': 'bebop2',
+            'goal_name': 'bebop2/setpoint'
         }.items()
     )
 
@@ -135,8 +145,9 @@ def generate_launch_description():
         joystick,
         set_pose,
         controller_leader,
-        controller_follower,
+        controller_follower_1,
+        controller_follower_2,
         setpoint_followers,
         DATA,
-        # imagenes
+        imagenes
     ])
