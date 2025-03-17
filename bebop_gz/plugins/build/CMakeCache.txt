@@ -242,6 +242,9 @@ CURL_LIBRARY_DEBUG:FILEPATH=CURL_LIBRARY_DEBUG-NOTFOUND
 //Path to a library.
 CURL_LIBRARY_RELEASE:FILEPATH=/usr/lib/x86_64-linux-gnu/libcurl.so
 
+//Dependencies for the target
+Common_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;general;gz-math8::gz-math8;general;gz-common6::gz-common6;
+
 //The directory containing a CMake configuration file for Eigen3.
 Eigen3_DIR:PATH=/usr/share/eigen3/cmake
 
@@ -265,6 +268,12 @@ IGN_SANITIZER:STRING=
 
 //Path to a library.
 JSONCPP_LIBRARY_jsoncpp:FILEPATH=/usr/lib/x86_64-linux-gnu/libjsoncpp.so
+
+//Dependencies for the target
+LeeVelocityController_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;
+
+//Dependencies for the target
+MulticopterVelocityControl_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;general;gz-transport14::gz-transport14;general;gz-msgs11::gz-msgs11;general;gz-plugin3::gz-plugin3;general;gz-math8::gz-math8;general;gz-common6::gz-common6;
 
 //Path to a file.
 OPENGL_EGL_INCLUDE_DIR:PATH=/usr/include
@@ -307,9 +316,6 @@ PKG_CONFIG_ARGN:STRING=
 
 //pkg-config executable
 PKG_CONFIG_EXECUTABLE:FILEPATH=/usr/bin/pkg-config
-
-//Dependencies for the target
-PPosePlugin_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;general;gz-transport14::gz-transport14;general;gz-msgs11::gz-msgs11;general;gz-plugin3::gz-plugin3;general;gz-math8::gz-math8;
 
 //The directory containing a CMake configuration file for Protobuf.
 Protobuf_DIR:PATH=Protobuf_DIR-NOTFOUND
@@ -369,7 +375,7 @@ Qt5Widgets_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/Qt5Widgets
 Qt5_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/Qt5
 
 //Dependencies for the target
-RobotPosePublisher_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;general;gz-transport14::gz-transport14;general;gz-msgs11::gz-msgs11;general;gz-plugin3::gz-plugin3;general;gz-math8::gz-math8;general;gz-common6::gz-common6;
+RobotPosePublisher_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;general;gz-transport14::gz-transport14;general;gz-plugin3::gz-plugin3;general;gz-math8::gz-math8;general;gz-common6::gz-common6;
 
 //Path to a library.
 SWSCALE_LIBRARY_swscale:FILEPATH=/usr/lib/x86_64-linux-gnu/libswscale.so

@@ -26,6 +26,30 @@ add_library(RobotPosePublisher SHARED RobotPosePublisher.cc)
 target_link_libraries(RobotPosePublisher
   gz-sim9::gz-sim9
   gz-transport14::gz-transport14
+  gz-plugin3::gz-plugin3
+  gz-math8::gz-math8
+  gz-common6::gz-common6
+)
+
+# Plugin 3: Common
+add_library(Common SHARED Common.cc)
+target_link_libraries(Common
+  gz-sim9::gz-sim9
+  gz-math8::gz-math8
+  gz-common6::gz-common6
+)
+
+# Plugin 4: LeeVelocityController
+add_library(LeeVelocityController SHARED LeeVelocityController.cc)
+target_link_libraries(LeeVelocityController
+  gz-sim9::gz-sim9
+)
+
+# Plugin 5: MulticopterVelocityControl
+add_library(MulticopterVelocityControl SHARED MulticopterVelocityControl.cc)
+target_link_libraries(MulticopterVelocityControl
+  gz-sim9::gz-sim9
+  gz-transport14::gz-transport14
   gz-msgs11::gz-msgs11
   gz-plugin3::gz-plugin3
   gz-math8::gz-math8
@@ -33,4 +57,4 @@ target_link_libraries(RobotPosePublisher
 )
 
 # Instalar los plugins
-install(TARGETS SetPosePlugin RobotPosePublisher DESTINATION lib)
+install(TARGETS SetPosePlugin RobotPosePublisher Common LeeVelocityController MulticopterVelocityControl DESTINATION lib)
