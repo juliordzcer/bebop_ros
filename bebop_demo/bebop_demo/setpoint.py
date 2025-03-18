@@ -138,7 +138,7 @@ class TrajectoryCircle(Node):
         x = self.r * (np.arctan(self.p) + np.arctan(self.t - self.p)) * np.cos(self.w * self.t)
         y = self.r * (np.arctan(self.p) + np.arctan(self.t - self.p)) * np.sin(self.w * self.t)
         z = (self.h / 2) * (1 + np.tanh(self.t - 2.5))
-        yaw = 0 # np.sin(self.w * self.t)
+        yaw = 0 #np.sin(self.w * self.t)
 
         # Conversión de ángulos de Euler a cuaternión
         q = quaternion_from_euler(0, 0, yaw + self.yawii)
