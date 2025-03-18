@@ -226,6 +226,32 @@ MulticopterVelocityControl/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MulticopterVelocityControl.dir/build.make CMakeFiles/MulticopterVelocityControl.dir/build
 .PHONY : MulticopterVelocityControl/fast
 
+#=============================================================================
+# Target rules for targets named MulticopterMotorModel
+
+# Build rule for target.
+MulticopterMotorModel: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 MulticopterMotorModel
+.PHONY : MulticopterMotorModel
+
+# fast build rule for target.
+MulticopterMotorModel/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MulticopterMotorModel.dir/build.make CMakeFiles/MulticopterMotorModel.dir/build
+.PHONY : MulticopterMotorModel/fast
+
+#=============================================================================
+# Target rules for targets named VelocityControl
+
+# Build rule for target.
+VelocityControl: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 VelocityControl
+.PHONY : VelocityControl
+
+# fast build rule for target.
+VelocityControl/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VelocityControl.dir/build.make CMakeFiles/VelocityControl.dir/build
+.PHONY : VelocityControl/fast
+
 Common.o: Common.cc.o
 .PHONY : Common.o
 
@@ -273,6 +299,30 @@ LeeVelocityController.s: LeeVelocityController.cc.s
 LeeVelocityController.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/LeeVelocityController.dir/build.make CMakeFiles/LeeVelocityController.dir/LeeVelocityController.cc.s
 .PHONY : LeeVelocityController.cc.s
+
+MulticopterMotorModel.o: MulticopterMotorModel.cc.o
+.PHONY : MulticopterMotorModel.o
+
+# target to build an object file
+MulticopterMotorModel.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MulticopterMotorModel.dir/build.make CMakeFiles/MulticopterMotorModel.dir/MulticopterMotorModel.cc.o
+.PHONY : MulticopterMotorModel.cc.o
+
+MulticopterMotorModel.i: MulticopterMotorModel.cc.i
+.PHONY : MulticopterMotorModel.i
+
+# target to preprocess a source file
+MulticopterMotorModel.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MulticopterMotorModel.dir/build.make CMakeFiles/MulticopterMotorModel.dir/MulticopterMotorModel.cc.i
+.PHONY : MulticopterMotorModel.cc.i
+
+MulticopterMotorModel.s: MulticopterMotorModel.cc.s
+.PHONY : MulticopterMotorModel.s
+
+# target to generate assembly for a file
+MulticopterMotorModel.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MulticopterMotorModel.dir/build.make CMakeFiles/MulticopterMotorModel.dir/MulticopterMotorModel.cc.s
+.PHONY : MulticopterMotorModel.cc.s
 
 MulticopterVelocityControl.o: MulticopterVelocityControl.cc.o
 .PHONY : MulticopterVelocityControl.o
@@ -346,6 +396,30 @@ SetPosePlugin.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/SetPosePlugin.dir/build.make CMakeFiles/SetPosePlugin.dir/SetPosePlugin.cc.s
 .PHONY : SetPosePlugin.cc.s
 
+VelocityControl.o: VelocityControl.cc.o
+.PHONY : VelocityControl.o
+
+# target to build an object file
+VelocityControl.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VelocityControl.dir/build.make CMakeFiles/VelocityControl.dir/VelocityControl.cc.o
+.PHONY : VelocityControl.cc.o
+
+VelocityControl.i: VelocityControl.cc.i
+.PHONY : VelocityControl.i
+
+# target to preprocess a source file
+VelocityControl.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VelocityControl.dir/build.make CMakeFiles/VelocityControl.dir/VelocityControl.cc.i
+.PHONY : VelocityControl.cc.i
+
+VelocityControl.s: VelocityControl.cc.s
+.PHONY : VelocityControl.s
+
+# target to generate assembly for a file
+VelocityControl.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VelocityControl.dir/build.make CMakeFiles/VelocityControl.dir/VelocityControl.cc.s
+.PHONY : VelocityControl.cc.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -360,15 +434,20 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... Common"
 	@echo "... LeeVelocityController"
+	@echo "... MulticopterMotorModel"
 	@echo "... MulticopterVelocityControl"
 	@echo "... RobotPosePublisher"
 	@echo "... SetPosePlugin"
+	@echo "... VelocityControl"
 	@echo "... Common.o"
 	@echo "... Common.i"
 	@echo "... Common.s"
 	@echo "... LeeVelocityController.o"
 	@echo "... LeeVelocityController.i"
 	@echo "... LeeVelocityController.s"
+	@echo "... MulticopterMotorModel.o"
+	@echo "... MulticopterMotorModel.i"
+	@echo "... MulticopterMotorModel.s"
 	@echo "... MulticopterVelocityControl.o"
 	@echo "... MulticopterVelocityControl.i"
 	@echo "... MulticopterVelocityControl.s"
@@ -378,6 +457,9 @@ help:
 	@echo "... SetPosePlugin.o"
 	@echo "... SetPosePlugin.i"
 	@echo "... SetPosePlugin.s"
+	@echo "... VelocityControl.o"
+	@echo "... VelocityControl.i"
+	@echo "... VelocityControl.s"
 .PHONY : help
 
 

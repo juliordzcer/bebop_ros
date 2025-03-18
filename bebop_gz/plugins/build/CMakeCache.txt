@@ -273,6 +273,9 @@ JSONCPP_LIBRARY_jsoncpp:FILEPATH=/usr/lib/x86_64-linux-gnu/libjsoncpp.so
 LeeVelocityController_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;
 
 //Dependencies for the target
+MulticopterMotorModel_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;general;gz-transport14::gz-transport14;general;gz-msgs11::gz-msgs11;general;gz-plugin3::gz-plugin3;general;gz-math8::gz-math8;general;gz-common6::gz-common6;
+
+//Dependencies for the target
 MulticopterVelocityControl_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;general;gz-transport14::gz-transport14;general;gz-msgs11::gz-msgs11;general;gz-plugin3::gz-plugin3;general;gz-math8::gz-math8;general;gz-common6::gz-common6;
 
 //Path to a file.
@@ -388,6 +391,9 @@ TINYXML2_LIBRARY_tinyxml2:FILEPATH=/usr/lib/x86_64-linux-gnu/libtinyxml2.so
 
 //Path to a library.
 UUID_LIBRARY_uuid:FILEPATH=/usr/lib/x86_64-linux-gnu/libuuid.so
+
+//Dependencies for the target
+VelocityControl_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;general;gz-transport14::gz-transport14;general;gz-msgs11::gz-msgs11;general;gz-plugin3::gz-plugin3;general;gz-math8::gz-math8;general;gz-common6::gz-common6;
 
 //Path to a library.
 YAML_LIBRARY_yaml:FILEPATH=/usr/lib/x86_64-linux-gnu/libyaml.so

@@ -3,6 +3,8 @@
 /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/CMakeFiles/Common.dir
 /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/CMakeFiles/LeeVelocityController.dir
 /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/CMakeFiles/MulticopterVelocityControl.dir
+/home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/CMakeFiles/MulticopterMotorModel.dir
+/home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/CMakeFiles/VelocityControl.dir
 /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/CMakeFiles/edit_cache.dir
 /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/CMakeFiles/rebuild_cache.dir
 /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/CMakeFiles/list_install_components.dir

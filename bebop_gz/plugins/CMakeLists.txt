@@ -56,5 +56,27 @@ target_link_libraries(MulticopterVelocityControl
   gz-common6::gz-common6
 )
 
+# Plugin 6: VelocityControl
+add_library(MulticopterMotorModel SHARED MulticopterMotorModel.cc)
+target_link_libraries(MulticopterMotorModel
+  gz-sim9::gz-sim9
+  gz-transport14::gz-transport14
+  gz-msgs11::gz-msgs11
+  gz-plugin3::gz-plugin3
+  gz-math8::gz-math8
+  gz-common6::gz-common6
+)
+
+# Plugin 7: VelocityControl
+add_library(VelocityControl SHARED VelocityControl.cc)
+target_link_libraries(VelocityControl
+  gz-sim9::gz-sim9
+  gz-transport14::gz-transport14
+  gz-msgs11::gz-msgs11
+  gz-plugin3::gz-plugin3
+  gz-math8::gz-math8
+  gz-common6::gz-common6
+)
+
 # Instalar los plugins
-install(TARGETS SetPosePlugin RobotPosePublisher Common LeeVelocityController MulticopterVelocityControl DESTINATION lib)
+install(TARGETS SetPosePlugin RobotPosePublisher Common LeeVelocityController MulticopterMotorModel MulticopterVelocityControl VelocityControl DESTINATION lib)
