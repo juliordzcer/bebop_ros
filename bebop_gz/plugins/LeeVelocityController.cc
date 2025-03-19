@@ -49,6 +49,9 @@ std::unique_ptr<LeeVelocityController> LeeVelocityController::MakeController(
 }
 
 //////////////////////////////////////////////////
+
+// Calculo de la matriz M de la relacion de las entradas de control y la velocidad de los motores
+
 bool LeeVelocityController::InitializeParameters()
 {
   auto allocationMatrix =

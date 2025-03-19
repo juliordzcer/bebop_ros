@@ -252,6 +252,32 @@ VelocityControl/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/VelocityControl.dir/build.make CMakeFiles/VelocityControl.dir/build
 .PHONY : VelocityControl/fast
 
+#=============================================================================
+# Target rules for targets named VelocityControllerPID
+
+# Build rule for target.
+VelocityControllerPID: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 VelocityControllerPID
+.PHONY : VelocityControllerPID
+
+# fast build rule for target.
+VelocityControllerPID/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VelocityControllerPID.dir/build.make CMakeFiles/VelocityControllerPID.dir/build
+.PHONY : VelocityControllerPID/fast
+
+#=============================================================================
+# Target rules for targets named PIDController
+
+# Build rule for target.
+PIDController: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 PIDController
+.PHONY : PIDController
+
+# fast build rule for target.
+PIDController/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PIDController.dir/build.make CMakeFiles/PIDController.dir/build
+.PHONY : PIDController/fast
+
 Common.o: Common.cc.o
 .PHONY : Common.o
 
@@ -348,6 +374,30 @@ MulticopterVelocityControl.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MulticopterVelocityControl.dir/build.make CMakeFiles/MulticopterVelocityControl.dir/MulticopterVelocityControl.cc.s
 .PHONY : MulticopterVelocityControl.cc.s
 
+PIDController.o: PIDController.cc.o
+.PHONY : PIDController.o
+
+# target to build an object file
+PIDController.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PIDController.dir/build.make CMakeFiles/PIDController.dir/PIDController.cc.o
+.PHONY : PIDController.cc.o
+
+PIDController.i: PIDController.cc.i
+.PHONY : PIDController.i
+
+# target to preprocess a source file
+PIDController.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PIDController.dir/build.make CMakeFiles/PIDController.dir/PIDController.cc.i
+.PHONY : PIDController.cc.i
+
+PIDController.s: PIDController.cc.s
+.PHONY : PIDController.s
+
+# target to generate assembly for a file
+PIDController.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PIDController.dir/build.make CMakeFiles/PIDController.dir/PIDController.cc.s
+.PHONY : PIDController.cc.s
+
 RobotPosePublisher.o: RobotPosePublisher.cc.o
 .PHONY : RobotPosePublisher.o
 
@@ -420,6 +470,30 @@ VelocityControl.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/VelocityControl.dir/build.make CMakeFiles/VelocityControl.dir/VelocityControl.cc.s
 .PHONY : VelocityControl.cc.s
 
+VelocityControllerPID.o: VelocityControllerPID.cc.o
+.PHONY : VelocityControllerPID.o
+
+# target to build an object file
+VelocityControllerPID.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VelocityControllerPID.dir/build.make CMakeFiles/VelocityControllerPID.dir/VelocityControllerPID.cc.o
+.PHONY : VelocityControllerPID.cc.o
+
+VelocityControllerPID.i: VelocityControllerPID.cc.i
+.PHONY : VelocityControllerPID.i
+
+# target to preprocess a source file
+VelocityControllerPID.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VelocityControllerPID.dir/build.make CMakeFiles/VelocityControllerPID.dir/VelocityControllerPID.cc.i
+.PHONY : VelocityControllerPID.cc.i
+
+VelocityControllerPID.s: VelocityControllerPID.cc.s
+.PHONY : VelocityControllerPID.s
+
+# target to generate assembly for a file
+VelocityControllerPID.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VelocityControllerPID.dir/build.make CMakeFiles/VelocityControllerPID.dir/VelocityControllerPID.cc.s
+.PHONY : VelocityControllerPID.cc.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -436,9 +510,11 @@ help:
 	@echo "... LeeVelocityController"
 	@echo "... MulticopterMotorModel"
 	@echo "... MulticopterVelocityControl"
+	@echo "... PIDController"
 	@echo "... RobotPosePublisher"
 	@echo "... SetPosePlugin"
 	@echo "... VelocityControl"
+	@echo "... VelocityControllerPID"
 	@echo "... Common.o"
 	@echo "... Common.i"
 	@echo "... Common.s"
@@ -451,6 +527,9 @@ help:
 	@echo "... MulticopterVelocityControl.o"
 	@echo "... MulticopterVelocityControl.i"
 	@echo "... MulticopterVelocityControl.s"
+	@echo "... PIDController.o"
+	@echo "... PIDController.i"
+	@echo "... PIDController.s"
 	@echo "... RobotPosePublisher.o"
 	@echo "... RobotPosePublisher.i"
 	@echo "... RobotPosePublisher.s"
@@ -460,6 +539,9 @@ help:
 	@echo "... VelocityControl.o"
 	@echo "... VelocityControl.i"
 	@echo "... VelocityControl.s"
+	@echo "... VelocityControllerPID.o"
+	@echo "... VelocityControllerPID.i"
+	@echo "... VelocityControllerPID.s"
 .PHONY : help
 
 

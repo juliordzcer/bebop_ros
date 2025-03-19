@@ -400,4 +400,6 @@ set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/MulticopterVelocityControl.dir/DependInfo.cmake"
   "CMakeFiles/MulticopterMotorModel.dir/DependInfo.cmake"
   "CMakeFiles/VelocityControl.dir/DependInfo.cmake"
+  "CMakeFiles/VelocityControllerPID.dir/DependInfo.cmake"
+  "CMakeFiles/PIDController.dir/DependInfo.cmake"
   )

@@ -314,6 +314,9 @@ OPENGL_opengl_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libOpenGL.so
 //Path to a file.
 OPENGL_xmesa_INCLUDE_DIR:PATH=OPENGL_xmesa_INCLUDE_DIR-NOTFOUND
 
+//Dependencies for the target
+PIDController_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;general;gz-transport14::gz-transport14;general;gz-msgs11::gz-msgs11;general;gz-plugin3::gz-plugin3;general;gz-math8::gz-math8;general;gz-common6::gz-common6;
+
 //Arguments to supply to pkg-config
 PKG_CONFIG_ARGN:STRING=
 
@@ -394,6 +397,9 @@ UUID_LIBRARY_uuid:FILEPATH=/usr/lib/x86_64-linux-gnu/libuuid.so
 
 //Dependencies for the target
 VelocityControl_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;general;gz-transport14::gz-transport14;general;gz-msgs11::gz-msgs11;general;gz-plugin3::gz-plugin3;general;gz-math8::gz-math8;general;gz-common6::gz-common6;
+
+//Dependencies for the target
+VelocityControllerPID_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;general;gz-transport14::gz-transport14;general;gz-msgs11::gz-msgs11;general;gz-plugin3::gz-plugin3;general;gz-math8::gz-math8;general;gz-common6::gz-common6;
 
 //Path to a library.
 YAML_LIBRARY_yaml:FILEPATH=/usr/lib/x86_64-linux-gnu/libyaml.so

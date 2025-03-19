@@ -70,6 +70,8 @@ all: CMakeFiles/LeeVelocityController.dir/all
 all: CMakeFiles/MulticopterVelocityControl.dir/all
 all: CMakeFiles/MulticopterMotorModel.dir/all
 all: CMakeFiles/VelocityControl.dir/all
+all: CMakeFiles/VelocityControllerPID.dir/all
+all: CMakeFiles/PIDController.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -84,6 +86,8 @@ clean: CMakeFiles/LeeVelocityController.dir/clean
 clean: CMakeFiles/MulticopterVelocityControl.dir/clean
 clean: CMakeFiles/MulticopterMotorModel.dir/clean
 clean: CMakeFiles/VelocityControl.dir/clean
+clean: CMakeFiles/VelocityControllerPID.dir/clean
+clean: CMakeFiles/PIDController.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -93,7 +97,7 @@ clean: CMakeFiles/VelocityControl.dir/clean
 CMakeFiles/SetPosePlugin.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/SetPosePlugin.dir/build.make CMakeFiles/SetPosePlugin.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/SetPosePlugin.dir/build.make CMakeFiles/SetPosePlugin.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/CMakeFiles --progress-num=11,12 "Built target SetPosePlugin"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/CMakeFiles --progress-num=13,14 "Built target SetPosePlugin"
 .PHONY : CMakeFiles/SetPosePlugin.dir/all
 
 # Build rule for subdir invocation for target.
@@ -119,7 +123,7 @@ CMakeFiles/SetPosePlugin.dir/clean:
 CMakeFiles/RobotPosePublisher.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/RobotPosePublisher.dir/build.make CMakeFiles/RobotPosePublisher.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/RobotPosePublisher.dir/build.make CMakeFiles/RobotPosePublisher.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/CMakeFiles --progress-num=9,10 "Built target RobotPosePublisher"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/CMakeFiles --progress-num=11,12 "Built target RobotPosePublisher"
 .PHONY : CMakeFiles/RobotPosePublisher.dir/all
 
 # Build rule for subdir invocation for target.
@@ -249,7 +253,7 @@ CMakeFiles/MulticopterMotorModel.dir/clean:
 CMakeFiles/VelocityControl.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/VelocityControl.dir/build.make CMakeFiles/VelocityControl.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/VelocityControl.dir/build.make CMakeFiles/VelocityControl.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/CMakeFiles --progress-num=13,14 "Built target VelocityControl"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/CMakeFiles --progress-num=15,16 "Built target VelocityControl"
 .PHONY : CMakeFiles/VelocityControl.dir/all
 
 # Build rule for subdir invocation for target.
@@ -267,6 +271,58 @@ VelocityControl: CMakeFiles/VelocityControl.dir/rule
 CMakeFiles/VelocityControl.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/VelocityControl.dir/build.make CMakeFiles/VelocityControl.dir/clean
 .PHONY : CMakeFiles/VelocityControl.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/VelocityControllerPID.dir
+
+# All Build rule for target.
+CMakeFiles/VelocityControllerPID.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VelocityControllerPID.dir/build.make CMakeFiles/VelocityControllerPID.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VelocityControllerPID.dir/build.make CMakeFiles/VelocityControllerPID.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/CMakeFiles --progress-num=17,18 "Built target VelocityControllerPID"
+.PHONY : CMakeFiles/VelocityControllerPID.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/VelocityControllerPID.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/VelocityControllerPID.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/CMakeFiles 0
+.PHONY : CMakeFiles/VelocityControllerPID.dir/rule
+
+# Convenience name for target.
+VelocityControllerPID: CMakeFiles/VelocityControllerPID.dir/rule
+.PHONY : VelocityControllerPID
+
+# clean rule for target.
+CMakeFiles/VelocityControllerPID.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VelocityControllerPID.dir/build.make CMakeFiles/VelocityControllerPID.dir/clean
+.PHONY : CMakeFiles/VelocityControllerPID.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/PIDController.dir
+
+# All Build rule for target.
+CMakeFiles/PIDController.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PIDController.dir/build.make CMakeFiles/PIDController.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PIDController.dir/build.make CMakeFiles/PIDController.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/CMakeFiles --progress-num=9,10 "Built target PIDController"
+.PHONY : CMakeFiles/PIDController.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/PIDController.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/PIDController.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/build/CMakeFiles 0
+.PHONY : CMakeFiles/PIDController.dir/rule
+
+# Convenience name for target.
+PIDController: CMakeFiles/PIDController.dir/rule
+.PHONY : PIDController
+
+# clean rule for target.
+CMakeFiles/PIDController.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PIDController.dir/build.make CMakeFiles/PIDController.dir/clean
+.PHONY : CMakeFiles/PIDController.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

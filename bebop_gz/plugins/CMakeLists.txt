@@ -78,5 +78,27 @@ target_link_libraries(VelocityControl
   gz-common6::gz-common6
 )
 
+# Plugin 8: VelocityControllerPID
+add_library(VelocityControllerPID SHARED VelocityControllerPID.cc)
+target_link_libraries(VelocityControllerPID
+  gz-sim9::gz-sim9
+  gz-transport14::gz-transport14
+  gz-msgs11::gz-msgs11
+  gz-plugin3::gz-plugin3
+  gz-math8::gz-math8
+  gz-common6::gz-common6
+)
+
+# Plugin 9: PIDController
+add_library(PIDController SHARED PIDController.cc)
+target_link_libraries(PIDController
+  gz-sim9::gz-sim9
+  gz-transport14::gz-transport14
+  gz-msgs11::gz-msgs11
+  gz-plugin3::gz-plugin3
+  gz-math8::gz-math8
+  gz-common6::gz-common6
+)
+
 # Instalar los plugins
-install(TARGETS SetPosePlugin RobotPosePublisher Common LeeVelocityController MulticopterMotorModel MulticopterVelocityControl VelocityControl DESTINATION lib)
+install(TARGETS SetPosePlugin RobotPosePublisher Common LeeVelocityController MulticopterMotorModel MulticopterVelocityControl VelocityControl VelocityControllerPID PIDController DESTINATION lib)
