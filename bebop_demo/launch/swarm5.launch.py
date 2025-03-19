@@ -18,6 +18,7 @@ def generate_launch_description():
     formation = '[[1.0, -1.0, -0.5, 0.0], [1.0, 1.0, -0.5, 0.0], [-1.0, -1.0, -0.5, 0.0], [-1.0, 1.0, -0.3, 0.0], [0.0, 0.0, 0.0, 0.0]]'
     lider = 'bebop5'
     world_name = 'bebop'
+    n=5
 
 
     # Lanzar Gazebo
@@ -132,13 +133,6 @@ def generate_launch_description():
     )
 
 
-    # Lanzar el nodo de joystick
-    DATA = ExecuteProcess(
-        cmd=['ros2', 'run', 'bebop_demo', 'graficas'],
-        output='screen'
-    )
-
-
     # Visor de imagenes
     imagenes = ExecuteProcess(
         cmd=[
@@ -146,6 +140,16 @@ def generate_launch_description():
             '--ros-args',
             '-p', f'robot_name:={robot_names}',
             '-p', f'world_name:={world_name}',           
+            ],
+        output='screen'
+    )
+
+    # Lanzar el nodo de joystick
+    Datos = ExecuteProcess(
+        cmd=[
+            'ros2', 'run', 'bebop_demo', 'graficas',
+            '--ros-args',
+            '-p', f'n:={n}',
             ],
         output='screen'
     )
@@ -162,4 +166,5 @@ def generate_launch_description():
         controller_follower_3,
         controller_follower_4,
         setpoint_followers,
+        Datos
     ])
