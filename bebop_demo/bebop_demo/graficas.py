@@ -1,158 +1,161 @@
+import os
+import json
+import numpy as np
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Pose
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-import numpy as np
-import time
+from nav_msgs.msg import Odometry
+from sensor_msgs.msg import Joy
+from scipy import io
 from tf_transformations import euler_from_quaternion
-from collections import deque
-from scipy.io import savemat  # Importar la función para guardar archivos .mat
+from rclpy.qos import QoSProfile
+import atexit
 
-class RealTimePlotter(Node):
+class MultiRobotDataRecorder(Node):
     def __init__(self):
-        super().__init__('real_time_plotter')
-
-        # Suscriptores a las poses y setpoints de los robots
-        self.sub_pose1 = self.create_subscription(Pose, '/bebop1/pose', lambda msg: self.pose_callback(msg, 'bebop1'), 10)
-        self.sub_setpoint1 = self.create_subscription(Pose, '/bebop1/setpointG', lambda msg: self.setpoint_callback(msg, 'bebop1'), 10)
-        self.sub_pose2 = self.create_subscription(Pose, '/bebop2/pose', lambda msg: self.pose_callback(msg, 'bebop2'), 10)
-        self.sub_setpoint2 = self.create_subscription(Pose, '/bebop2/setpointG', lambda msg: self.setpoint_callback(msg, 'bebop2'), 10)
-        self.sub_pose3 = self.create_subscription(Pose, '/bebop3/pose', lambda msg: self.pose_callback(msg, 'bebop2'), 10)
-        self.sub_setpoint3 = self.create_subscription(Pose, '/bebop3/setpointG', lambda msg: self.setpoint_callback(msg, 'bebop2'), 10)
-
-        # Variables para almacenar poses y setpoints
-        self.poses = {'bebop1': None, 'bebop2': None, 'bebop3': None}
-        self.setpoints = {'bebop1': None, 'bebop2': None, 'bebop3': None}
+        super().__init__('multi_robot_data_recorder')
         
-
-        # Almacenar trayectorias (usando deque para limitar el número de puntos)
-        self.max_history_length = 1000
-        self.pose_history = {'bebop1': deque(maxlen=self.max_history_length), 'bebop2': deque(maxlen=self.max_history_length), 'bebop3': deque(maxlen=self.max_history_length)}
-        self.setpoint_history = {'bebop1': deque(maxlen=self.max_history_length), 'bebop2': deque(maxlen=self.max_history_length), 'bebop3': deque(maxlen=self.max_history_length)}
-
-        # Almacenar errores
-        self.error_history = {
-            'bebop1': {'x': deque(maxlen=self.max_history_length), 'y': deque(maxlen=self.max_history_length), 
-                       'z': deque(maxlen=self.max_history_length), 'yaw': deque(maxlen=self.max_history_length)},
-            'bebop2': {'x': deque(maxlen=self.max_history_length), 'y': deque(maxlen=self.max_history_length), 
-                       'z': deque(maxlen=self.max_history_length), 'yaw': deque(maxlen=self.max_history_length)},
-            'bebop3': {'x': deque(maxlen=self.max_history_length), 'y': deque(maxlen=self.max_history_length), 
-                       'z': deque(maxlen=self.max_history_length), 'yaw': deque(maxlen=self.max_history_length)}
-        }
-
-        # Inicialización de la figura de trayectoria 3D
-        plt.ion()
-        self.fig_traj = plt.figure()
-        self.ax_traj = self.fig_traj.add_subplot(111, projection='3d')
+        # Declarar y obtener el parámetro 'n' (número de robots)
+        self.declare_parameter('n', 1)  
+        self.n = self.get_parameter('n').value
         
-        # Inicialización de la figura de error con 4 subgráficos
-        self.fig_error, self.axs_error = plt.subplots(2, 2, figsize=(12, 8))
-        self.fig_error.suptitle('Errores de seguimiento')
-
-        self.start_time = time.time()
-
-    def pose_callback(self, msg, robot_name):
-        """Callback para actualizar la pose de un robot."""
-        pose = np.array([msg.position.x, msg.position.y, msg.position.z])
-        quat = np.array([msg.orientation.x, msg.orientation.y, msg.orientation.z, msg.orientation.w])
-        self.poses[robot_name] = (pose, quat)
-        self.pose_history[robot_name].append(pose)
-
-    def setpoint_callback(self, msg, robot_name):
-        """Callback para actualizar el setpoint de un robot."""
-        setpoint = np.array([msg.position.x, msg.position.y, msg.position.z])
-        quat = np.array([msg.orientation.x, msg.orientation.y, msg.orientation.z, msg.orientation.w])
-        self.setpoints[robot_name] = (setpoint, quat)
-        self.setpoint_history[robot_name].append(setpoint)
-
-    def calculate_yaw_error(self, pose_quat, setpoint_quat):
-        """Calcula el error de yaw entre la pose y el setpoint."""
-        pose_euler = euler_from_quaternion(pose_quat)
-        setpoint_euler = euler_from_quaternion(setpoint_quat)
-        return setpoint_euler[2] - pose_euler[2]
-
-    def plot_data(self):
-        """Grafica las trayectorias y errores en tiempo real."""
-        try:
-            self.ax_traj.clear()
-            for robot_name in ['bebop1', 'bebop2']:
-                if self.poses[robot_name] is not None and self.setpoints[robot_name] is not None:
-                    pose, pose_quat = self.poses[robot_name]
-                    setpoint, setpoint_quat = self.setpoints[robot_name]
-
-                    # Calcular errores
-                    error_x = setpoint[0] - pose[0]
-                    error_y = setpoint[1] - pose[1]
-                    error_z = setpoint[2] - pose[2]
-                    error_yaw = self.calculate_yaw_error(pose_quat, setpoint_quat)
-
-                    # Almacenar errores
-                    self.error_history[robot_name]['x'].append(error_x)
-                    self.error_history[robot_name]['y'].append(error_y)
-                    self.error_history[robot_name]['z'].append(error_z)
-                    self.error_history[robot_name]['yaw'].append(error_yaw)
-
-                    # Graficar trayectorias
-                    if self.pose_history[robot_name]:
-                        pose_array = np.array(self.pose_history[robot_name])
-                        self.ax_traj.plot(pose_array[:, 0], pose_array[:, 1], pose_array[:, 2], label=f'Trayectoria {robot_name}')
-                    if self.setpoint_history[robot_name]:
-                        setpoint_array = np.array(self.setpoint_history[robot_name])
-                        self.ax_traj.plot(setpoint_array[:, 0], setpoint_array[:, 1], setpoint_array[:, 2], '--', label=f'Setpoint {robot_name}')
-
-            # Configurar gráfico de trayectorias
-            self.ax_traj.set_xlabel('X')
-            self.ax_traj.set_ylabel('Y')
-            self.ax_traj.set_zlabel('Z')
-            self.ax_traj.legend()
-
-            # Graficar errores
-            for i, (error_type, ax) in enumerate(zip(['x', 'y', 'z', 'yaw'], self.axs_error.flat)):
-                ax.clear()
-                for robot_name in ['bebop1', 'bebop2']:
-                    if self.error_history[robot_name][error_type]:
-                        ax.plot(self.error_history[robot_name][error_type], label=f'Error {error_type} {robot_name}')
-                ax.set_title(f'Error {error_type.upper()}')
-                ax.legend()
-                ax.grid(True)
-
-            plt.draw()
-            plt.pause(0.001)  # Reducir la frecuencia de actualización
-
-        except Exception as e:
-            self.get_logger().error(f"Error al graficar: {str(e)}")
-
-    def save_data_to_mat(self, filename):
+        # Validar que el número de robots sea válido
+        if self.n < 1:
+            self.get_logger().error("El número de robots debe ser al menos 1.")
+            raise ValueError("El número de robots debe ser al menos 1.")
+        
+        # Inicializar variables
+        self.robot_names = [f'bebop{i+1}' for i in range(self.n)]
+        self.time = []
+        self.poses = {name: {'x': [], 'y': [], 'z': [], 'yaw': []} for name in self.robot_names}
+        self.setpoints = {name: {'x': [], 'y': [], 'z': [], 'yaw': []} for name in self.robot_names}
+        
+        self.is_saving_data = False
+        self.recording_started = False  
+        
+        # Configurar QoS
+        qos_profile = QoSProfile(depth=10)
+        
+        # Crear suscripciones para cada robot
+        for name in self.robot_names:
+            self.create_subscription(Pose, f'/{name}/pose', lambda msg, n=name: self.pose_callback(msg, n), qos_profile)
+            self.create_subscription(Pose, f'/{name}/setpointG', lambda msg, n=name: self.setpoint_callback(msg, n), qos_profile)
+        
+        # Suscribirse al topic /joy para iniciar la grabación
+        self.create_subscription(Joy, '/joy', self.joy_callback, qos_profile)
+        self.get_logger().info(f"Esperando botón X del control de Xbox para iniciar... Número de robots: {self.n}")
+    
+    def joy_callback(self, msg):
+        """Callback para el joystick. Inicia la grabación si se presiona el botón X."""
+        if len(msg.buttons) > 0 and msg.buttons[3] == 1:  # Botón X del control de Xbox
+            if not self.recording_started:
+                self.start_recording()
+    
+    def start_recording(self):
+        """Inicia la grabación de datos."""
+        self.recording_started = True
+        self.is_saving_data = True
+        self.start_time = self.get_clock().now().seconds_nanoseconds()[0]
+        self.get_logger().info("Grabación iniciada...")
+        
+        # Crear un temporizador para guardar datos periódicamente
+        self.timer = self.create_timer(0.001, self.record_data)
+        # Crear un temporizador para detener la grabación después de 60 segundos
+        self.stop_timer_ros = self.create_timer(60.0, self.stop_recording)
+    
+    def stop_recording(self):
+        """Detiene la grabación y guarda los datos."""
+        if self.is_saving_data:
+            self.get_logger().info("Deteniendo la grabación...")
+            self.is_saving_data = False
+            self.recording_started = False
+            if hasattr(self, 'timer') and self.timer:
+                self.destroy_timer(self.timer)
+            self.get_logger().info("Grabación finalizada. Guardando datos...")
+            self.save_data()
+    
+    def record_data(self):
+        """Guarda el tiempo actual en la lista de tiempos."""
+        if not self.is_saving_data:
+            return
+        
+        current_time = self.get_clock().now().seconds_nanoseconds()[0] - self.start_time
+        self.time.append(current_time)
+    
+    def pose_callback(self, msg, name):
+        """Callback para la pose de los robots."""
+        if not self.is_saving_data:
+            return
+        
+        self.poses[name]['x'].append(msg.position.x)
+        self.poses[name]['y'].append(msg.position.y)
+        self.poses[name]['z'].append(msg.position.z)
+        
+        # Convertir la orientación (quaternion) a ángulo de guiñada (yaw)
+        q = msg.orientation
+        _, _, yaw = euler_from_quaternion([q.x, q.y, q.z, q.w])
+        self.poses[name]['yaw'].append(yaw)
+    
+    def setpoint_callback(self, msg, name):
+        """Callback para los setpoints de los robots."""
+        if not self.is_saving_data:
+            return
+        
+        self.setpoints[name]['x'].append(msg.position.x)
+        self.setpoints[name]['y'].append(msg.position.y)
+        self.setpoints[name]['z'].append(msg.position.z)
+        
+        # Convertir la orientación (quaternion) a ángulo de guiñada (yaw)
+        q = msg.orientation
+        _, _, yaw = euler_from_quaternion([q.x, q.y, q.z, q.w])
+        self.setpoints[name]['yaw'].append(yaw)
+    
+    def save_data(self):
         """Guarda los datos en un archivo .mat."""
-        data = {
-            'pose_history_bebop1': np.array(self.pose_history['bebop1']),
-            'pose_history_bebop2': np.array(self.pose_history['bebop2']),
-            'setpoint_history_bebop1': np.array(self.setpoint_history['bebop1']),
-            'setpoint_history_bebop2': np.array(self.setpoint_history['bebop2']),
-            'error_history_bebop1': {k: np.array(v) for k, v in self.error_history['bebop1'].items()},
-            'error_history_bebop2': {k: np.array(v) for k, v in self.error_history['bebop2'].items()},
-        }
-        savemat(filename, data)  # Guardar los datos en un archivo .mat
-        self.get_logger().info(f"Datos guardados en {filename}")
-
-    def run(self):
-        """Bucle principal para actualizar los gráficos."""
+        if not self.time:
+            self.get_logger().warn("No hay datos para guardar.")
+            return
+        
+        # Crear el directorio si no existe
+        home_dir = os.path.expanduser("~/Experimentos")
+        if not os.path.exists(home_dir):
+            try:
+                os.makedirs(home_dir)
+            except Exception as e:
+                self.get_logger().error(f"Error al crear directorio: {e}")
+                return
+        
+        # Preparar los datos para guardar
+        data_dict = {'time': self.time, 'poses': self.poses, 'setpoints': self.setpoints}
+        mat_path = os.path.join(home_dir, "drones_data.mat")
+        
+        # Verificar la cantidad de datos
+        self.get_logger().info(f"Número de registros en time: {len(self.time)}")
+        self.get_logger().info(f"Número de registros en poses: {sum(len(v['x']) for v in self.poses.values())}")
+        
+        # Guardar los datos en un archivo .mat
         try:
-            while rclpy.ok():
-                rclpy.spin_once(self, timeout_sec=0.001)  # Reducir el tiempo de espera
-                self.plot_data()
-        except KeyboardInterrupt:
-            # Guardar los datos al finalizar el programa
-            self.save_data_to_mat('datos_drones.mat')
-            self.get_logger().info("Programa finalizado. Datos guardados.")
+            io.savemat(mat_path, data_dict)
+            self.get_logger().info(f"Datos guardados en: {mat_path}")
+        except Exception as e:
+            self.get_logger().error(f"Error al guardar datos: {e}")
+    
 
-def main():
-    rclpy.init()
-    plotter = RealTimePlotter()
-    plotter.run()
-    plotter.destroy_node()
-    rclpy.shutdown()
+def main(args=None):
+    rclpy.init(args=args)
+    recorder = MultiRobotDataRecorder()
+    
+    # Registrar la función save_data para que se llame al salir
+    atexit.register(recorder.save_data)
+
+    try:
+        rclpy.spin(recorder)
+    except KeyboardInterrupt:
+        recorder.save_data()
+    finally:
+        recorder.destroy_node()
+        rclpy.shutdown()
+    
 
 if __name__ == '__main__':
     main()

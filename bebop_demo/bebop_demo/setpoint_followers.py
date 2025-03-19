@@ -74,7 +74,7 @@ class SetpointFollowers(Node):
         if len(msg.buttons) > JoystickButtons.BUTTON_2 and msg.buttons[JoystickButtons.BUTTON_2] == 1:
             if not self.recording_enabled:
                 self.recording_enabled = True  # Habilita la publicación
-                self.get_logger().info("¡Botón 2 presionado! Iniciando gráficas...")
+                # self.get_logger().info("¡Botón 2 presionado! Iniciando gráficas...")
 
     def pos_changed(self, msg):
         """ Callback que actualiza la pose del líder """

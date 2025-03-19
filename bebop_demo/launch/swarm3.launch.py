@@ -14,10 +14,11 @@ def generate_launch_description():
 
     # Definir nombres de robots y condiciones iniciales como cadenas JSON
     robot_names = '["bebop1", "bebop2", "bebop3"]'  # Cadena JSON
-    initial_conditions = '[[0.5, -0.5, 0.0, 0.0], [0.5, 0.5, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]]'  # Cadena JSON
-    formation = '[[0.5, -0.5, 0.0, 0.0], [0.5, 0.5, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]]'  # Cadena JSON
+    initial_conditions = '[[1.5, -0.5, 0.0, 0.0], [1.5, 0.5, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]]'  # Cadena JSON
+    formation = '[[1.5, -0.5, 0.0, 0.0], [1.5, 0.5, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]]'  # Cadena JSON
     lider = 'bebop3'
     world_name = 'bebop'
+    n=3
 
     # Lanzar Gazebo
     gz_sim = IncludeLaunchDescription(
@@ -25,13 +26,13 @@ def generate_launch_description():
             os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')
         ),
         launch_arguments={
-            'gz_args': '-r -z  2000000 bebop.sdf'
+            'gz_args': '-r -s -z  2000000 bebop3.sdf'
         }.items(),
     )
     # Lanzar el puente ROS-Gazebo
     ros_gz_bridge = RosGzBridge(
         bridge_name='ros_gz_bridge',
-        config_file=os.path.join(pkg_ros_gz_sim_demos, 'config', 'bebop_swarm.yaml'),
+        config_file=os.path.join(pkg_ros_gz_sim_demos, 'config', 'bebop_swarm3.yaml'),
     )
 
     # # Lanzar el controlador de joystick
@@ -120,8 +121,12 @@ def generate_launch_description():
 
 
     # Lanzar el nodo de joystick
-    DATA = ExecuteProcess(
-        cmd=['ros2', 'run', 'bebop_demo', 'graficas'],
+    Datos = ExecuteProcess(
+        cmd=[
+            'ros2', 'run', 'bebop_demo', 'graficas',
+            '--ros-args',
+            '-p', f'n:={n}',
+            ],
         output='screen'
     )
 
@@ -148,6 +153,6 @@ def generate_launch_description():
         controller_follower_1,
         controller_follower_2,
         setpoint_followers,
-        # DATA,
-        # imagenes
+        Datos,
+        imagenes
     ])
