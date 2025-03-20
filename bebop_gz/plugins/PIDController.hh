@@ -15,12 +15,13 @@
 #include "gz/sim/Model.hh"
 
 #include "Common.hh"
-#include "VelocityControllerPID.hh"
+#include "LeeVelocityController.hh"
 
 namespace gz
 {
 namespace sim
 {
+// Inline bracket to help doxygen filtering.
 inline namespace GZ_SIM_VERSION_NAMESPACE {
 namespace systems
 {
@@ -35,6 +36,9 @@ namespace systems
   /// system on each rotor. Note also that only one PIDController
   /// system is allowed per model.
   ///
+  /// This system is inspired by the LeePositionController from RotorS
+  /// https://github.com/ethz-asl/rotors_simulator/blob/master/rotors_control/include/rotors_control/lee_position_controller.h
+  /// Instead of subscribing to odometry messages, this system uses ground truth
   /// values of orientation, linear velocity and angular velocity from
   /// simulation. As such it is not designed to work with user supplied state
   /// estimators. Instead, the system allows noise to be added to velocity
@@ -202,7 +206,7 @@ namespace systems
     private: Eigen::VectorXd rotorVelocities;
 
     /// \brief Velocity controller
-    private: std::unique_ptr<multicopter_control::VelocityControllerPID>
+    private: std::unique_ptr<multicopter_control::LeeVelocityController>
                  velocityController;
 
     /// \brief Noise parameters read from SDF

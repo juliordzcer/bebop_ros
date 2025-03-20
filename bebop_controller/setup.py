@@ -24,8 +24,9 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'controller_node = bebop_controller.controller:main',
-            'controller_follower = bebop_controller.controller_follower:main',
+            'controller_pid = bebop_controller.controller_pid:main',
+            'controller_follower_pid = bebop_controller.controller_follower_pid:main',
+            'controller_sta = bebop_controller.controller_sta:main',
         ],
     },
 )

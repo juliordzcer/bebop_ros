@@ -4,9 +4,9 @@
 CMakeFiles/PIDController.dir/PIDController.cc.o
  /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/PIDController.cc
  /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/Common.hh
+ /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/LeeVelocityController.hh
  /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/PIDController.hh
  /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/Parameters.hh
- /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/VelocityControllerPID.hh
  /opt/ros/rolling/opt/gz_common_vendor/include/gz/common6/gz/common/Console.hh
  /opt/ros/rolling/opt/gz_common_vendor/include/gz/common6/gz/common/Event.hh
  /opt/ros/rolling/opt/gz_common_vendor/include/gz/common6/gz/common/Export.hh

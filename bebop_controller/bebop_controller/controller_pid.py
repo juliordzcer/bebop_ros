@@ -6,7 +6,7 @@ from rclpy.parameter import Parameter
 from geometry_msgs.msg import Twist, Pose
 from std_srvs.srv import Empty
 from tf2_ros import Buffer, TransformListener
-from tf_transformations import euler_from_quaternion,quaternion_from_euler
+from tf_transformations import euler_from_quaternion, quaternion_from_euler
 from rclpy.qos import QoSProfile
 from nav_msgs.msg import Odometry
 from std_msgs.msg import Bool
@@ -30,31 +30,31 @@ class Controller(Node):
         super().__init__('controller')
         
         # Declaración de parámetros
-        self.declare_parameter('frequency', 50.0)
-        self.declare_parameter('robot_name', 'bebop2')
-        self.declare_parameter('lider_name', 'goal')
-        self.declare_parameter('takeoff_threshold', 0.05)
+        self.declare_parameter('frequency',50.0)
+        self.declare_parameter('robot_name', 'bebop3')
+        self.declare_parameter('goal_name', 'goal')
+        self.declare_parameter('takeoff_threshold', 0.04)
         self.declare_parameter('landing_threshold', 0.08)
         
         # Obtención de parámetros
         self.frequency = self.get_parameter('frequency').value
         self.robot_name = self.get_parameter('robot_name').value.strip()
-        self.lider_name = self.get_parameter("lider_name").value.strip()
+        self.goal_name = self.get_parameter("goal_name").value.strip()
         self.takeoff_threshold = self.get_parameter('takeoff_threshold').value
         self.landing_threshold = self.get_parameter('landing_threshold').value
 
         if not self.robot_name:
-            self.get_logger().warn('El parámetro "robot_name" está vacío. Se usará "bebop2" por defecto.')
-            self.robot_name = 'bebop2'
+            self.get_logger().warn('El parámetro "robot_name" está vacío. Se usará "bebop3" por defecto.')
+            self.robot_name = 'bebop3'
 
         self.get_logger().info(f"Robot Name: {self.robot_name}")
 
         # Definición de tópicos dinámicos
         qos_profile = QoSProfile(depth=10)
         self.cmd_pub = self.create_publisher(Twist, f"/{self.robot_name}/cmd_vel", qos_profile)
-        self.cmd_enable = self.create_publisher(Bool, f"/{self.robot_name}/enable", qos_profile)
         self.cmd_des = self.create_publisher(Pose, f"/{self.robot_name}/setpointG", qos_profile)
-        self.goal_sub = self.create_subscription(Pose, f"/{self.lider_name}/setpoint", self.goal_changed, qos_profile)
+        self.cmd_enable = self.create_publisher(Bool, f"/{self.robot_name}/enable", qos_profile)
+        self.goal_sub = self.create_subscription(Pose, f"/{self.goal_name}", self.goal_changed, qos_profile)
         self.pos_sub = self.create_subscription(Pose, f"/{self.robot_name}/pose", self.pos_changed, qos_profile)
         self.joy_sub = self.create_subscription(Joy, 'joy', self.joy_callback, qos_profile)
         
@@ -100,8 +100,9 @@ class Controller(Node):
         max_output = self.get_param_or(prefix + 'maxOutput', 1.0)
         integrator_min = self.get_param_or(prefix + 'integratorMin', -0.5)
         integrator_max = self.get_param_or(prefix + 'integratorMax', 0.5)
+        dt = 1.0 / self.frequency
         
-        return PID(self, kp, kd, ki, min_output, max_output, integrator_min, integrator_max, axis.lower())
+        return PID(self, kp, kd, ki, min_output, max_output, integrator_min, integrator_max, dt, axis.lower())
 
     def get_param_or(self, name, default):
         self.declare_parameter(name, default)
@@ -167,6 +168,7 @@ class Controller(Node):
             msg.linear.z = float(self.pid_z.update(self.current_pose.position.z, z_d))
             msg.angular.z = float(self.pid_z.update(euler_angles_c[2], yaw_d))
             self.cmd_pub.publish(msg)
+
 
             msg_goal = Pose()
             msg_goal.position.x = x_d

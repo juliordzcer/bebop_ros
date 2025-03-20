@@ -14,7 +14,7 @@ def generate_launch_description():
 
     # Definir nombres de robots y condiciones iniciales como cadenas JSON
     robot_names = '["bebop1", "bebop2", "bebop3"]'  # Cadena JSON
-    initial_conditions = '[[1.5, -0.5, 0.0, 0.0], [1.5, 0.5, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]]'  # Cadena JSON
+    initial_conditions = '[[2.5, -0.5, 0.0, 1.0], [2.5, 0.5, 0.0, 1.0], [0.0, 0.0, 0.0, 0.0]]'  # Cadena JSON
     formation = '[[1.5, -0.5, 0.0, 0.0], [1.5, 0.5, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]]'  # Cadena JSON
     lider = 'bebop3'
     world_name = 'bebop'
@@ -26,7 +26,7 @@ def generate_launch_description():
             os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')
         ),
         launch_arguments={
-            'gz_args': '-r -s -z  2000000 bebop3.sdf'
+            'gz_args': '-r -z  1000000 bebop3.sdf'
         }.items(),
     )
     # Lanzar el puente ROS-Gazebo
@@ -50,8 +50,8 @@ def generate_launch_description():
         cmd=[
             'ros2', 'run', 'bebop_demo', 'setpoint',
             '--ros-args',
-            '-p', 'h:=2.0',
-            '-p', 'r:=0.5',
+            '-p', 'h:=0.3',
+            '-p', 'r:=0.2',
             '-p', f'lider_name:={lider}',
         ],
         output='screen'
@@ -61,8 +61,8 @@ def generate_launch_description():
         cmd=[
             'ros2', 'run', 'bebop_demo', 'setpoint_followers',
             '--ros-args',
-            "-p", f"robot_names:='{robot_names}'",  # Corrección: Comillas simples externas, dobles internas
-            "-p", f"formation:='{formation}'", # Corrección: Comillas simples externas, dobles internas
+            "-p", f"robot_names:='{robot_names}'",  
+            "-p", f"formation:='{formation}'", 
             "-p", f"lider_name:='{lider}'",
         ],
         output='screen'
@@ -77,7 +77,7 @@ def generate_launch_description():
     # Lanzar el nodo MultiRobotPosePublisher
     set_pose = Node(
         package='bebop_demo',
-        executable='set_pose',  # Nombre del ejecutable
+        executable='set_pose', 
         name='set_pose',
         output='screen',
         parameters=[

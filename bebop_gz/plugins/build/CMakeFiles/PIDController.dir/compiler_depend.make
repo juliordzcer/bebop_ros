@@ -3,9 +3,9 @@
 
 CMakeFiles/PIDController.dir/PIDController.cc.o: /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/PIDController.cc \
   /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/Common.hh \
+  /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/LeeVelocityController.hh \
   /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/PIDController.hh \
   /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/Parameters.hh \
-  /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/VelocityControllerPID.hh \
   /opt/ros/rolling/opt/gz_common_vendor/include/gz/common6/gz/common/Console.hh \
   /opt/ros/rolling/opt/gz_common_vendor/include/gz/common6/gz/common/Event.hh \
   /opt/ros/rolling/opt/gz_common_vendor/include/gz/common6/gz/common/Export.hh \
@@ -1528,6 +1528,12 @@ CMakeFiles/PIDController.dir/PIDController.cc.o: /home/jr/ws_bebop/src/bebop_ros
 
 /opt/ros/rolling/opt/gz_msgs_vendor/include/gz/msgs11/gz/msgs/pointcloud_packed.pb.h:
 
+/usr/include/eigen3/Eigen/src/Core/SolveTriangular.h:
+
+/usr/include/c++/13/exception:
+
+/opt/ros/rolling/opt/gz_msgs_vendor/include/gz/msgs11/gz/msgs/particle_emitter.pb.h:
+
 /opt/ros/rolling/opt/gz_msgs_vendor/include/gz/msgs11/gz/msgs/Factory.hh:
 
 /usr/include/eigen3/Eigen/src/Core/util/ReshapedHelper.h:
@@ -1940,28 +1946,6 @@ CMakeFiles/PIDController.dir/PIDController.cc.o: /home/jr/ws_bebop/src/bebop_ros
 
 /opt/ros/rolling/opt/gz_common_vendor/include/gz/common6/gz/common/Console.hh:
 
-/usr/include/eigen3/Eigen/src/Core/SolveTriangular.h:
-
-/usr/include/c++/13/exception:
-
-/opt/ros/rolling/opt/gz_msgs_vendor/include/gz/msgs11/gz/msgs/particle_emitter.pb.h:
-
-/home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/VelocityControllerPID.hh:
-
-/opt/ros/rolling/opt/gz_msgs_vendor/include/gz/msgs11/gz/msgs/convert/DiscoveryType.hh:
-
-/opt/ros/rolling/opt/gz_msgs_vendor/include/gz/msgs11/gz/msgs/sensor.pb.h:
-
-/opt/ros/rolling/opt/gz_msgs_vendor/include/gz/msgs11/gz/msgs/details/double.pb.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/13/include/mmintrin.h:
-
-/usr/include/c++/13/tr1/bessel_function.tcc:
-
-/opt/ros/rolling/opt/gz_msgs_vendor/include/gz/msgs11/gz/msgs/stringmsg.pb.h:
-
-/opt/ros/rolling/opt/gz_common_vendor/include/gz/common6/gz/common/detail/Export.hh:
-
 /usr/include/x86_64-linux-gnu/c++/13/bits/c++allocator.h:
 
 /usr/include/c++/13/ext/aligned_buffer.h:
@@ -2071,6 +2055,20 @@ CMakeFiles/PIDController.dir/PIDController.cc.o: /home/jr/ws_bebop/src/bebop_ros
 /opt/ros/rolling/opt/gz_common_vendor/include/gz/common6/gz/common/profiler/detail/Export.hh:
 
 /opt/ros/rolling/opt/gz_transport_vendor/include/gz/transport14/gz/transport/Node.hh:
+
+/opt/ros/rolling/opt/gz_msgs_vendor/include/gz/msgs11/gz/msgs/convert/DiscoveryType.hh:
+
+/opt/ros/rolling/opt/gz_msgs_vendor/include/gz/msgs11/gz/msgs/sensor.pb.h:
+
+/opt/ros/rolling/opt/gz_msgs_vendor/include/gz/msgs11/gz/msgs/details/double.pb.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/13/include/mmintrin.h:
+
+/usr/include/c++/13/tr1/bessel_function.tcc:
+
+/opt/ros/rolling/opt/gz_msgs_vendor/include/gz/msgs11/gz/msgs/stringmsg.pb.h:
+
+/opt/ros/rolling/opt/gz_common_vendor/include/gz/common6/gz/common/detail/Export.hh:
 
 /opt/ros/rolling/opt/gz_msgs_vendor/include/gz/msgs11/gz/msgs/details/version.pb.h:
 
@@ -2215,6 +2213,8 @@ CMakeFiles/PIDController.dir/PIDController.cc.o: /home/jr/ws_bebop/src/bebop_ros
 /opt/ros/rolling/opt/gz_math_vendor/include/gz/math8/gz/math/Matrix6.hh:
 
 /opt/ros/rolling/opt/gz_msgs_vendor/include/gz/msgs11/gz/msgs/details/model.pb.h:
+
+/home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/LeeVelocityController.hh:
 
 /opt/ros/rolling/opt/gz_msgs_vendor/include/gz/msgs11/gz/msgs/serialized_map.pb.h:
 

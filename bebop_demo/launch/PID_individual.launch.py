@@ -23,7 +23,7 @@ def generate_launch_description():
             os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')
         ),
         launch_arguments={
-            'gz_args': '-r -z 1000000 bebop_PID.sdf'
+            'gz_args': '-r -z 1000000 bebop1.sdf'
         }.items(),
     )
 
@@ -53,10 +53,15 @@ def generate_launch_description():
 
 
     # Lanzar el nodo de joystick
-    DATA = ExecuteProcess(
-        cmd=['ros2', 'run', 'bebop_demo', 'graficas'],
+    Datos = ExecuteProcess(
+        cmd=[
+            'ros2', 'run', 'bebop_demo', 'graficas',
+            '--ros-args',
+            '-p', 'n:=1',
+            ],
         output='screen'
     )
+
 
     # Lanzar el nodo MultiRobotPosePublisher
     set_pose = Node(
@@ -100,5 +105,5 @@ def generate_launch_description():
         joystick,
         set_pose,
         controller_leader,
-        DATA,
+        Datos,
     ])

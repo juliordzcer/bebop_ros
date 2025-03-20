@@ -243,7 +243,7 @@ CURL_LIBRARY_DEBUG:FILEPATH=CURL_LIBRARY_DEBUG-NOTFOUND
 CURL_LIBRARY_RELEASE:FILEPATH=/usr/lib/x86_64-linux-gnu/libcurl.so
 
 //Dependencies for the target
-Common_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;general;gz-math8::gz-math8;general;gz-common6::gz-common6;
+Common_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;general;gz-math8::gz-math8;general;gz-common6::gz-common6;general;dl;
 
 //The directory containing a CMake configuration file for Eigen3.
 Eigen3_DIR:PATH=/usr/share/eigen3/cmake
@@ -270,13 +270,13 @@ IGN_SANITIZER:STRING=
 JSONCPP_LIBRARY_jsoncpp:FILEPATH=/usr/lib/x86_64-linux-gnu/libjsoncpp.so
 
 //Dependencies for the target
-LeeVelocityController_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;
+LeeVelocityController_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;general;dl;
 
 //Dependencies for the target
-MulticopterMotorModel_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;general;gz-transport14::gz-transport14;general;gz-msgs11::gz-msgs11;general;gz-plugin3::gz-plugin3;general;gz-math8::gz-math8;general;gz-common6::gz-common6;
+MulticopterMotorModel_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;general;gz-transport14::gz-transport14;general;gz-msgs11::gz-msgs11;general;gz-plugin3::gz-plugin3;general;gz-math8::gz-math8;general;gz-common6::gz-common6;general;dl;
 
 //Dependencies for the target
-MulticopterVelocityControl_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;general;gz-transport14::gz-transport14;general;gz-msgs11::gz-msgs11;general;gz-plugin3::gz-plugin3;general;gz-math8::gz-math8;general;gz-common6::gz-common6;
+MulticopterVelocityControl_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;general;gz-transport14::gz-transport14;general;gz-msgs11::gz-msgs11;general;gz-plugin3::gz-plugin3;general;gz-math8::gz-math8;general;gz-common6::gz-common6;general;dl;
 
 //Path to a file.
 OPENGL_EGL_INCLUDE_DIR:PATH=/usr/include
@@ -315,7 +315,7 @@ OPENGL_opengl_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libOpenGL.so
 OPENGL_xmesa_INCLUDE_DIR:PATH=OPENGL_xmesa_INCLUDE_DIR-NOTFOUND
 
 //Dependencies for the target
-PIDController_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;general;gz-transport14::gz-transport14;general;gz-msgs11::gz-msgs11;general;gz-plugin3::gz-plugin3;general;gz-math8::gz-math8;general;gz-common6::gz-common6;
+PIDController_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;general;gz-transport14::gz-transport14;general;gz-msgs11::gz-msgs11;general;gz-plugin3::gz-plugin3;general;gz-math8::gz-math8;general;gz-common6::gz-common6;general;dl;
 
 //Arguments to supply to pkg-config
 PKG_CONFIG_ARGN:STRING=
@@ -381,13 +381,13 @@ Qt5Widgets_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/Qt5Widgets
 Qt5_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/Qt5
 
 //Dependencies for the target
-RobotPosePublisher_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;general;gz-transport14::gz-transport14;general;gz-plugin3::gz-plugin3;general;gz-math8::gz-math8;general;gz-common6::gz-common6;
+RobotPosePublisher_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;general;gz-transport14::gz-transport14;general;gz-plugin3::gz-plugin3;general;gz-math8::gz-math8;general;gz-common6::gz-common6;general;dl;
 
 //Path to a library.
 SWSCALE_LIBRARY_swscale:FILEPATH=/usr/lib/x86_64-linux-gnu/libswscale.so
 
 //Dependencies for the target
-SetPosePlugin_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;general;gz-transport14::gz-transport14;general;gz-msgs11::gz-msgs11;general;gz-plugin3::gz-plugin3;general;gz-math8::gz-math8;general;gz-common6::gz-common6;
+SetPosePlugin_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;general;gz-transport14::gz-transport14;general;gz-msgs11::gz-msgs11;general;gz-plugin3::gz-plugin3;general;gz-math8::gz-math8;general;gz-common6::gz-common6;general;dl;
 
 //Path to a library.
 TINYXML2_LIBRARY_tinyxml2:FILEPATH=/usr/lib/x86_64-linux-gnu/libtinyxml2.so
@@ -396,10 +396,10 @@ TINYXML2_LIBRARY_tinyxml2:FILEPATH=/usr/lib/x86_64-linux-gnu/libtinyxml2.so
 UUID_LIBRARY_uuid:FILEPATH=/usr/lib/x86_64-linux-gnu/libuuid.so
 
 //Dependencies for the target
-VelocityControl_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;general;gz-transport14::gz-transport14;general;gz-msgs11::gz-msgs11;general;gz-plugin3::gz-plugin3;general;gz-math8::gz-math8;general;gz-common6::gz-common6;
+VelocityControl_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;general;gz-transport14::gz-transport14;general;gz-msgs11::gz-msgs11;general;gz-plugin3::gz-plugin3;general;gz-math8::gz-math8;general;gz-common6::gz-common6;general;dl;
 
 //Dependencies for the target
-VelocityControllerPID_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;general;gz-transport14::gz-transport14;general;gz-msgs11::gz-msgs11;general;gz-plugin3::gz-plugin3;general;gz-math8::gz-math8;general;gz-common6::gz-common6;
+VelocityControllerPID_LIB_DEPENDS:STATIC=general;gz-sim9::gz-sim9;general;gz-transport14::gz-transport14;general;gz-msgs11::gz-msgs11;general;gz-plugin3::gz-plugin3;general;gz-math8::gz-math8;general;gz-common6::gz-common6;general;dl;
 
 //Path to a library.
 YAML_LIBRARY_yaml:FILEPATH=/usr/lib/x86_64-linux-gnu/libyaml.so

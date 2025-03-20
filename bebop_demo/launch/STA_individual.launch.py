@@ -23,7 +23,7 @@ def generate_launch_description():
             os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')
         ),
         launch_arguments={
-            'gz_args': '-r -z 1000000 bebop_PID.sdf'
+            'gz_args': '-r -z 1000000 bebop_only.sdf'
         }.items(),
     )
 
@@ -73,7 +73,7 @@ def generate_launch_description():
     # Lanzar el controlador PID
     controller_leader = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(get_package_share_directory('bebop_controller'), 'launch', 'pid.launch.py')
+            os.path.join(get_package_share_directory('bebop_controller'), 'launch', 'sta.launch.py')
         ),
         launch_arguments={
             'robot_name': 'bebop1',
