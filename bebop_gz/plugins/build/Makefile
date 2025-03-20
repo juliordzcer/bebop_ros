@@ -187,6 +187,217 @@ RobotPosePublisher/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/RobotPosePublisher.dir/build.make CMakeFiles/RobotPosePublisher.dir/build
 .PHONY : RobotPosePublisher/fast
 
+#=============================================================================
+# Target rules for targets named Common
+
+# Build rule for target.
+Common: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Common
+.PHONY : Common
+
+# fast build rule for target.
+Common/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Common.dir/build.make CMakeFiles/Common.dir/build
+.PHONY : Common/fast
+
+#=============================================================================
+# Target rules for targets named LeeVelocityController
+
+# Build rule for target.
+LeeVelocityController: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 LeeVelocityController
+.PHONY : LeeVelocityController
+
+# fast build rule for target.
+LeeVelocityController/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LeeVelocityController.dir/build.make CMakeFiles/LeeVelocityController.dir/build
+.PHONY : LeeVelocityController/fast
+
+#=============================================================================
+# Target rules for targets named MulticopterVelocityControl
+
+# Build rule for target.
+MulticopterVelocityControl: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 MulticopterVelocityControl
+.PHONY : MulticopterVelocityControl
+
+# fast build rule for target.
+MulticopterVelocityControl/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MulticopterVelocityControl.dir/build.make CMakeFiles/MulticopterVelocityControl.dir/build
+.PHONY : MulticopterVelocityControl/fast
+
+#=============================================================================
+# Target rules for targets named MulticopterMotorModel
+
+# Build rule for target.
+MulticopterMotorModel: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 MulticopterMotorModel
+.PHONY : MulticopterMotorModel
+
+# fast build rule for target.
+MulticopterMotorModel/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MulticopterMotorModel.dir/build.make CMakeFiles/MulticopterMotorModel.dir/build
+.PHONY : MulticopterMotorModel/fast
+
+#=============================================================================
+# Target rules for targets named VelocityControl
+
+# Build rule for target.
+VelocityControl: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 VelocityControl
+.PHONY : VelocityControl
+
+# fast build rule for target.
+VelocityControl/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VelocityControl.dir/build.make CMakeFiles/VelocityControl.dir/build
+.PHONY : VelocityControl/fast
+
+#=============================================================================
+# Target rules for targets named VelocityControllerPID
+
+# Build rule for target.
+VelocityControllerPID: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 VelocityControllerPID
+.PHONY : VelocityControllerPID
+
+# fast build rule for target.
+VelocityControllerPID/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VelocityControllerPID.dir/build.make CMakeFiles/VelocityControllerPID.dir/build
+.PHONY : VelocityControllerPID/fast
+
+#=============================================================================
+# Target rules for targets named PIDController
+
+# Build rule for target.
+PIDController: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 PIDController
+.PHONY : PIDController
+
+# fast build rule for target.
+PIDController/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PIDController.dir/build.make CMakeFiles/PIDController.dir/build
+.PHONY : PIDController/fast
+
+Common.o: Common.cc.o
+.PHONY : Common.o
+
+# target to build an object file
+Common.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Common.dir/build.make CMakeFiles/Common.dir/Common.cc.o
+.PHONY : Common.cc.o
+
+Common.i: Common.cc.i
+.PHONY : Common.i
+
+# target to preprocess a source file
+Common.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Common.dir/build.make CMakeFiles/Common.dir/Common.cc.i
+.PHONY : Common.cc.i
+
+Common.s: Common.cc.s
+.PHONY : Common.s
+
+# target to generate assembly for a file
+Common.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Common.dir/build.make CMakeFiles/Common.dir/Common.cc.s
+.PHONY : Common.cc.s
+
+LeeVelocityController.o: LeeVelocityController.cc.o
+.PHONY : LeeVelocityController.o
+
+# target to build an object file
+LeeVelocityController.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LeeVelocityController.dir/build.make CMakeFiles/LeeVelocityController.dir/LeeVelocityController.cc.o
+.PHONY : LeeVelocityController.cc.o
+
+LeeVelocityController.i: LeeVelocityController.cc.i
+.PHONY : LeeVelocityController.i
+
+# target to preprocess a source file
+LeeVelocityController.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LeeVelocityController.dir/build.make CMakeFiles/LeeVelocityController.dir/LeeVelocityController.cc.i
+.PHONY : LeeVelocityController.cc.i
+
+LeeVelocityController.s: LeeVelocityController.cc.s
+.PHONY : LeeVelocityController.s
+
+# target to generate assembly for a file
+LeeVelocityController.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LeeVelocityController.dir/build.make CMakeFiles/LeeVelocityController.dir/LeeVelocityController.cc.s
+.PHONY : LeeVelocityController.cc.s
+
+MulticopterMotorModel.o: MulticopterMotorModel.cc.o
+.PHONY : MulticopterMotorModel.o
+
+# target to build an object file
+MulticopterMotorModel.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MulticopterMotorModel.dir/build.make CMakeFiles/MulticopterMotorModel.dir/MulticopterMotorModel.cc.o
+.PHONY : MulticopterMotorModel.cc.o
+
+MulticopterMotorModel.i: MulticopterMotorModel.cc.i
+.PHONY : MulticopterMotorModel.i
+
+# target to preprocess a source file
+MulticopterMotorModel.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MulticopterMotorModel.dir/build.make CMakeFiles/MulticopterMotorModel.dir/MulticopterMotorModel.cc.i
+.PHONY : MulticopterMotorModel.cc.i
+
+MulticopterMotorModel.s: MulticopterMotorModel.cc.s
+.PHONY : MulticopterMotorModel.s
+
+# target to generate assembly for a file
+MulticopterMotorModel.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MulticopterMotorModel.dir/build.make CMakeFiles/MulticopterMotorModel.dir/MulticopterMotorModel.cc.s
+.PHONY : MulticopterMotorModel.cc.s
+
+MulticopterVelocityControl.o: MulticopterVelocityControl.cc.o
+.PHONY : MulticopterVelocityControl.o
+
+# target to build an object file
+MulticopterVelocityControl.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MulticopterVelocityControl.dir/build.make CMakeFiles/MulticopterVelocityControl.dir/MulticopterVelocityControl.cc.o
+.PHONY : MulticopterVelocityControl.cc.o
+
+MulticopterVelocityControl.i: MulticopterVelocityControl.cc.i
+.PHONY : MulticopterVelocityControl.i
+
+# target to preprocess a source file
+MulticopterVelocityControl.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MulticopterVelocityControl.dir/build.make CMakeFiles/MulticopterVelocityControl.dir/MulticopterVelocityControl.cc.i
+.PHONY : MulticopterVelocityControl.cc.i
+
+MulticopterVelocityControl.s: MulticopterVelocityControl.cc.s
+.PHONY : MulticopterVelocityControl.s
+
+# target to generate assembly for a file
+MulticopterVelocityControl.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MulticopterVelocityControl.dir/build.make CMakeFiles/MulticopterVelocityControl.dir/MulticopterVelocityControl.cc.s
+.PHONY : MulticopterVelocityControl.cc.s
+
+PIDController.o: PIDController.cc.o
+.PHONY : PIDController.o
+
+# target to build an object file
+PIDController.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PIDController.dir/build.make CMakeFiles/PIDController.dir/PIDController.cc.o
+.PHONY : PIDController.cc.o
+
+PIDController.i: PIDController.cc.i
+.PHONY : PIDController.i
+
+# target to preprocess a source file
+PIDController.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PIDController.dir/build.make CMakeFiles/PIDController.dir/PIDController.cc.i
+.PHONY : PIDController.cc.i
+
+PIDController.s: PIDController.cc.s
+.PHONY : PIDController.s
+
+# target to generate assembly for a file
+PIDController.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PIDController.dir/build.make CMakeFiles/PIDController.dir/PIDController.cc.s
+.PHONY : PIDController.cc.s
+
 RobotPosePublisher.o: RobotPosePublisher.cc.o
 .PHONY : RobotPosePublisher.o
 
@@ -235,6 +446,54 @@ SetPosePlugin.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/SetPosePlugin.dir/build.make CMakeFiles/SetPosePlugin.dir/SetPosePlugin.cc.s
 .PHONY : SetPosePlugin.cc.s
 
+VelocityControl.o: VelocityControl.cc.o
+.PHONY : VelocityControl.o
+
+# target to build an object file
+VelocityControl.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VelocityControl.dir/build.make CMakeFiles/VelocityControl.dir/VelocityControl.cc.o
+.PHONY : VelocityControl.cc.o
+
+VelocityControl.i: VelocityControl.cc.i
+.PHONY : VelocityControl.i
+
+# target to preprocess a source file
+VelocityControl.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VelocityControl.dir/build.make CMakeFiles/VelocityControl.dir/VelocityControl.cc.i
+.PHONY : VelocityControl.cc.i
+
+VelocityControl.s: VelocityControl.cc.s
+.PHONY : VelocityControl.s
+
+# target to generate assembly for a file
+VelocityControl.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VelocityControl.dir/build.make CMakeFiles/VelocityControl.dir/VelocityControl.cc.s
+.PHONY : VelocityControl.cc.s
+
+VelocityControllerPID.o: VelocityControllerPID.cc.o
+.PHONY : VelocityControllerPID.o
+
+# target to build an object file
+VelocityControllerPID.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VelocityControllerPID.dir/build.make CMakeFiles/VelocityControllerPID.dir/VelocityControllerPID.cc.o
+.PHONY : VelocityControllerPID.cc.o
+
+VelocityControllerPID.i: VelocityControllerPID.cc.i
+.PHONY : VelocityControllerPID.i
+
+# target to preprocess a source file
+VelocityControllerPID.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VelocityControllerPID.dir/build.make CMakeFiles/VelocityControllerPID.dir/VelocityControllerPID.cc.i
+.PHONY : VelocityControllerPID.cc.i
+
+VelocityControllerPID.s: VelocityControllerPID.cc.s
+.PHONY : VelocityControllerPID.s
+
+# target to generate assembly for a file
+VelocityControllerPID.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VelocityControllerPID.dir/build.make CMakeFiles/VelocityControllerPID.dir/VelocityControllerPID.cc.s
+.PHONY : VelocityControllerPID.cc.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -247,14 +506,42 @@ help:
 	@echo "... install/strip"
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
+	@echo "... Common"
+	@echo "... LeeVelocityController"
+	@echo "... MulticopterMotorModel"
+	@echo "... MulticopterVelocityControl"
+	@echo "... PIDController"
 	@echo "... RobotPosePublisher"
 	@echo "... SetPosePlugin"
+	@echo "... VelocityControl"
+	@echo "... VelocityControllerPID"
+	@echo "... Common.o"
+	@echo "... Common.i"
+	@echo "... Common.s"
+	@echo "... LeeVelocityController.o"
+	@echo "... LeeVelocityController.i"
+	@echo "... LeeVelocityController.s"
+	@echo "... MulticopterMotorModel.o"
+	@echo "... MulticopterMotorModel.i"
+	@echo "... MulticopterMotorModel.s"
+	@echo "... MulticopterVelocityControl.o"
+	@echo "... MulticopterVelocityControl.i"
+	@echo "... MulticopterVelocityControl.s"
+	@echo "... PIDController.o"
+	@echo "... PIDController.i"
+	@echo "... PIDController.s"
 	@echo "... RobotPosePublisher.o"
 	@echo "... RobotPosePublisher.i"
 	@echo "... RobotPosePublisher.s"
 	@echo "... SetPosePlugin.o"
 	@echo "... SetPosePlugin.i"
 	@echo "... SetPosePlugin.s"
+	@echo "... VelocityControl.o"
+	@echo "... VelocityControl.i"
+	@echo "... VelocityControl.s"
+	@echo "... VelocityControllerPID.o"
+	@echo "... VelocityControllerPID.i"
+	@echo "... VelocityControllerPID.s"
 .PHONY : help
 
 

@@ -72,7 +72,7 @@ rosdep update
 ### Install dependencies.
 To be able to execute the programs it is necessary to install the following dependencies, executing the following commands in the console
 ```
-sudo apt-get install ros-rolling-desktop sudo apt-get install ros-rolling-ros-gz ros-rolling-joy ros-rolling-tf-transformations ros-rolling-ament-lint-auto ros-rolling-ament-cmake
+sudo apt-get install ros-rolling-desktop ros-rolling-ros-gz ros-rolling-joy ros-rolling-tf-transformations ros-rolling-ament-lint-auto ros-rolling-ament-cmake install libgz-cmake3-dev
 sudo pip3 install transforms3d --break-system-packages
 ```
 
@@ -124,19 +124,12 @@ colcon build
 You can add the necessary environment variables and source file to your `.bashrc` file using the following commands:
 
 ```bash
-source /opt/ros/rolling/setup.bash
-source ~/ws_bebop/install/setup.bash
-export GZ_SIM_RESOURCE_PATH="$HOME/ws_bebop/src/bebop_ros/bebop_gz/worlds:$HOME/ws_bebop/src/>
-export GAZEBO_PLUGIN_PATH="$HOME/ws_bebop/src/bebop_ros/bebop_gz/plugins/build"
-export GZ_VERSION=ionic
-```
-
-### **Reload the `.bashrc` File**
-
-After updating the `.bashrc`, reload it by running:
-
-```bash
+echo "source ~/ws_bebop/install/setup.bash" >> ~/.bashrc
+echo "export GZ_SIM_RESOURCE_PATH=\$HOME/ws_bebop/src/bebop_ros/bebop_gz/worlds:\$HOME/ws_bebop/src/" >> ~/.bashrc
+echo "export GAZEBO_PLUGIN_PATH=\$HOME/ws_bebop/src/bebop_ros/bebop_gz/plugins/build" >> ~/.bashrc
+echo "export GZ_VERSION=ionic" >> ~/.bashrc
 source ~/.bashrc
+
 ```
 
 ### **Alternatively, Edit `.bashrc` Manually**

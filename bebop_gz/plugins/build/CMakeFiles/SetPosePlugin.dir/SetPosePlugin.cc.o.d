@@ -1,6 +1,7 @@
 CMakeFiles/SetPosePlugin.dir/SetPosePlugin.cc.o: \
  /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/SetPosePlugin.cc \
  /usr/include/stdc-predef.h \
+ /home/jr/ws_bebop/src/bebop_ros/bebop_gz/plugins/SetPosePlugin.hh \
  /opt/ros/rolling/opt/gz_sim_vendor/include/gz/sim9/gz/sim/Model.hh \
  /usr/include/c++/13/memory /usr/include/c++/13/bits/memoryfwd.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
