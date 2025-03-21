@@ -132,7 +132,7 @@ You can add the necessary environment variables and source file to your `.bashrc
 
 ```bash
 echo "source ~/ws_bebop/install/setup.bash" >> ~/.bashrc
-echo "export GZ_SIM_RESOURCE_PATH=\$HOME/ws_bebop/src/bebop_ros/bebop_gz/worlds:\$HOME/ws_bebop/src/" >> ~/.bashrc
+echo "export GZ_SIM_RESOURCE_PATH=\$HOME/ws_bebop/src/bebop_ros/bebop_gz/worlds:$HOME/ws_bebop/src/bebop_ros/bebop_gz/models" >> ~/.bashrc
 echo "export GAZEBO_PLUGIN_PATH=\$HOME/ws_bebop/src/bebop_ros/bebop_gz/plugins/build" >> ~/.bashrc
 echo "export GZ_VERSION=ionic" >> ~/.bashrc
 source ~/.bashrc
