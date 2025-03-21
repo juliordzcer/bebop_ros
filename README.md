@@ -80,7 +80,12 @@ sudo apt-get install ros-rolling-ament-lint-auto -y
 sudo apt-get install ros-rolling-ament-cmake -y
 sudo apt-get install cmake -y
 sudo apt-get install libgz-cmake3-dev -y
+```
+```
 sudo pip3 install transforms3d --break-system-packages
+sudo pip3 install numpy --break-system-packages 
+sudo pip3 install matplotlib --break-system-packages
+sudo pip3 install scipy --break-system-packages 
 ```
 
 ## Install Gazebo Ionic
