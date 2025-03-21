@@ -72,7 +72,14 @@ rosdep update
 ### Install dependencies.
 To be able to execute the programs it is necessary to install the following dependencies, executing the following commands in the console
 ```
-sudo apt-get install ros-rolling-desktop ros-rolling-ros-gz ros-rolling-joy ros-rolling-tf-transformations ros-rolling-ament-lint-auto ros-rolling-ament-cmake install libgz-cmake3-dev
+sudo apt-get install ros-rolling-desktop -y
+sudo apt-get install ros-rolling-ros-gz -y
+sudo apt-get install ros-rolling-joy -y
+sudo apt-get install ros-rolling-tf-transformations -y
+sudo apt-get install ros-rolling-ament-lint-auto -y
+sudo apt-get install ros-rolling-ament-cmake -y
+sudo apt-get install cmake -y
+sudo apt-get install libgz-cmake3-dev -y
 sudo pip3 install transforms3d --break-system-packages
 ```
 
