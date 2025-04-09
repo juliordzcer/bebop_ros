@@ -25,6 +25,7 @@ class Controller(Node):
         TAKING_OFF = 2
         LANDING = 3
         EMERGENCY_STOP = 4
+        HOVER = 5
 
     def __init__(self):
         super().__init__('controller')
