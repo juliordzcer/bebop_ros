@@ -72,8 +72,20 @@ rosdep update
 ### Install dependencies.
 To be able to execute the programs it is necessary to install the following dependencies, executing the following commands in the console
 ```
-sudo apt-get install ros-rolling-desktop ros-rolling-ros-gz ros-rolling-joy ros-rolling-tf-transformations ros-rolling-ament-lint-auto ros-rolling-ament-cmake install libgz-cmake3-dev
+sudo apt-get install ros-rolling-desktop -y
+sudo apt-get install ros-rolling-ros-gz -y
+sudo apt-get install ros-rolling-joy -y
+sudo apt-get install ros-rolling-tf-transformations -y
+sudo apt-get install ros-rolling-ament-lint-auto -y
+sudo apt-get install ros-rolling-ament-cmake -y
+sudo apt-get install cmake -y
+sudo apt-get install libgz-cmake3-dev -y
+```
+```
 sudo pip3 install transforms3d --break-system-packages
+sudo pip3 install numpy --break-system-packages 
+sudo pip3 install matplotlib --break-system-packages
+sudo pip3 install scipy --break-system-packages 
 ```
 
 ## Install Gazebo Ionic
@@ -125,7 +137,7 @@ You can add the necessary environment variables and source file to your `.bashrc
 
 ```bash
 echo "source ~/ws_bebop/install/setup.bash" >> ~/.bashrc
-echo "export GZ_SIM_RESOURCE_PATH=\$HOME/ws_bebop/src/bebop_ros/bebop_gz/worlds:\$HOME/ws_bebop/src/" >> ~/.bashrc
+echo "export GZ_SIM_RESOURCE_PATH=\$HOME/ws_bebop/src/bebop_ros/bebop_gz/worlds:$HOME/ws_bebop/src/bebop_ros/bebop_gz/models" >> ~/.bashrc
 echo "export GAZEBO_PLUGIN_PATH=\$HOME/ws_bebop/src/bebop_ros/bebop_gz/plugins/build" >> ~/.bashrc
 echo "export GZ_VERSION=ionic" >> ~/.bashrc
 source ~/.bashrc
