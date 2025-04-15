@@ -79,7 +79,6 @@ sudo apt-get install ros-rolling-tf-transformations -y
 sudo apt-get install ros-rolling-ament-lint-auto -y
 sudo apt-get install ros-rolling-ament-cmake -y
 sudo apt-get install cmake -y
-sudo apt-get install libgz-cmake3-dev -y
 ```
 ```
 sudo pip3 install transforms3d --break-system-packages
@@ -101,7 +100,9 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-
 sudo apt-get update
 sudo apt-get install gz-ionic
 ```
-
+```
+sudo apt-get install libgz-cmake3-dev -y
+```
 ## Create a catkin workspace
 ```
 mkdir -p ~/ws_bebop/src
