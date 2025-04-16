@@ -124,10 +124,11 @@ class TrajectoryCircle(Node):
         scale = self.r * (np.arctan(self.p) + np.arctan(self.t - self.p))
         x = scale * np.cos(self.w * self.t)
         y = scale * np.sin(self.w * self.t)
-        z = (self.h / 2) * (1 + np.tanh(self.t - 2.5))
+        z = 1.0 #(self.h / 2) * (1 + np.tanh(self.t - 2.5))
         yaw = 0
 
-        q = quaternion_from_euler(0, 0, yaw + self.yawii)
+        # q = quaternion_from_euler(0, 0, yaw + self.yawii)
+        q = quaternion_from_euler(0, 0, yaw)
 
         pose_msg.position.x = x + self.xii
         pose_msg.position.y = y + self.yii
