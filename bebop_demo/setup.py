@@ -26,11 +26,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            "position_control = bebop_demo.position_control:main",
             "joystick = bebop_demo.joystick:main",
             "setpoint = bebop_demo.setpoint:main",
-            "setpoint_followers = bebop_demo.setpoint_followers:main",
-            "joystick_swarm = bebop_demo.joystick_swarm:main",
             "graficas = bebop_demo.graficas:main",
             "imagenes = bebop_demo.image_viewer:main",
             "set_pose = bebop_demo.set_pose:main",
