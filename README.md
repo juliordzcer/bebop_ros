@@ -79,7 +79,6 @@ sudo apt-get install ros-rolling-tf-transformations -y
 sudo apt-get install ros-rolling-ament-lint-auto -y
 sudo apt-get install ros-rolling-ament-cmake -y
 sudo apt-get install cmake -y
-sudo apt-get install libgz-cmake3-dev -y
 ```
 ```
 sudo pip3 install transforms3d --break-system-packages
@@ -101,7 +100,9 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-
 sudo apt-get update
 sudo apt-get install gz-ionic
 ```
-
+```
+sudo apt-get install libgz-cmake3-dev -y
+```
 ## Create a catkin workspace
 ```
 mkdir -p ~/ws_bebop/src
@@ -176,6 +177,10 @@ There are three packages included: bebop_controller, bebop_demo and bebop_ros_gz
 ### bebop_controller
 
 ### bebop_demo
-This package contains a set of examples to quickly get started with bebop on Gazebo.
+This package contains example setups to help you get started with the Bebop drone in Gazebo.
+If everything is installed correctly, try running the following example:
+```
+ros2 launch bebop_demo bebop1.launch.py
+```
 
 ### bebop_ros_gz

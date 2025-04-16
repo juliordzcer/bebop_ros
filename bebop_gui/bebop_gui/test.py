@@ -14,13 +14,14 @@ class DroneStateSubscriber(Node):
             2: 'TAKING_OFF',
             3: 'LANDING',
             4: 'EMERGENCY_STOP',
-            5: 'HOVER'
+            5: 'HOVER',
+            6: 'RESTART_TRAJ'
         }
         
         # Crear subscriber
         self.subscription = self.create_subscription(
             Int32,
-            '/drone_state',
+            '/state',
             self.state_callback,
             10
         )

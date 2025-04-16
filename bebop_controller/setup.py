@@ -25,8 +25,6 @@ setup(
     entry_points={
         'console_scripts': [
             'controller_pid = bebop_controller.controller_pid:main',
-            'controller_follower_pid = bebop_controller.controller_follower_pid:main',
-            'controller_sta = bebop_controller.controller_sta:main',
         ],
     },
 )
