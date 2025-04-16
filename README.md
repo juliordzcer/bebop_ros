@@ -177,6 +177,10 @@ There are three packages included: bebop_controller, bebop_demo and bebop_ros_gz
 ### bebop_controller
 
 ### bebop_demo
-This package contains a set of examples to quickly get started with bebop on Gazebo.
+This package contains example setups to help you get started with the Bebop drone in Gazebo.
+If everything is installed correctly, try running the following example:
+```
+ros2 launch bebop_demo bebop1.launch.py
+```
 
 ### bebop_ros_gz
