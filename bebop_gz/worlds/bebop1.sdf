@@ -27,14 +27,15 @@
 
     <!-- Configuración de la física actualizada -->
     <physics name="ode_physics" type="ode">
-      <max_step_size>0.002</max_step_size>
+      <max_step_size>0.001</max_step_size>
       <real_time_factor>1.0</real_time_factor>
       <real_time_update_rate>500</real_time_update_rate>
       <ode>
         <solver>
           <type>world</type>
           <iters>100</iters>
-          <sor>1.4</sor>
+          <!-- <sor>1.4</sor> -->
+          <sor>1.0</sor>
         </solver>
         <constraints>
           <cfm>0.00001</cfm>
@@ -109,13 +110,6 @@
       </link>
     </model>
 
-
-
-        <!-- <positionGain>4 4 3</positionGain>
-        <velocityGain>1.5 1.5 2</velocityGain>
-        <attitudeGain>0.25 0.2 0.2</attitudeGain>
-        <angularRateGain>0.03 0.03 0.05</angularRateGain> -->
-
     <include>
       <uri>model://parrot_bebop_2</uri>
       <name>bebop1</name>
@@ -145,7 +139,7 @@
 
         <maxRotVelocity>800.0</maxRotVelocity>
         <motorConstant>8.54858e-06</motorConstant>
-        <momentConstant>0.016</momentConstant>
+        <momentConstant>0.005964552</momentConstant>
         <rotorDragCoefficient>8.06428e-05</rotorDragCoefficient>
         <rollingMomentCoefficient>1e-06</rollingMomentCoefficient>
         <rotorVelocitySlowdownSim>20</rotorVelocitySlowdownSim>
@@ -163,7 +157,7 @@
 
         <maxRotVelocity>800.0</maxRotVelocity>
         <motorConstant>8.54858e-06</motorConstant>
-        <momentConstant>0.016</momentConstant>
+        <momentConstant>0.005964552</momentConstant>
         <rotorDragCoefficient>8.06428e-05</rotorDragCoefficient>
         <rollingMomentCoefficient>1e-06</rollingMomentCoefficient>
         <rotorVelocitySlowdownSim>20</rotorVelocitySlowdownSim>
@@ -181,7 +175,7 @@
         
         <maxRotVelocity>800.0</maxRotVelocity>
         <motorConstant>8.54858e-06</motorConstant>
-        <momentConstant>0.016</momentConstant>
+        <momentConstant>0.005964552</momentConstant>
         <rotorDragCoefficient>8.06428e-05</rotorDragCoefficient>
         <rollingMomentCoefficient>1e-06</rollingMomentCoefficient>
         <rotorVelocitySlowdownSim>20</rotorVelocitySlowdownSim>
@@ -199,7 +193,7 @@
         
         <maxRotVelocity>800.0</maxRotVelocity>
         <motorConstant>8.54858e-06</motorConstant>
-        <momentConstant>0.016</momentConstant>
+        <momentConstant>0.005964552</momentConstant>
         <rotorDragCoefficient>8.06428e-05</rotorDragCoefficient>
         <rollingMomentCoefficient>1e-06</rollingMomentCoefficient>
         <rotorVelocitySlowdownSim>20</rotorVelocitySlowdownSim>
