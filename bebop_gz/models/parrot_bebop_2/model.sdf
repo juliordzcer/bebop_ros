@@ -3,12 +3,9 @@
   Autor: Julio César Rodríguez
   Correo: juliordzcer@gmail.com
   Fecha: 2025-03-14
-  Descripción: [Breve descripción del código]
-  Institución: CINVESTAV Guadalajara
-  Tema de investigación: Control de formación mediante bearings aplicado a Quadrotors
   -->
 
-<sdf version="1.8">
+<sdf version="1.9">
   <model name="parrot_bebop_2">
     <link name="body">
       <pose>0 0 0 0 0 0</pose>
