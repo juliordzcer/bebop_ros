@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 import os
 from glob import glob
 
-package_name = 'bebop_controller'
+package_name = 'bebop_bearings'
 
 setup(
     name=package_name,
@@ -24,8 +24,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'controller_pid = bebop_controller.controller_pid:main',
-            'formation_controller = bebop_controller.formation_controller:main',
+            'bearings_based = bebop_bearings.bearings_based:main',
         ],
     },
 )
