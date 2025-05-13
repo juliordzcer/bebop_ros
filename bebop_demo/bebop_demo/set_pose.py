@@ -8,53 +8,60 @@ class MultiRobotPosePublisher(Node):
     def __init__(self):
         super().__init__('multi_robot_pose_publisher')
         
-        # Declarar parámetros
-        self.declare_parameter('robot_names', '["bebop1", "bebop2"]')  # Cadena JSON
-        self.declare_parameter('initial_conditions', '[[1.0, 2.0, 0.0, 0.0], [3.0, 4.0, 0.0, 1.57]]')  # Cadena JSON
+        # Declarar parámetros con valores por defecto genéricos
+        self.declare_parameter('robot_names', '[]')  # Lista vacía por defecto
+        self.declare_parameter('initial_conditions', '[]')  # Lista vacía por defecto
         
-        # Obtener parámetros
-        raw_robot_names = self.get_parameter('robot_names').value
-        raw_initial_conditions = self.get_parameter('initial_conditions').value
-        
-        # Parsear JSON
+        # Obtener y parsear parámetros
         try:
-            self.robot_names = json.loads(raw_robot_names)
-            self.initial_conditions = json.loads(raw_initial_conditions)
+            self.robot_names = json.loads(self.get_parameter('robot_names').value)
+            self.initial_conditions = json.loads(self.get_parameter('initial_conditions').value)
         except json.JSONDecodeError as e:
             self.get_logger().error(f"ERROR de JSON: {str(e)}")
             raise
         
-        # Crear publicadores
+        # Validar que coincidan las longitudes
+        if len(self.robot_names) != len(self.initial_conditions):
+            self.get_logger().error(
+                f"Número de robots ({len(self.robot_names)}) "
+                f"no coincide con condiciones iniciales ({len(self.initial_conditions)})"
+            )
+            raise ValueError("Longitudes de parámetros no coinciden")
+        
+        # Crear publicadores dinámicamente
         self._publishers = [
             self.create_publisher(Pose, f'{name}/set_pose', 10)
             for name in self.robot_names
         ]
         
-        # Temporizador de un solo disparo con un retraso de 2 segundos
+        # Temporizador de un solo disparo
         self.timer = self.create_timer(2.0, self.publish_initial_poses)
 
     def publish_initial_poses(self):
-        # Publicar las poses una sola vez
+        """Publica las poses iniciales para todos los drones."""
+        self.hd = 0.05075  # Altura de despegue (ajustable)
+        
         for i, (name, conditions) in enumerate(zip(self.robot_names, self.initial_conditions)):
-            self.hd = 0.05075
+            if len(conditions) < 4:
+                self.get_logger().error(f"Condiciones iniciales inválidas para {name}: {conditions}")
+                continue
+            
             pose = Pose()
             pose.position.x = conditions[0]
             pose.position.y = conditions[1]
-            pose.position.z = conditions[2] + self.hd
+            pose.position.z = conditions[2] + self.hd  # Añadir altura de despegue
             
-            # Convertir ángulo de yaw a cuaternión
+            # Convertir yaw (en radianes) a cuaternión
             q = quaternion_from_euler(0, 0, conditions[3])
             pose.orientation.x = q[0]
             pose.orientation.y = q[1]
             pose.orientation.z = q[2]
             pose.orientation.w = q[3]
             
-            # Publicar la pose
             self._publishers[i].publish(pose)
-            self.get_logger().info(f"Publicada pose para {name}: {conditions}")
+            self.get_logger().info(f"Publicada pose inicial para {name}: {conditions}")
         
-        # Detener el temporizador después de la primera publicación
-        self.timer.cancel()
+        self.timer.cancel()  # Detener después de publicar
 
 def main(args=None):
     rclpy.init(args=args)
@@ -62,9 +69,9 @@ def main(args=None):
         node = MultiRobotPosePublisher()
         rclpy.spin(node)
     except Exception as e:
-        node.get_logger().error(f"ERROR FATAL: {str(e)}")
+        node.get_logger().error(f"ERROR: {str(e)}")
     finally:
-        if 'node' in locals():  # Para evitar el error cuando `node` no se crea
+        if 'node' in locals():
             node.destroy_node()
         rclpy.shutdown()
 

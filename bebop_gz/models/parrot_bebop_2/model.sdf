@@ -22,12 +22,36 @@
       </inertial>
 
       <collision name="body_inertia_collision">
+        <pose>-0.00424 0.00014 -0.00595 0 0 0</pose>
         <geometry>
-          <box>
-            <size>0.28 0.28 0.089582</size>
-          </box>
+          <box><size>0.316618 0.330564 0.089582</size></box>
         </geometry>
+        <max_contacts>10</max_contacts>
+        <surface>
+          <bounce>
+            <restitution_coefficient>0.828</restitution_coefficient>
+            <threshold>0</threshold>
+          </bounce>
+          <friction>
+            <ode>
+              <mu>10</mu>
+              <mu2>5</mu2>
+              <fdir1>0 0 0</fdir1>
+              <slip1>0.0</slip1>
+              <slip2>0.0</slip2>
+            </ode>
+          </friction>
+          <contact>
+            <ode>
+              <kp>10000.0</kp>
+              <kd>10.0</kd>
+              <max_vel>0.01</max_vel>
+              <min_depth>0</min_depth>
+            </ode>
+          </contact>
+        </surface>
       </collision>
+
 
       <visual name="body_inertia_visual">
         <geometry>
