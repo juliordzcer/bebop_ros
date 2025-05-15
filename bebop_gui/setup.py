@@ -24,6 +24,7 @@ setup(
     entry_points={
         'console_scripts': [
             'bebop_gui = bebop_gui.gui_node:main',
+            'bebop_gui_one = bebop_gui.gui_node_one:main',
             'test_gui = bebop_gui.test:main', 
         ],
     },
