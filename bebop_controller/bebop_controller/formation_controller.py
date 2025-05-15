@@ -65,17 +65,17 @@ class FormationController(Node):
             parameters=[
                 ('robot_names', '["bebop1", "bebop2", "bebop3", "bebop4"]'),
                 ('frequency', 100.0),
-                ('takeoff_height', 1.5),
+                ('takeoff_height', 2.5),
                 ('min_altitude', 0.5),
                 ('takeoff_threshold', 0.05),
                 ('landing_threshold', 0.08),
-                ('formation_scale', 1.0),
-                ('pyramid_base_width', 2.0),
-                ('pyramid_height_factor', 0.8),
+                ('formation_scale', 1.5),
+                ('pyramid_base_width', 3.0),
+                ('pyramid_height_factor', 1.5),
                 ('max_linear_velocity', 1.5),
                 ('max_angular_velocity', 3.0),
                 ('trajectory_speed', 0.4),
-                ('safety_margin', 0.3)
+                ('safety_margin', 0.5)
             ])
 
         # Get parameters
@@ -157,27 +157,25 @@ class FormationController(Node):
         # Control timer
         self.control_timer = self.create_timer(dt, self.control_loop)
 
-    def generate_precise_pyramid(self, num_agents):
-        """
-        Generate precise pyramid formation with:
-        - 1m separation between agents in XY
-        - Leader at z=4m
-        - Each layer 1m lower than previous
-        - Each layer has 4^n agents (1, 4, 8, 12, etc.)
-        """
+    def generate_pyramid_formation(self, num_agents):
+        """Generate pyramid formation positions for the given number of agents"""
         positions = np.zeros((num_agents, 3))
         
         if num_agents == 0:
             return positions
         
+        # Configuration parameters
+        leader_height = self.takeoff_height * self.pyramid_height_factor
+        layer_height_reduction = self.takeoff_height * self.safety_margin  # Cada capa 30% más baja
+        xy_separation = self.pyramid_base_width / 2.0
+        
         # Leader position (always at top)
-        positions[0] = [0, 0, self.leader_height]
+        positions[0] = [0, 0, leader_height]
         
         if num_agents == 1:
             return positions
         
         # Calculate how many full layers we can have
-        max_layers = 0
         remaining_agents = num_agents - 1
         layer_agents = 4  # First layer after leader has 4 agents
         layers = []
@@ -192,14 +190,13 @@ class FormationController(Node):
         agent_index = 1
         
         for layer_num, agents_in_layer in enumerate(layers, 1):
-            layer_z = self.leader_height - (layer_num * self.layer_height_reduction)
-            layer_radius = layer_num * self.xy_separation
+            layer_z = leader_height - (layer_num * layer_height_reduction)
+            layer_radius = layer_num * xy_separation
             
             # Calculate angle step between agents
             angle_step = 2 * math.pi / agents_in_layer
             
             for i in range(agents_in_layer):
-                # Calculate position in circle
                 angle = i * angle_step
                 x = layer_radius * math.cos(angle)
                 y = layer_radius * math.sin(angle)
@@ -213,6 +210,66 @@ class FormationController(Node):
                 agent_index += 1
         
         return positions
+
+    # def generate_pyramid_formation(self, num_agents):
+    #     """Genera formación piramidal con líder en la posición más alta garantizada"""
+    #     positions = np.zeros((num_agents, 3))
+        
+    #     if num_agents == 0:
+    #         return positions
+
+    #     # Parámetros configurables
+    #     BASE_ALTITUDE = 1.0          # Altura mínima (última capa)
+    #     LEADER_HEIGHT = 2.5           # Altura fija del líder 
+    #     LAYER_SPACING = 0.5           # Espacio vertical entre capas
+    #     HORIZONTAL_SPACING = 1.2      # Separación horizontal base
+
+    #     # 1. Posicionar LÍDER (siempre en [0, 0, altura_máxima])
+    #     positions[0] = [0, 0, LEADER_HEIGHT]
+        
+    #     self.takeoff_height = LEADER_HEIGHT  # Altura de despegue del líder
+    #     if num_agents == 1:
+    #         return positions
+
+    #     # 2. Calcular número de capas necesarias
+    #     remaining_drones = num_agents - 1
+    #     drones_per_layer = 4  # Comenzamos con 4 drones en primera capa
+    #     layer = 1
+
+    #     while remaining_drones > 0:
+    #         # Drones en esta capa
+    #         current_layer_drones = min(drones_per_layer, remaining_drones)
+            
+    #         # Altura de la capa (decreciente)
+    #         layer_z = max(BASE_ALTITUDE, LEADER_HEIGHT - (layer * LAYER_SPACING))
+            
+    #         # Radio adaptativo
+    #         radius = HORIZONTAL_SPACING * layer
+            
+    #         # Distribución circular perfecta
+    #         angle_step = 2 * math.pi / current_layer_drones
+            
+    #         for i in range(current_layer_drones):
+    #             angle = i * angle_step
+    #             x = radius * math.cos(angle)
+    #             y = radius * math.sin(angle)
+                
+    #             # Asignar posición (índice +1 porque el 0 es el líder)
+    #             positions[layer + i] = [x, y, layer_z]
+            
+    #         remaining_drones -= current_layer_drones
+    #         layer += 1
+    #         drones_per_layer += 4  # Cada capa tiene 4 drones más
+
+    #     # Verificación de altura del líder
+    #     max_z = max(pos[2] for pos in positions)
+    #     if not math.isclose(max_z, LEADER_HEIGHT, abs_tol=0.01):
+    #         self.get_logger().error("¡Error crítico! El líder no está en la posición más alta")
+    #         # Failsafe: reposicionar todos los drones debajo del líder
+    #         for i in range(1, num_agents):
+    #             positions[i][2] = max(BASE_ALTITUDE, LEADER_HEIGHT - 0.5)
+        
+    #     return positions
 
     def pose_callback(self, msg, robot_name):
         """Update pose and estimate velocity"""
