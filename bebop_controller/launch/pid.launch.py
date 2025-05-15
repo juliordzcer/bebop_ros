@@ -72,8 +72,6 @@ def generate_launch_description():
         'PIDs.Yaw.integratorMax': 5.0
     }
 
-
-
     # Combinar todos los parámetros
     node_params = [base_params, pid_params]
 

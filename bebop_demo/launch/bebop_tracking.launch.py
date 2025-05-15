@@ -10,7 +10,7 @@ def generate_launch_description():
     # =====================================================
     # Simulation Parameters
     # =====================================================
-    num_drones = 50
+    num_drones = 1
     robot_names = '["bebop1"]'
     initial_conditions = '[[2.5, -0.5, 0.0, 1.0]]'
     lider = 'bebop1'

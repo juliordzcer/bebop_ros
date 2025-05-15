@@ -127,7 +127,7 @@ def generate_launch_description():
     return LaunchDescription([
         world_generator,
         TimerAction(
-            period=1.0,
+            period=5.0,
             actions=delayed_nodes
         ),
         state_gui
