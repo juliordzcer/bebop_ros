@@ -3,7 +3,7 @@ import rclpy
 from rclpy.node import Node
 from rclpy.qos import QoSProfile
 from geometry_msgs.msg import Twist, Pose
-from std_msgs.msg import Bool, Int32
+from std_msgs.msg import Bool, Int32, Float32MultiArray
 from std_srvs.srv import Empty
 from tf_transformations import euler_from_quaternion
 import numpy as np
@@ -59,23 +59,22 @@ class FormationController(Node):
 
     def __init__(self):
         super().__init__('formation_controller')
-
         # Configuration parameters
         self.declare_parameters(namespace='',
             parameters=[
                 ('robot_names', '["bebop1", "bebop2", "bebop3", "bebop4"]'),
                 ('frequency', 100.0),
-                ('takeoff_height', 1.5),
+                ('takeoff_height', 2.5),
                 ('min_altitude', 0.5),
                 ('takeoff_threshold', 0.05),
                 ('landing_threshold', 0.08),
-                ('formation_scale', 1.0),
-                ('pyramid_base_width', 2.0),
-                ('pyramid_height_factor', 0.8),
+                ('formation_scale', 1.5),
+                ('pyramid_base_width', 3.0),
+                ('pyramid_height_factor', 1.5),
                 ('max_linear_velocity', 1.5),
                 ('max_angular_velocity', 3.0),
                 ('trajectory_speed', 0.4),
-                ('safety_margin', 0.3)
+                ('safety_margin', 0.5)
             ])
 
         # Get parameters
@@ -121,6 +120,9 @@ class FormationController(Node):
             for name in self.robot_names
         }
 
+        self.formation_error_pub = self.create_publisher(Float32MultiArray, '/formation_errors', qos)
+        self.desired_positions = np.zeros((len(self.robot_names), 3))
+
         # Subscribers
         self.pose_subs = [
             self.create_subscription(
@@ -157,27 +159,25 @@ class FormationController(Node):
         # Control timer
         self.control_timer = self.create_timer(dt, self.control_loop)
 
-    def generate_precise_pyramid(self, num_agents):
-        """
-        Generate precise pyramid formation with:
-        - 1m separation between agents in XY
-        - Leader at z=4m
-        - Each layer 1m lower than previous
-        - Each layer has 4^n agents (1, 4, 8, 12, etc.)
-        """
+    def generate_pyramid_formation(self, num_agents):
+        """Generate pyramid formation positions for the given number of agents"""
         positions = np.zeros((num_agents, 3))
         
         if num_agents == 0:
             return positions
         
+        # Configuration parameters
+        leader_height = self.takeoff_height * self.pyramid_height_factor
+        layer_height_reduction = self.takeoff_height * self.safety_margin  # Cada capa 30% más baja
+        xy_separation = self.pyramid_base_width / 2.0
+        
         # Leader position (always at top)
-        positions[0] = [0, 0, self.leader_height]
+        positions[0] = [0, 0, leader_height]
         
         if num_agents == 1:
             return positions
         
         # Calculate how many full layers we can have
-        max_layers = 0
         remaining_agents = num_agents - 1
         layer_agents = 4  # First layer after leader has 4 agents
         layers = []
@@ -192,14 +192,13 @@ class FormationController(Node):
         agent_index = 1
         
         for layer_num, agents_in_layer in enumerate(layers, 1):
-            layer_z = self.leader_height - (layer_num * self.layer_height_reduction)
-            layer_radius = layer_num * self.xy_separation
+            layer_z = leader_height - (layer_num * layer_height_reduction)
+            layer_radius = layer_num * xy_separation
             
             # Calculate angle step between agents
             angle_step = 2 * math.pi / agents_in_layer
             
             for i in range(agents_in_layer):
-                # Calculate position in circle
                 angle = i * angle_step
                 x = layer_radius * math.cos(angle)
                 y = layer_radius * math.sin(angle)
@@ -213,6 +212,32 @@ class FormationController(Node):
                 agent_index += 1
         
         return positions
+    
+    def calculate_formation_errors(self, positions):
+        """Calcula los errores de posición relativa respecto a la formación deseada"""
+        n = len(self.robot_names)
+        formation_errors = np.zeros(n)
+        
+        # Return zeros if desired_positions hasn't been set yet
+        if not hasattr(self, 'desired_positions'):
+            return formation_errors
+            
+        for i in range(n):
+            error_sum = 0.0
+            count = 0
+            
+            for j in range(n):
+                if i != j:
+                    # Error de posición relativa
+                    desired_rel_pos = self.desired_positions[j] - self.desired_positions[i]
+                    actual_rel_pos = positions[j] - positions[i]
+                    
+                    error_sum += np.linalg.norm(actual_rel_pos - desired_rel_pos)
+                    count += 1
+                    
+            if count > 0:
+                formation_errors[i] = error_sum / count
+        return formation_errors
 
     def pose_callback(self, msg, robot_name):
         """Update pose and estimate velocity"""
@@ -440,13 +465,24 @@ class FormationController(Node):
             commands = np.zeros((n, 3))
             cyaw = np.zeros(n)
 
+            positions = np.array([self.robot_poses[name] for name in self.robot_names])
+
+            # Calcular errores
+            formation_errors = self.calculate_formation_errors(positions)
+            
+            # Publicar errores de formación
+            formation_msg = Float32MultiArray()
+            formation_msg.data = formation_errors.tolist()
+            self.formation_error_pub.publish(formation_msg)
+
+
             # First calculate all desired positions
-            desired_positions = np.zeros((n, 3))
+            self.desired_positions = np.zeros((n, 3))
             for i in range(n):
                 if i == 0:  # Leader
-                    desired_positions[i][0] = min(elapsed_time * self.trajectory_speed, 10.0)
-                    desired_positions[i][1] = 0.0
-                    desired_positions[i][2] = self.takeoff_height
+                    self.desired_positions[i][0] = min(elapsed_time * self.trajectory_speed, 10.0)
+                    self.desired_positions[i][1] = 0.0
+                    self.desired_positions[i][2] = self.takeoff_height
                 else:  # Followers
                     # Get relative position from formation pattern
                     rel_pos = self.relative_positions[i]
@@ -458,13 +494,13 @@ class FormationController(Node):
                     z_rel = rel_pos[2]
                     
                     # Calculate absolute desired position
-                    desired_positions[i][0] = self.leader_position[0] + x_rel
-                    desired_positions[i][1] = self.leader_position[1] + y_rel
+                    self.desired_positions[i][0] = self.leader_position[0] + x_rel
+                    self.desired_positions[i][1] = self.leader_position[1] + y_rel
                     
                     # Calculate desired altitude with safety constraints
                     desired_altitude = self.leader_position[2] + z_rel
                     min_allowed = self.min_altitude + (abs(z_rel) * 0.5)  # Higher layers have more margin
-                    desired_positions[i][2] = max(desired_altitude, min_allowed)
+                    self.desired_positions[i][2] = max(desired_altitude, min_allowed)
 
             # Then calculate commands for each drone
             for i, name in enumerate(self.robot_names):
@@ -473,7 +509,7 @@ class FormationController(Node):
                 
                 current_pos = self.robot_poses[name]
                 euler_c = self.robot_orientations[name]
-                target_pos = desired_positions[i]
+                target_pos = self.desired_positions[i]
                 
                 # Calculate position error with safety checks
                 pos_error = target_pos - current_pos

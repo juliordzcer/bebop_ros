@@ -176,6 +176,7 @@ source ~/.bashrc
 There are three packages included: bebop_controller, bebop_demo and bebop_ros_gz.
 
 ### bebop_controller
+This package contains a PIC controller based in positions, following a desired trajectory.
 
 ### bebop_demo
 This package contains example setups to help you get started with the Bebop drone in Gazebo.

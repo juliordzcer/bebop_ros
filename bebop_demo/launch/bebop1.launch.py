@@ -3,68 +3,40 @@ from launch.actions import IncludeLaunchDescription, ExecuteProcess
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from ros_gz_bridge.actions import RosGzBridge
 from launch_ros.actions import Node
-from ament_index_python.packages import get_package_share_directory
 import os
+from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
-    # =====================================================
-    # Simulation Parameters
-    # =====================================================
-    num_drones = 50
-    robot_names = '["bebop1"]'
-    initial_conditions = '[[2.5, -0.5, 0.0, 1.0]]'
+    # Obtener rutas de los paquetes
+    pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
+    pkg_ros_gz_sim_demos = get_package_share_directory('bebop_demo')
+
+    # Definir nombres de robots y condiciones iniciales como cadenas JSON
+    robot_names = '["bebop1"]'  # Cadena JSON
+    initial_conditions = '[[2.5, -0.5, 0.0, 1.0]]'  # Cadena JSON
     lider = 'bebop1'
 
-    # =====================================================
-    # Package Paths
-    # =====================================================
-    pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
-    pkg_bebop_demo = get_package_share_directory('bebop_demo')
-    pkg_bebop_controller = get_package_share_directory('bebop_controller')
-
-    # =====================================================
-    # World Generator Script
-    # =====================================================
-    world_generator = ExecuteProcess(
-        cmd=[
-            'python3',
-            os.path.expanduser('~/ws_bebop/src/bebop_ros/bebop_gz/world_generator.py'),
-            f'num_drones={num_drones}'
-        ],
+    State = ExecuteProcess(
+        cmd=['ros2', 'run', 'bebop_gui', 'bebop_gui_one',],
         output='screen'
     )
 
-    # =====================================================
-    # Custom GUI Node
-    # =====================================================
-    state_gui = ExecuteProcess(
-        cmd=['ros2', 'run', 'bebop_gui', 'bebop_gui'],
-        output='screen'
-    )
-
-    # =====================================================
-    # Launch Gazebo Simulator
-    # =====================================================
+    # Lanzar Gazebo
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')
         ),
         launch_arguments={
-            'gz_args': '-r -z  1000000 bebop_multi.world',
+            'gz_args': '-r -z  1000000 bebop1.sdf'
         }.items(),
     )
-
-    # =====================================================
-    # ROS-Gazebo Bridge
-    # =====================================================
+    # Lanzar el puente ROS-Gazebo
     ros_gz_bridge = RosGzBridge(
         bridge_name='ros_gz_bridge',
-        config_file=os.path.join(pkg_bebop_demo, 'config', 'bebop_bridge.yaml'),
+        config_file=os.path.join(pkg_ros_gz_sim_demos, 'config', 'bebop1.yaml'),
     )
 
-    # =====================================================
-    # Trajectory Generator Node (Setpoint)
-    # =====================================================
+    # Lanzar el nodo de setpoint
     setpoint = ExecuteProcess(
         cmd=[
             'ros2', 'run', 'bebop_demo', 'setpoint',
@@ -76,12 +48,11 @@ def generate_launch_description():
         output='screen'
     )
 
-    # =====================================================
-    # Initial Pose Publisher Node
-    # =====================================================
+
+    # Lanzar el nodo MultiRobotPosePublisher
     set_pose = Node(
         package='bebop_demo',
-        executable='set_pose',
+        executable='set_pose', 
         name='set_pose',
         output='screen',
         parameters=[
@@ -90,25 +61,19 @@ def generate_launch_description():
         ]
     )
 
-    # =====================================================
-    # PID Controller Node
-    # =====================================================
+    # Lanzar el controlador PID
     controller = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(pkg_bebop_controller, 'launch', 'pid.launch.py')
+            os.path.join(get_package_share_directory('bebop_controller'), 'launch', 'pid.launch.py')
         ),
         launch_arguments={
-            'robot_name': lider,
+            'robot_name': f'{lider}',
             'goal_name': 'goal'
         }.items()
     )
 
-    # =====================================================
-    # Launch Description
-    # =====================================================
     return LaunchDescription([
-        world_generator,
-        state_gui,
+        State,
         gz_sim,
         ros_gz_bridge,
         setpoint,

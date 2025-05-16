@@ -11,21 +11,31 @@ from geometry_msgs.msg import Pose
 from sensor_msgs.msg import Image
 from std_msgs.msg import Float32MultiArray
 
+import time
+
 from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QLabel,
     QComboBox, QStackedWidget, QMessageBox, QHBoxLayout, QGridLayout
 )
-from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtCore import Qt, QTimer, QSize
 from PyQt5.QtGui import QImage, QPixmap
 
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
+import matplotlib.pyplot as plt  # Importación añadida
+
+import matplotlib
+matplotlib.use('Qt5Agg')  # Usar backend adecuado
+matplotlib.rcParams['path.simplify'] = True
+matplotlib.rcParams['path.simplify_threshold'] = 1.0
+
 
 import cv2
 from cv_bridge import CvBridge
 from enum import IntEnum
 from threading import Lock
 import numpy as np
+from collections import deque
 
 class DroneState(IntEnum):
     IDLE = 0
@@ -36,25 +46,31 @@ class DroneState(IntEnum):
     RESTART_TRAJ = 6
 
 class BebopGUI(Node, QMainWindow):
-    def __init__(self, robot_names):
+    def __init__(self):
         Node.__init__(self, 'bebop_gui_combined')
         QMainWindow.__init__(self)
 
-        self.robot_names = robot_names
+        self.declare_parameter('num_drones', 20)
+        num_drones = self.get_parameter('num_drones').get_parameter_value().integer_value
+
+        self.robot_names = [f"bebop{i+1}" for i in range(num_drones)]
+        self.current_camera_view = "Todas las cámaras" 
         self.setup_ros()
         self.setup_ui()
 
         self.state_lock = Lock()
         self.current_state = DroneState.IDLE
         self.goal_positions = []
-        self.drone_positions = {name: [] for name in robot_names}
-        self.error_history = {'formation': [], 'bearing': []} 
+        self.drone_positions = {name: [] for name in self.robot_names}
+        self.error_history = {'formation': []}
         self.time_history = []
         self.start_time = self.get_clock().now().nanoseconds / 1e9
         self.current_goal = None
-        self.current_poses = {name: None for name in robot_names}
+        self.current_poses = {name: None for name in self.robot_names}
         self.bridge = CvBridge()
-        self.camera_images = {name: None for name in robot_names}
+        self.camera_images = {name: None for name in self.robot_names}
+        self.last_update_time = 0
+        
 
     def setup_ros(self):
         qos = QoSProfile(depth=10)
@@ -83,15 +99,10 @@ class BebopGUI(Node, QMainWindow):
                 )
             )
         
-        # Suscriptor de errores de formación
+        # Suscriptor de errores de formación (único error ahora)
         self.formation_error_sub = self.create_subscription(
             Float32MultiArray, '/formation_errors',
             self.formation_error_callback, qos
-        )
-        
-        self.bearing_error_sub = self.create_subscription(
-            Float32MultiArray, '/bearing_errors',
-            self.bearing_error_callback, qos
         )
 
     def setup_ui(self):
@@ -104,7 +115,7 @@ class BebopGUI(Node, QMainWindow):
         central_widget.setLayout(self.main_layout)
 
         # Título
-        title = QLabel('Bebop Control Panel')
+        title = QLabel(f'Bebop Control Panel - {len(self.robot_names)} Drones')
         title.setAlignment(Qt.AlignCenter)
         title.setStyleSheet('font-size: 20px; font-weight: bold; color: #333;')
         self.main_layout.addWidget(title)
@@ -128,18 +139,32 @@ class BebopGUI(Node, QMainWindow):
         self.status_label.setStyleSheet('font-size: 16px; color: #555;')
         self.main_layout.addWidget(self.status_label)
 
+        # Timer para actualización eficiente de vistas
+        self.view_update_timer = QTimer()
+        self.view_update_timer.timeout.connect(self.update_current_view)
+        self.view_update_timer.start(10000)  # Actualizar cada 100ms (10 FPS)
+
+
+
     def setup_selectors(self):
         # Selector de vista principal
         self.view_selector = QComboBox()
-        self.view_selector.addItems(["Vista de Cámaras", "Gráfica 3D", "Errores de Formación"])
+        self.view_selector.addItems(["Vista de Cámaras", "Gráfica 3D", "Error de Formación"])
         self.view_selector.currentIndexChanged.connect(self.switch_view)
         self.main_layout.addWidget(self.view_selector)
 
-        # Selector de cámara (solo visible en vista de cámaras)
+        # Selector de cámara con estilo mejorado
         self.camera_selector = QComboBox()
         self.camera_selector.addItems(["Todas las cámaras"] + self.robot_names)
-        self.camera_selector.currentIndexChanged.connect(self.update_camera_view)
+        self.camera_selector.currentIndexChanged.connect(self.change_camera_view)
         self.camera_selector.setVisible(False)
+        self.camera_selector.setStyleSheet("""
+            QComboBox {
+                padding: 8px;
+                font-size: 14px;
+                min-width: 200px;
+            }
+        """)
         self.main_layout.addWidget(self.camera_selector)
 
     def setup_buttons(self):
@@ -170,6 +195,54 @@ class BebopGUI(Node, QMainWindow):
         
         self.main_layout.addLayout(button_layout)
 
+
+
+    def change_camera_view(self):
+        self.current_camera_view = self.camera_selector.currentText()
+        self.update_camera_view_layout()
+
+    def update_camera_view_layout(self):
+        # Limpiar layout
+        for i in reversed(range(self.camera_layout.count())): 
+            self.camera_layout.itemAt(i).widget().setParent(None)
+        
+        if self.current_camera_view == "Todas las cámaras":
+            # Mostrar todas las cámaras en grid
+            num_drones = len(self.robot_names)
+            cols = int(math.ceil(math.sqrt(num_drones)))
+            
+            for i, name in enumerate(self.robot_names):
+                self.camera_layout.addWidget(self.camera_labels[name], i//cols, i%cols)
+        else:
+            # Mostrar solo la cámara seleccionada (centrada)
+            self.camera_layout.addWidget(self.camera_labels[self.current_camera_view], 0, 0, 2, 2)
+
+    def update_current_view(self):
+        """Actualiza solo la vista activa para mejorar rendimiento"""
+        current_time = time.time()
+        if current_time - self.last_update_time < 0.001:  # Limitar a 10 FPS
+            return
+            
+        self.last_update_time = current_time
+        
+        if self.stack.currentIndex() == 0:  # Vista de cámaras
+            self.update_camera_images()
+        elif self.stack.currentIndex() == 1:  # Gráfica 3D
+            self.update_3d_plot()
+        elif self.stack.currentIndex() == 2:  # Gráfica de error
+            self.update_error_plot()
+
+    def update_camera_images(self):
+        """Actualiza solo las imágenes visibles"""
+        if self.current_camera_view == "Todas las cámaras":
+            for name in self.robot_names:
+                if self.camera_images[name] is not None:
+                    self.display_image(self.camera_images[name], self.camera_labels[name])
+        else:
+            name = self.current_camera_view
+            if self.camera_images[name] is not None:
+                self.display_image(self.camera_images[name], self.camera_labels[name])
+
     def setup_camera_view(self):
         self.camera_container = QWidget()
         self.camera_layout = QGridLayout()
@@ -177,13 +250,20 @@ class BebopGUI(Node, QMainWindow):
         
         # Crear etiquetas para cada cámara
         self.camera_labels = {}
-        for i, name in enumerate(self.robot_names):
+        
+        for name in self.robot_names:
             label = QLabel()
             label.setAlignment(Qt.AlignCenter)
             label.setMinimumSize(320, 240)
+            label.setStyleSheet("""
+                QLabel {
+                    border: 2px solid #ddd;
+                    background-color: #f0f0f0;
+                }
+            """)
             self.camera_labels[name] = label
-            self.camera_layout.addWidget(label, i//2, i%2)
         
+        self.update_camera_view_layout()
         self.stack.addWidget(self.camera_container)
 
     def setup_3d_plot(self):
@@ -199,21 +279,11 @@ class BebopGUI(Node, QMainWindow):
     def setup_error_plot(self):
         self.figure_error = Figure(figsize=(10, 8), tight_layout=True)
         self.canvas_error = FigureCanvas(self.figure_error)
-        
-        # Crear 2 subplots
-        self.ax_formation = self.figure_error.add_subplot(211)
-        self.ax_bearing = self.figure_error.add_subplot(212)
-        
-        # Configurar ejes
-        self.ax_formation.set_title("Error de Formación")
-        self.ax_formation.set_ylabel("Error [m]")
-        self.ax_formation.grid(True)
-        
-        self.ax_bearing.set_title("Error de Bearings")
-        self.ax_bearing.set_xlabel("Tiempo [s]")
-        self.ax_bearing.set_ylabel("Error [rad]")
-        self.ax_bearing.grid(True)
-        
+        self.ax_error = self.figure_error.add_subplot(111)
+        self.ax_error.set_title("Error de Formación")
+        self.ax_error.set_xlabel("Tiempo [s]")
+        self.ax_error.set_ylabel("Error [m]")
+        self.ax_error.grid(True)
         self.stack.addWidget(self.canvas_error)
 
     def switch_view(self, index):
@@ -222,7 +292,7 @@ class BebopGUI(Node, QMainWindow):
         
         if index == 1:  # Gráfica 3D
             self.update_3d_plot()
-        elif index == 2:  # Gráfica de errores
+        elif index == 2:  # Gráfica de error
             self.update_error_plot()
 
     def update_camera_view(self):
@@ -234,9 +304,12 @@ class BebopGUI(Node, QMainWindow):
         
         if selected == "Todas las cámaras":
             # Mostrar todas las cámaras en grid
+            num_drones = len(self.robot_names)
+            cols = int(math.ceil(math.sqrt(num_drones)))
+            
             for i, (name, label) in enumerate(self.camera_labels.items()):
                 label.setVisible(True)
-                self.camera_layout.addWidget(label, i//2, i%2)
+                self.camera_layout.addWidget(label, i//cols, i%cols)
         else:
             # Mostrar solo la cámara seleccionada (centrada)
             label = self.camera_labels[selected]
@@ -311,76 +384,80 @@ class BebopGUI(Node, QMainWindow):
             if self.stack.currentIndex() == 2:
                 self.update_error_plot()
 
-    def bearing_error_callback(self, msg):
-        current_time = self.get_clock().now().nanoseconds / 1e9 - self.start_time
-        
-        if len(msg.data) > 0:
-            # Calcular error promedio de bearings
-            avg_error = sum(msg.data) / len(msg.data)
-            self.error_history['bearing'].append(avg_error)
-            
-            # Limitar el historial (el tiempo ya se limita en formation_error_callback)
-            max_history = 1000
-
-            if len(self.time_history) > max_history:
-            # if len(self.error_history['bearing']) > max_history:
-                self.error_history['bearing'] = self.error_history['bearing'][-max_history:]
-            
-            # Actualizar gráfica si está visible
-            if self.stack.currentIndex() == 2:
-                self.update_error_plot()
-
     def update_3d_plot(self):
-        self.ax_3d.clear()
+        try:
+            # No limpiar completamente el gráfico para mejor rendimiento
+            self.ax_3d.cla()  # Más eficiente que clear()
+            
+            # Configuración inicial del gráfico (solo una vez)
+            if not hasattr(self, 'plot_initialized'):
+                self.ax_3d.set_title(f"3D Trajectory - {len(self.robot_names)} Drones")
+                self.ax_3d.set_xlabel("X [m]")
+                self.ax_3d.set_ylabel("Y [m]")
+                self.ax_3d.set_zlabel("Z [m]")
+                self.ax_3d.grid(True, alpha=0.3)
+                self.plot_initialized = True
+            
+            # Pre-alocar arrays para mejor performance
+            colors = plt.cm.tab20(np.linspace(0, 1, len(self.robot_names)))
+            
+            for i, name in enumerate(self.robot_names):
+                if len(self.drone_positions[name]) > 1:
+                    positions = np.array(self.drone_positions[name])
+                    
+                    # Dibujar trayectoria con línea sólida
+                    self.ax_3d.plot(positions[:,0], positions[:,1], positions[:,2], 
+                                '-', color=colors[i], linewidth=1.5, alpha=0.7)
+                    
+                    # Dibujar posición actual como marcador
+                    if self.current_poses[name]:
+                        self.ax_3d.scatter(
+                            [self.current_poses[name][0]], 
+                            [self.current_poses[name][1]], 
+                            [self.current_poses[name][2]], 
+                            color=colors[i], s=80, marker='o',
+                            edgecolors='black', linewidth=0.5
+                        )
+            
+            # Ajustar límites dinámicamente
+            self.adjust_3d_axes_limits()
+            
+            # Dibujar solo si hay cambios significativos
+            self.canvas_3d.draw_idle()  # Más eficiente que draw()
+            
+        except Exception as e:
+            self.get_logger().error(f"Error updating 3D plot: {str(e)}")
+
+    def adjust_3d_axes_limits(self):
+        """Ajusta los límites de los ejes dinámicamente"""
+        all_positions = []
+        for name in self.robot_names:
+            if len(self.drone_positions[name]) > 0:
+                all_positions.extend(self.drone_positions[name])
         
-        # Plotear trayectorias de cada dron
-        colors = ['r', 'g', 'b', 'c', 'm', 'y']
-        for i, name in enumerate(self.robot_names):
-            if self.drone_positions[name]:
-                x, y, z = zip(*self.drone_positions[name])
-                self.ax_3d.plot(x, y, z, f'{colors[i%len(colors)]}-', linewidth=1, markersize=3, label=name)
-                
-                # Plotear posición actual
-                if self.current_poses[name]:
-                    self.ax_3d.scatter(
-                        self.current_poses[name][0], 
-                        self.current_poses[name][1], 
-                        self.current_poses[name][2], 
-                        c=colors[i%len(colors)], s=80, marker='o'
-                    )
-        
-        # Plotear formación deseada si está disponible
-        if self.goal_positions:
-            x_goal, y_goal, z_goal = zip(*self.goal_positions)
-            self.ax_3d.plot(x_goal, y_goal, z_goal, 'k--', linewidth=2, markersize=5, label='Formación deseada')
-        
-        self.ax_3d.set_title("3D Trajectory", pad=20)
-        self.ax_3d.set_xlabel("X [m]")
-        self.ax_3d.set_ylabel("Y [m]")
-        self.ax_3d.set_zlabel("Z [m]")
-        self.ax_3d.legend()
-        self.canvas_3d.draw()
+        if all_positions:
+            positions = np.array(all_positions)
+            min_vals = positions.min(axis=0)
+            max_vals = positions.max(axis=0)
+            
+            # Añadir margen del 10%
+            margin = 0.1 * (max_vals - min_vals)
+            self.ax_3d.set_xlim(min_vals[0]-margin[0], max_vals[0]+margin[0])
+            self.ax_3d.set_ylim(min_vals[1]-margin[1], max_vals[1]+margin[1])
+            self.ax_3d.set_zlim(min_vals[2]-margin[2], max_vals[2]+margin[2])
 
     def update_error_plot(self):
         if not self.time_history:
             return
             
         # Actualizar gráfica de error de formación
-        self.ax_formation.clear()
-        self.ax_formation.plot(self.time_history, self.error_history['formation'], 'b-', label='Error de Formación')
-        self.ax_formation.set_title("Error de Formación")
-        self.ax_formation.set_ylabel("Error [m]")
-        self.ax_formation.grid(True)
-        self.ax_formation.legend()
-        
-        # Actualizar gráfica de error de bearings
-        self.ax_bearing.clear()
-        self.ax_bearing.plot(self.time_history, self.error_history['bearing'], 'r-', label='Error de Bearings')
-        self.ax_bearing.set_title("Error de Bearings")
-        self.ax_bearing.set_xlabel("Tiempo [s]")
-        self.ax_bearing.set_ylabel("Error [rad]")
-        self.ax_bearing.grid(True)
-        self.ax_bearing.legend()
+        self.ax_error.clear()
+        self.ax_error.plot(self.time_history, self.error_history['formation'], 'b-', label='Error de Formación')
+        self.ax_error.set_title("Error de Formación")
+        self.ax_error.set_xlabel("Tiempo [s]")
+        self.ax_error.set_ylabel("Error [m]")
+        self.ax_error.grid(True)
+        self.ax_error.legend()
         
         self.canvas_error.draw()
 
@@ -421,7 +498,7 @@ class BebopGUI(Node, QMainWindow):
         self.goal_positions.clear()
         for name in self.robot_names:
             self.drone_positions[name].clear()
-        self.error_history = {'formation': [], 'bearing': []}
+        self.error_history = {'formation': []}
         self.time_history = []
         if self.stack.currentIndex() == 1:
             self.update_3d_plot()
@@ -451,14 +528,14 @@ def sigint_handler(*args):
 def main(args=None):
     rclpy.init(args=args)
     
-    # Nombres de los robots (deberían coincidir con los del controlador)
-    robot_names = ["bebop1", "bebop2", "bebop3", "bebop4"]
+    # Número de drones (puede pasarse como argumento)
+    # num_drones = 20  # Puedes cambiar este valor
     
     # Set up signal handler for Ctrl+C
     signal.signal(signal.SIGINT, sigint_handler)
     
     app = QApplication([])
-    gui = BebopGUI(robot_names)
+    gui = BebopGUI()
     gui.show()
 
     # Configurar timer para procesar eventos ROS
