@@ -21,7 +21,7 @@ def generate_launch_description():
     # =====================================================
     # Configuración de parámetros
     # =====================================================
-    num_drones = 20
+    num_drones = 5
     min_distance = 0.8  # Separación mínima de 50 cm entre drones
     max_attempts = 100  # Intentos máximos para colocar cada dron
     robot_names = [f"bebop{i+1}" for i in range(num_drones)]
@@ -117,9 +117,12 @@ def generate_launch_description():
     state_gui = TimerAction(
         period=2.0,
         actions=[
-            ExecuteProcess(
-                cmd=['ros2', 'run', 'bebop_gui', 'bebop_gui'],
-                output='screen'
+            Node(
+                package='bebop_gui',
+                executable='bebop_gui_swarm',
+                name='bebop_gui',
+                output='screen',
+                parameters=[{'num_drones': num_drones}] 
             )
         ]
     )

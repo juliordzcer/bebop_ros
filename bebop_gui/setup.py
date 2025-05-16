@@ -25,6 +25,7 @@ setup(
         'console_scripts': [
             'bebop_gui = bebop_gui.gui_node:main',
             'bebop_gui_one = bebop_gui.gui_node_one:main',
+            'bebop_gui_swarm = bebop_gui.gui_swarm:main',
             'test_gui = bebop_gui.test:main', 
         ],
     },

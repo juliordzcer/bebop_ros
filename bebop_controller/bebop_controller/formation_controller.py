@@ -3,7 +3,7 @@ import rclpy
 from rclpy.node import Node
 from rclpy.qos import QoSProfile
 from geometry_msgs.msg import Twist, Pose
-from std_msgs.msg import Bool, Int32
+from std_msgs.msg import Bool, Int32, Float32MultiArray
 from std_srvs.srv import Empty
 from tf_transformations import euler_from_quaternion
 import numpy as np
@@ -59,7 +59,6 @@ class FormationController(Node):
 
     def __init__(self):
         super().__init__('formation_controller')
-
         # Configuration parameters
         self.declare_parameters(namespace='',
             parameters=[
@@ -120,6 +119,9 @@ class FormationController(Node):
             name: self.create_publisher(Bool, f'/{name}/enable', qos)
             for name in self.robot_names
         }
+
+        self.formation_error_pub = self.create_publisher(Float32MultiArray, '/formation_errors', qos)
+        self.desired_positions = np.zeros((len(self.robot_names), 3))
 
         # Subscribers
         self.pose_subs = [
@@ -210,66 +212,32 @@ class FormationController(Node):
                 agent_index += 1
         
         return positions
-
-    # def generate_pyramid_formation(self, num_agents):
-    #     """Genera formación piramidal con líder en la posición más alta garantizada"""
-    #     positions = np.zeros((num_agents, 3))
+    
+    def calculate_formation_errors(self, positions):
+        """Calcula los errores de posición relativa respecto a la formación deseada"""
+        n = len(self.robot_names)
+        formation_errors = np.zeros(n)
         
-    #     if num_agents == 0:
-    #         return positions
-
-    #     # Parámetros configurables
-    #     BASE_ALTITUDE = 1.0          # Altura mínima (última capa)
-    #     LEADER_HEIGHT = 2.5           # Altura fija del líder 
-    #     LAYER_SPACING = 0.5           # Espacio vertical entre capas
-    #     HORIZONTAL_SPACING = 1.2      # Separación horizontal base
-
-    #     # 1. Posicionar LÍDER (siempre en [0, 0, altura_máxima])
-    #     positions[0] = [0, 0, LEADER_HEIGHT]
-        
-    #     self.takeoff_height = LEADER_HEIGHT  # Altura de despegue del líder
-    #     if num_agents == 1:
-    #         return positions
-
-    #     # 2. Calcular número de capas necesarias
-    #     remaining_drones = num_agents - 1
-    #     drones_per_layer = 4  # Comenzamos con 4 drones en primera capa
-    #     layer = 1
-
-    #     while remaining_drones > 0:
-    #         # Drones en esta capa
-    #         current_layer_drones = min(drones_per_layer, remaining_drones)
+        # Return zeros if desired_positions hasn't been set yet
+        if not hasattr(self, 'desired_positions'):
+            return formation_errors
             
-    #         # Altura de la capa (decreciente)
-    #         layer_z = max(BASE_ALTITUDE, LEADER_HEIGHT - (layer * LAYER_SPACING))
+        for i in range(n):
+            error_sum = 0.0
+            count = 0
             
-    #         # Radio adaptativo
-    #         radius = HORIZONTAL_SPACING * layer
-            
-    #         # Distribución circular perfecta
-    #         angle_step = 2 * math.pi / current_layer_drones
-            
-    #         for i in range(current_layer_drones):
-    #             angle = i * angle_step
-    #             x = radius * math.cos(angle)
-    #             y = radius * math.sin(angle)
-                
-    #             # Asignar posición (índice +1 porque el 0 es el líder)
-    #             positions[layer + i] = [x, y, layer_z]
-            
-    #         remaining_drones -= current_layer_drones
-    #         layer += 1
-    #         drones_per_layer += 4  # Cada capa tiene 4 drones más
-
-    #     # Verificación de altura del líder
-    #     max_z = max(pos[2] for pos in positions)
-    #     if not math.isclose(max_z, LEADER_HEIGHT, abs_tol=0.01):
-    #         self.get_logger().error("¡Error crítico! El líder no está en la posición más alta")
-    #         # Failsafe: reposicionar todos los drones debajo del líder
-    #         for i in range(1, num_agents):
-    #             positions[i][2] = max(BASE_ALTITUDE, LEADER_HEIGHT - 0.5)
-        
-    #     return positions
+            for j in range(n):
+                if i != j:
+                    # Error de posición relativa
+                    desired_rel_pos = self.desired_positions[j] - self.desired_positions[i]
+                    actual_rel_pos = positions[j] - positions[i]
+                    
+                    error_sum += np.linalg.norm(actual_rel_pos - desired_rel_pos)
+                    count += 1
+                    
+            if count > 0:
+                formation_errors[i] = error_sum / count
+        return formation_errors
 
     def pose_callback(self, msg, robot_name):
         """Update pose and estimate velocity"""
@@ -497,13 +465,24 @@ class FormationController(Node):
             commands = np.zeros((n, 3))
             cyaw = np.zeros(n)
 
+            positions = np.array([self.robot_poses[name] for name in self.robot_names])
+
+            # Calcular errores
+            formation_errors = self.calculate_formation_errors(positions)
+            
+            # Publicar errores de formación
+            formation_msg = Float32MultiArray()
+            formation_msg.data = formation_errors.tolist()
+            self.formation_error_pub.publish(formation_msg)
+
+
             # First calculate all desired positions
-            desired_positions = np.zeros((n, 3))
+            self.desired_positions = np.zeros((n, 3))
             for i in range(n):
                 if i == 0:  # Leader
-                    desired_positions[i][0] = min(elapsed_time * self.trajectory_speed, 10.0)
-                    desired_positions[i][1] = 0.0
-                    desired_positions[i][2] = self.takeoff_height
+                    self.desired_positions[i][0] = min(elapsed_time * self.trajectory_speed, 10.0)
+                    self.desired_positions[i][1] = 0.0
+                    self.desired_positions[i][2] = self.takeoff_height
                 else:  # Followers
                     # Get relative position from formation pattern
                     rel_pos = self.relative_positions[i]
@@ -515,13 +494,13 @@ class FormationController(Node):
                     z_rel = rel_pos[2]
                     
                     # Calculate absolute desired position
-                    desired_positions[i][0] = self.leader_position[0] + x_rel
-                    desired_positions[i][1] = self.leader_position[1] + y_rel
+                    self.desired_positions[i][0] = self.leader_position[0] + x_rel
+                    self.desired_positions[i][1] = self.leader_position[1] + y_rel
                     
                     # Calculate desired altitude with safety constraints
                     desired_altitude = self.leader_position[2] + z_rel
                     min_allowed = self.min_altitude + (abs(z_rel) * 0.5)  # Higher layers have more margin
-                    desired_positions[i][2] = max(desired_altitude, min_allowed)
+                    self.desired_positions[i][2] = max(desired_altitude, min_allowed)
 
             # Then calculate commands for each drone
             for i, name in enumerate(self.robot_names):
@@ -530,7 +509,7 @@ class FormationController(Node):
                 
                 current_pos = self.robot_poses[name]
                 euler_c = self.robot_orientations[name]
-                target_pos = desired_positions[i]
+                target_pos = self.desired_positions[i]
                 
                 # Calculate position error with safety checks
                 pos_error = target_pos - current_pos
