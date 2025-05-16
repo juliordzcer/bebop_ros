@@ -242,3 +242,738 @@
   gz_type_name: "gz.msgs.CameraInfo"
   lazy: true
   direction: GZ_TO_ROS
+
+# Robot 6
+# Velocity command configuration.
+- topic_name: "/bebop6/cmd_vel"
+  ros_type_name: "geometry_msgs/msg/Twist"
+  gz_type_name: "gz.msgs.Twist"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Motor speed command configuration.
+- topic_name: "/bebop6/gazebo/command/motor_speed"
+  ros_type_name: "std_msgs/msg/Float32"
+  gz_type_name: "gz.msgs.Float"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Enable Quadrotor command configuration.
+- topic_name: "/bebop6/enable"
+  ros_type_name: "std_msgs/msg/Bool"
+  gz_type_name: "gz.msgs.Boolean"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Pose state configuration.
+- topic_name: "/bebop6/pose"
+  ros_type_name: "geometry_msgs/msg/Pose"
+  gz_type_name: "gz.msgs.Pose"
+  lazy: true
+  direction: GZ_TO_ROS
+
+# Initial Pose configuration.
+- topic_name: "/bebop6/set_pose"
+  ros_type_name: "geometry_msgs/msg/Pose"
+  gz_type_name: "gz.msgs.Pose"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# rgbd_camera_bridge configuration.
+- topic_name: "/world/bebop/model/bebop6/link/body/sensor/rgb_camera_sensor/image"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  lazy: true
+  direction: GZ_TO_ROS
+
+- topic_name: "/world/bebop/model/bebop6/link/body/sensor/rgb_camera_sensor/camera_info"
+  ros_type_name: "sensor_msgs/msg/CameraInfo"
+  gz_type_name: "gz.msgs.CameraInfo"
+  lazy: true
+  direction: GZ_TO_ROS
+
+# Robot 7
+# Velocity command configuration.
+- topic_name: "/bebop7/cmd_vel"
+  ros_type_name: "geometry_msgs/msg/Twist"
+  gz_type_name: "gz.msgs.Twist"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Motor speed command configuration.
+- topic_name: "/bebop7/gazebo/command/motor_speed"
+  ros_type_name: "std_msgs/msg/Float32"
+  gz_type_name: "gz.msgs.Float"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Enable Quadrotor command configuration.
+- topic_name: "/bebop7/enable"
+  ros_type_name: "std_msgs/msg/Bool"
+  gz_type_name: "gz.msgs.Boolean"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Pose state configuration.
+- topic_name: "/bebop7/pose"
+  ros_type_name: "geometry_msgs/msg/Pose"
+  gz_type_name: "gz.msgs.Pose"
+  lazy: true
+  direction: GZ_TO_ROS
+
+# Initial Pose configuration.
+- topic_name: "/bebop7/set_pose"
+  ros_type_name: "geometry_msgs/msg/Pose"
+  gz_type_name: "gz.msgs.Pose"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# rgbd_camera_bridge configuration.
+- topic_name: "/world/bebop/model/bebop7/link/body/sensor/rgb_camera_sensor/image"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  lazy: true
+  direction: GZ_TO_ROS
+
+- topic_name: "/world/bebop/model/bebop7/link/body/sensor/rgb_camera_sensor/camera_info"
+  ros_type_name: "sensor_msgs/msg/CameraInfo"
+  gz_type_name: "gz.msgs.CameraInfo"
+  lazy: true
+  direction: GZ_TO_ROS
+
+# Robot 8
+# Velocity command configuration.
+- topic_name: "/bebop8/cmd_vel"
+  ros_type_name: "geometry_msgs/msg/Twist"
+  gz_type_name: "gz.msgs.Twist"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Motor speed command configuration.
+- topic_name: "/bebop8/gazebo/command/motor_speed"
+  ros_type_name: "std_msgs/msg/Float32"
+  gz_type_name: "gz.msgs.Float"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Enable Quadrotor command configuration.
+- topic_name: "/bebop8/enable"
+  ros_type_name: "std_msgs/msg/Bool"
+  gz_type_name: "gz.msgs.Boolean"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Pose state configuration.
+- topic_name: "/bebop8/pose"
+  ros_type_name: "geometry_msgs/msg/Pose"
+  gz_type_name: "gz.msgs.Pose"
+  lazy: true
+  direction: GZ_TO_ROS
+
+# Initial Pose configuration.
+- topic_name: "/bebop8/set_pose"
+  ros_type_name: "geometry_msgs/msg/Pose"
+  gz_type_name: "gz.msgs.Pose"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# rgbd_camera_bridge configuration.
+- topic_name: "/world/bebop/model/bebop8/link/body/sensor/rgb_camera_sensor/image"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  lazy: true
+  direction: GZ_TO_ROS
+
+- topic_name: "/world/bebop/model/bebop8/link/body/sensor/rgb_camera_sensor/camera_info"
+  ros_type_name: "sensor_msgs/msg/CameraInfo"
+  gz_type_name: "gz.msgs.CameraInfo"
+  lazy: true
+  direction: GZ_TO_ROS
+
+# Robot 9
+# Velocity command configuration.
+- topic_name: "/bebop9/cmd_vel"
+  ros_type_name: "geometry_msgs/msg/Twist"
+  gz_type_name: "gz.msgs.Twist"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Motor speed command configuration.
+- topic_name: "/bebop9/gazebo/command/motor_speed"
+  ros_type_name: "std_msgs/msg/Float32"
+  gz_type_name: "gz.msgs.Float"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Enable Quadrotor command configuration.
+- topic_name: "/bebop9/enable"
+  ros_type_name: "std_msgs/msg/Bool"
+  gz_type_name: "gz.msgs.Boolean"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Pose state configuration.
+- topic_name: "/bebop9/pose"
+  ros_type_name: "geometry_msgs/msg/Pose"
+  gz_type_name: "gz.msgs.Pose"
+  lazy: true
+  direction: GZ_TO_ROS
+
+# Initial Pose configuration.
+- topic_name: "/bebop9/set_pose"
+  ros_type_name: "geometry_msgs/msg/Pose"
+  gz_type_name: "gz.msgs.Pose"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# rgbd_camera_bridge configuration.
+- topic_name: "/world/bebop/model/bebop9/link/body/sensor/rgb_camera_sensor/image"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  lazy: true
+  direction: GZ_TO_ROS
+
+- topic_name: "/world/bebop/model/bebop9/link/body/sensor/rgb_camera_sensor/camera_info"
+  ros_type_name: "sensor_msgs/msg/CameraInfo"
+  gz_type_name: "gz.msgs.CameraInfo"
+  lazy: true
+  direction: GZ_TO_ROS
+
+# Robot 10
+# Velocity command configuration.
+- topic_name: "/bebop10/cmd_vel"
+  ros_type_name: "geometry_msgs/msg/Twist"
+  gz_type_name: "gz.msgs.Twist"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Motor speed command configuration.
+- topic_name: "/bebop10/gazebo/command/motor_speed"
+  ros_type_name: "std_msgs/msg/Float32"
+  gz_type_name: "gz.msgs.Float"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Enable Quadrotor command configuration.
+- topic_name: "/bebop10/enable"
+  ros_type_name: "std_msgs/msg/Bool"
+  gz_type_name: "gz.msgs.Boolean"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Pose state configuration.
+- topic_name: "/bebop10/pose"
+  ros_type_name: "geometry_msgs/msg/Pose"
+  gz_type_name: "gz.msgs.Pose"
+  lazy: true
+  direction: GZ_TO_ROS
+
+# Initial Pose configuration.
+- topic_name: "/bebop10/set_pose"
+  ros_type_name: "geometry_msgs/msg/Pose"
+  gz_type_name: "gz.msgs.Pose"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# rgbd_camera_bridge configuration.
+- topic_name: "/world/bebop/model/bebop10/link/body/sensor/rgb_camera_sensor/image"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  lazy: true
+  direction: GZ_TO_ROS
+
+- topic_name: "/world/bebop/model/bebop10/link/body/sensor/rgb_camera_sensor/camera_info"
+  ros_type_name: "sensor_msgs/msg/CameraInfo"
+  gz_type_name: "gz.msgs.CameraInfo"
+  lazy: true
+  direction: GZ_TO_ROS
+
+# Robot 11
+# Velocity command configuration.
+- topic_name: "/bebop11/cmd_vel"
+  ros_type_name: "geometry_msgs/msg/Twist"
+  gz_type_name: "gz.msgs.Twist"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Motor speed command configuration.
+- topic_name: "/bebop11/gazebo/command/motor_speed"
+  ros_type_name: "std_msgs/msg/Float32"
+  gz_type_name: "gz.msgs.Float"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Enable Quadrotor command configuration.
+- topic_name: "/bebop11/enable"
+  ros_type_name: "std_msgs/msg/Bool"
+  gz_type_name: "gz.msgs.Boolean"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Pose state configuration.
+- topic_name: "/bebop11/pose"
+  ros_type_name: "geometry_msgs/msg/Pose"
+  gz_type_name: "gz.msgs.Pose"
+  lazy: true
+  direction: GZ_TO_ROS
+
+# Initial Pose configuration.
+- topic_name: "/bebop11/set_pose"
+  ros_type_name: "geometry_msgs/msg/Pose"
+  gz_type_name: "gz.msgs.Pose"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# rgbd_camera_bridge configuration.
+- topic_name: "/world/bebop/model/bebop11/link/body/sensor/rgb_camera_sensor/image"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  lazy: true
+  direction: GZ_TO_ROS
+
+- topic_name: "/world/bebop/model/bebop11/link/body/sensor/rgb_camera_sensor/camera_info"
+  ros_type_name: "sensor_msgs/msg/CameraInfo"
+  gz_type_name: "gz.msgs.CameraInfo"
+  lazy: true
+  direction: GZ_TO_ROS
+
+# Robot 12
+# Velocity command configuration.
+- topic_name: "/bebop12/cmd_vel"
+  ros_type_name: "geometry_msgs/msg/Twist"
+  gz_type_name: "gz.msgs.Twist"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Motor speed command configuration.
+- topic_name: "/bebop12/gazebo/command/motor_speed"
+  ros_type_name: "std_msgs/msg/Float32"
+  gz_type_name: "gz.msgs.Float"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Enable Quadrotor command configuration.
+- topic_name: "/bebop12/enable"
+  ros_type_name: "std_msgs/msg/Bool"
+  gz_type_name: "gz.msgs.Boolean"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Pose state configuration.
+- topic_name: "/bebop12/pose"
+  ros_type_name: "geometry_msgs/msg/Pose"
+  gz_type_name: "gz.msgs.Pose"
+  lazy: true
+  direction: GZ_TO_ROS
+
+# Initial Pose configuration.
+- topic_name: "/bebop12/set_pose"
+  ros_type_name: "geometry_msgs/msg/Pose"
+  gz_type_name: "gz.msgs.Pose"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# rgbd_camera_bridge configuration.
+- topic_name: "/world/bebop/model/bebop12/link/body/sensor/rgb_camera_sensor/image"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  lazy: true
+  direction: GZ_TO_ROS
+
+- topic_name: "/world/bebop/model/bebop12/link/body/sensor/rgb_camera_sensor/camera_info"
+  ros_type_name: "sensor_msgs/msg/CameraInfo"
+  gz_type_name: "gz.msgs.CameraInfo"
+  lazy: true
+  direction: GZ_TO_ROS
+
+# Robot 13
+# Velocity command configuration.
+- topic_name: "/bebop13/cmd_vel"
+  ros_type_name: "geometry_msgs/msg/Twist"
+  gz_type_name: "gz.msgs.Twist"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Motor speed command configuration.
+- topic_name: "/bebop13/gazebo/command/motor_speed"
+  ros_type_name: "std_msgs/msg/Float32"
+  gz_type_name: "gz.msgs.Float"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Enable Quadrotor command configuration.
+- topic_name: "/bebop13/enable"
+  ros_type_name: "std_msgs/msg/Bool"
+  gz_type_name: "gz.msgs.Boolean"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Pose state configuration.
+- topic_name: "/bebop13/pose"
+  ros_type_name: "geometry_msgs/msg/Pose"
+  gz_type_name: "gz.msgs.Pose"
+  lazy: true
+  direction: GZ_TO_ROS
+
+# Initial Pose configuration.
+- topic_name: "/bebop13/set_pose"
+  ros_type_name: "geometry_msgs/msg/Pose"
+  gz_type_name: "gz.msgs.Pose"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# rgbd_camera_bridge configuration.
+- topic_name: "/world/bebop/model/bebop13/link/body/sensor/rgb_camera_sensor/image"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  lazy: true
+  direction: GZ_TO_ROS
+
+- topic_name: "/world/bebop/model/bebop13/link/body/sensor/rgb_camera_sensor/camera_info"
+  ros_type_name: "sensor_msgs/msg/CameraInfo"
+  gz_type_name: "gz.msgs.CameraInfo"
+  lazy: true
+  direction: GZ_TO_ROS
+
+# Robot 14
+# Velocity command configuration.
+- topic_name: "/bebop14/cmd_vel"
+  ros_type_name: "geometry_msgs/msg/Twist"
+  gz_type_name: "gz.msgs.Twist"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Motor speed command configuration.
+- topic_name: "/bebop14/gazebo/command/motor_speed"
+  ros_type_name: "std_msgs/msg/Float32"
+  gz_type_name: "gz.msgs.Float"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Enable Quadrotor command configuration.
+- topic_name: "/bebop14/enable"
+  ros_type_name: "std_msgs/msg/Bool"
+  gz_type_name: "gz.msgs.Boolean"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Pose state configuration.
+- topic_name: "/bebop14/pose"
+  ros_type_name: "geometry_msgs/msg/Pose"
+  gz_type_name: "gz.msgs.Pose"
+  lazy: true
+  direction: GZ_TO_ROS
+
+# Initial Pose configuration.
+- topic_name: "/bebop14/set_pose"
+  ros_type_name: "geometry_msgs/msg/Pose"
+  gz_type_name: "gz.msgs.Pose"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# rgbd_camera_bridge configuration.
+- topic_name: "/world/bebop/model/bebop14/link/body/sensor/rgb_camera_sensor/image"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  lazy: true
+  direction: GZ_TO_ROS
+
+- topic_name: "/world/bebop/model/bebop14/link/body/sensor/rgb_camera_sensor/camera_info"
+  ros_type_name: "sensor_msgs/msg/CameraInfo"
+  gz_type_name: "gz.msgs.CameraInfo"
+  lazy: true
+  direction: GZ_TO_ROS
+
+# Robot 15
+# Velocity command configuration.
+- topic_name: "/bebop15/cmd_vel"
+  ros_type_name: "geometry_msgs/msg/Twist"
+  gz_type_name: "gz.msgs.Twist"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Motor speed command configuration.
+- topic_name: "/bebop15/gazebo/command/motor_speed"
+  ros_type_name: "std_msgs/msg/Float32"
+  gz_type_name: "gz.msgs.Float"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Enable Quadrotor command configuration.
+- topic_name: "/bebop15/enable"
+  ros_type_name: "std_msgs/msg/Bool"
+  gz_type_name: "gz.msgs.Boolean"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Pose state configuration.
+- topic_name: "/bebop15/pose"
+  ros_type_name: "geometry_msgs/msg/Pose"
+  gz_type_name: "gz.msgs.Pose"
+  lazy: true
+  direction: GZ_TO_ROS
+
+# Initial Pose configuration.
+- topic_name: "/bebop15/set_pose"
+  ros_type_name: "geometry_msgs/msg/Pose"
+  gz_type_name: "gz.msgs.Pose"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# rgbd_camera_bridge configuration.
+- topic_name: "/world/bebop/model/bebop15/link/body/sensor/rgb_camera_sensor/image"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  lazy: true
+  direction: GZ_TO_ROS
+
+- topic_name: "/world/bebop/model/bebop15/link/body/sensor/rgb_camera_sensor/camera_info"
+  ros_type_name: "sensor_msgs/msg/CameraInfo"
+  gz_type_name: "gz.msgs.CameraInfo"
+  lazy: true
+  direction: GZ_TO_ROS
+
+# Robot 16
+# Velocity command configuration.
+- topic_name: "/bebop16/cmd_vel"
+  ros_type_name: "geometry_msgs/msg/Twist"
+  gz_type_name: "gz.msgs.Twist"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Motor speed command configuration.
+- topic_name: "/bebop16/gazebo/command/motor_speed"
+  ros_type_name: "std_msgs/msg/Float32"
+  gz_type_name: "gz.msgs.Float"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Enable Quadrotor command configuration.
+- topic_name: "/bebop16/enable"
+  ros_type_name: "std_msgs/msg/Bool"
+  gz_type_name: "gz.msgs.Boolean"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Pose state configuration.
+- topic_name: "/bebop16/pose"
+  ros_type_name: "geometry_msgs/msg/Pose"
+  gz_type_name: "gz.msgs.Pose"
+  lazy: true
+  direction: GZ_TO_ROS
+
+# Initial Pose configuration.
+- topic_name: "/bebop16/set_pose"
+  ros_type_name: "geometry_msgs/msg/Pose"
+  gz_type_name: "gz.msgs.Pose"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# rgbd_camera_bridge configuration.
+- topic_name: "/world/bebop/model/bebop16/link/body/sensor/rgb_camera_sensor/image"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  lazy: true
+  direction: GZ_TO_ROS
+
+- topic_name: "/world/bebop/model/bebop16/link/body/sensor/rgb_camera_sensor/camera_info"
+  ros_type_name: "sensor_msgs/msg/CameraInfo"
+  gz_type_name: "gz.msgs.CameraInfo"
+  lazy: true
+  direction: GZ_TO_ROS
+
+# Robot 17
+# Velocity command configuration.
+- topic_name: "/bebop17/cmd_vel"
+  ros_type_name: "geometry_msgs/msg/Twist"
+  gz_type_name: "gz.msgs.Twist"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Motor speed command configuration.
+- topic_name: "/bebop17/gazebo/command/motor_speed"
+  ros_type_name: "std_msgs/msg/Float32"
+  gz_type_name: "gz.msgs.Float"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Enable Quadrotor command configuration.
+- topic_name: "/bebop17/enable"
+  ros_type_name: "std_msgs/msg/Bool"
+  gz_type_name: "gz.msgs.Boolean"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Pose state configuration.
+- topic_name: "/bebop17/pose"
+  ros_type_name: "geometry_msgs/msg/Pose"
+  gz_type_name: "gz.msgs.Pose"
+  lazy: true
+  direction: GZ_TO_ROS
+
+# Initial Pose configuration.
+- topic_name: "/bebop17/set_pose"
+  ros_type_name: "geometry_msgs/msg/Pose"
+  gz_type_name: "gz.msgs.Pose"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# rgbd_camera_bridge configuration.
+- topic_name: "/world/bebop/model/bebop17/link/body/sensor/rgb_camera_sensor/image"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  lazy: true
+  direction: GZ_TO_ROS
+
+- topic_name: "/world/bebop/model/bebop17/link/body/sensor/rgb_camera_sensor/camera_info"
+  ros_type_name: "sensor_msgs/msg/CameraInfo"
+  gz_type_name: "gz.msgs.CameraInfo"
+  lazy: true
+  direction: GZ_TO_ROS
+
+# Robot 18
+# Velocity command configuration.
+- topic_name: "/bebop18/cmd_vel"
+  ros_type_name: "geometry_msgs/msg/Twist"
+  gz_type_name: "gz.msgs.Twist"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Motor speed command configuration.
+- topic_name: "/bebop18/gazebo/command/motor_speed"
+  ros_type_name: "std_msgs/msg/Float32"
+  gz_type_name: "gz.msgs.Float"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Enable Quadrotor command configuration.
+- topic_name: "/bebop18/enable"
+  ros_type_name: "std_msgs/msg/Bool"
+  gz_type_name: "gz.msgs.Boolean"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Pose state configuration.
+- topic_name: "/bebop18/pose"
+  ros_type_name: "geometry_msgs/msg/Pose"
+  gz_type_name: "gz.msgs.Pose"
+  lazy: true
+  direction: GZ_TO_ROS
+
+# Initial Pose configuration.
+- topic_name: "/bebop18/set_pose"
+  ros_type_name: "geometry_msgs/msg/Pose"
+  gz_type_name: "gz.msgs.Pose"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# rgbd_camera_bridge configuration.
+- topic_name: "/world/bebop/model/bebop18/link/body/sensor/rgb_camera_sensor/image"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  lazy: true
+  direction: GZ_TO_ROS
+
+- topic_name: "/world/bebop/model/bebop18/link/body/sensor/rgb_camera_sensor/camera_info"
+  ros_type_name: "sensor_msgs/msg/CameraInfo"
+  gz_type_name: "gz.msgs.CameraInfo"
+  lazy: true
+  direction: GZ_TO_ROS
+
+# Robot 19
+# Velocity command configuration.
+- topic_name: "/bebop19/cmd_vel"
+  ros_type_name: "geometry_msgs/msg/Twist"
+  gz_type_name: "gz.msgs.Twist"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Motor speed command configuration.
+- topic_name: "/bebop19/gazebo/command/motor_speed"
+  ros_type_name: "std_msgs/msg/Float32"
+  gz_type_name: "gz.msgs.Float"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Enable Quadrotor command configuration.
+- topic_name: "/bebop19/enable"
+  ros_type_name: "std_msgs/msg/Bool"
+  gz_type_name: "gz.msgs.Boolean"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Pose state configuration.
+- topic_name: "/bebop19/pose"
+  ros_type_name: "geometry_msgs/msg/Pose"
+  gz_type_name: "gz.msgs.Pose"
+  lazy: true
+  direction: GZ_TO_ROS
+
+# Initial Pose configuration.
+- topic_name: "/bebop19/set_pose"
+  ros_type_name: "geometry_msgs/msg/Pose"
+  gz_type_name: "gz.msgs.Pose"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# rgbd_camera_bridge configuration.
+- topic_name: "/world/bebop/model/bebop19/link/body/sensor/rgb_camera_sensor/image"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  lazy: true
+  direction: GZ_TO_ROS
+
+- topic_name: "/world/bebop/model/bebop19/link/body/sensor/rgb_camera_sensor/camera_info"
+  ros_type_name: "sensor_msgs/msg/CameraInfo"
+  gz_type_name: "gz.msgs.CameraInfo"
+  lazy: true
+  direction: GZ_TO_ROS
+
+# Robot 20
+# Velocity command configuration.
+- topic_name: "/bebop20/cmd_vel"
+  ros_type_name: "geometry_msgs/msg/Twist"
+  gz_type_name: "gz.msgs.Twist"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Motor speed command configuration.
+- topic_name: "/bebop20/gazebo/command/motor_speed"
+  ros_type_name: "std_msgs/msg/Float32"
+  gz_type_name: "gz.msgs.Float"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Enable Quadrotor command configuration.
+- topic_name: "/bebop20/enable"
+  ros_type_name: "std_msgs/msg/Bool"
+  gz_type_name: "gz.msgs.Boolean"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# Pose state configuration.
+- topic_name: "/bebop20/pose"
+  ros_type_name: "geometry_msgs/msg/Pose"
+  gz_type_name: "gz.msgs.Pose"
+  lazy: true
+  direction: GZ_TO_ROS
+
+# Initial Pose configuration.
+- topic_name: "/bebop20/set_pose"
+  ros_type_name: "geometry_msgs/msg/Pose"
+  gz_type_name: "gz.msgs.Pose"
+  lazy: true
+  direction: ROS_TO_GZ
+
+# rgbd_camera_bridge configuration.
+- topic_name: "/world/bebop/model/bebop20/link/body/sensor/rgb_camera_sensor/image"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  lazy: true
+  direction: GZ_TO_ROS
+
+- topic_name: "/world/bebop/model/bebop20/link/body/sensor/rgb_camera_sensor/camera_info"
+  ros_type_name: "sensor_msgs/msg/CameraInfo"
+  gz_type_name: "gz.msgs.CameraInfo"
+  lazy: true
+  direction: GZ_TO_ROS
