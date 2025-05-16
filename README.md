@@ -172,17 +172,47 @@ source ~/.bashrc
 
 **The environment should now be configured correctly. You can proceed to run your Bebop2 drone simulations in Gazebo.**
 
-## Usage
-There are three packages included: bebop_controller, bebop_demo and bebop_ros_gz.
+## Package Overview
+This project contains six main packages that work together to provide drone simulation capabilities:
+
+### bebop_bearings
+Implements a multi-agent bearing-based formation control system for 4 agents, achieving formation through bearing measurements.
+**Demo command:**
+```
+ros2 launch bebop_bearings bebop.launch.py
+```
 
 ### bebop_controller
-This package contains a PIC controller based in positions, following a desired trajectory.
+Contains a position-based PID controller for single-agent trajectory tracking. Also includes an additional demo for swarm formation:
+- Pyramid formation with leader-follower topology
+- Straight-line movement for N agents
 
-### bebop_demo
-This package contains example setups to help you get started with the Bebop drone in Gazebo.
-If everything is installed correctly, try running the following example:
+**Demo Commands:**
+Single agent:
 ```
 ros2 launch bebop_demo bebop1.launch.py
 ```
 
+Swarm formation:
+
+```
+ros2 launch bebop_demo swarmbebop.launch.py
+```
+
+### bebop_demo
+Contains utility packages and demonstration setups:
+- `set_pose`: Sets initial drone positions
+- `setpoint`: Generates circular trajectories for single drone operation
+- Various executable examples
+
+### bebop_gui
+Contains graphical user interfaces for the different demos.
+
+### bebop_gz
+Gazebo-specific components including:
+- Drone models and plugins
+- Simulation worlds
+- A configurable world generator that adapts to N agents
+
 ### bebop_ros_gz
+Integrates all Gazebo packages into a single project. This meta-package provides the complete interface for using ROS 2 with Gazebo simulation.
