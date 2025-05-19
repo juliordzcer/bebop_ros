@@ -21,7 +21,7 @@ def generate_launch_description():
     # =====================================================
     # Configuración de parámetros
     # =====================================================
-    num_drones = 5
+    num_drones = 4
     min_distance = 0.5  # Separación mínima de 50 cm entre drones
     max_attempts = 100  # Intentos máximos para colocar cada dron
     robot_names = [f"bebop{i+1}" for i in range(num_drones)]
