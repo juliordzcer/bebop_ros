@@ -26,6 +26,7 @@ setup(
             'bebop_gui = bebop_gui.gui_node:main',
             'bebop_gui_one = bebop_gui.gui_node_one:main',
             'bebop_gui_swarm = bebop_gui.gui_swarm:main',
+            'bebop_gui_swarm_no_cameras = bebop_gui.gui_swarm_no_cameras:main',
             'test_gui = bebop_gui.test:main', 
         ],
     },

@@ -15,7 +15,7 @@ import time
 
 from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QLabel,
-    QComboBox, QStackedWidget, QMessageBox, QHBoxLayout, QGridLayout
+    QComboBox, QStackedWidget, QMessageBox, QHBoxLayout, QGridLayout, QDialog, QDialogButtonBox, QCheckBox,
 )
 from PyQt5.QtCore import Qt, QTimer, QSize
 from PyQt5.QtGui import QImage, QPixmap
@@ -55,6 +55,9 @@ class BebopGUI(Node, QMainWindow):
 
         self.robot_names = [f"bebop{i+1}" for i in range(num_drones)]
         self.current_camera_view = "Todas las cámaras" 
+        self.camera_states = {name: True for name in self.robot_names}  # Todas activas por defecto
+        self.all_cameras_active = True  # Estado global de todas las cámaras
+    
         self.setup_ros()
         self.setup_ui()
 
@@ -185,6 +188,11 @@ class BebopGUI(Node, QMainWindow):
             ('EMERGENCY STOP', self.emergency_stop, '#d32f2f'),
             ('Reset Trajectory', self.restart_trajectory, '#9C27B0')
         ]
+        # Botones de control de cámaras
+        camera_buttons = [
+            ('Toggle All Cameras', self.toggle_all_cameras, '#2196F3'),
+            ('Select Cameras to Disable', self.select_cameras_to_disable, '#673AB7')
+        ]
         
         button_layout = QHBoxLayout()
         for text, callback, color in buttons:
@@ -192,30 +200,123 @@ class BebopGUI(Node, QMainWindow):
             btn.setStyleSheet(f"{button_style} QPushButton {{ background-color: {color}; color: white; }}")
             btn.clicked.connect(callback)
             button_layout.addWidget(btn)
+
+
+        # Layout para botones de cámara
+        camera_button_layout = QHBoxLayout()
+        for text, callback, color in camera_buttons:
+            btn = QPushButton(text)
+            btn.setStyleSheet(f"{button_style} QPushButton {{ background-color: {color}; color: white; }}")
+            btn.clicked.connect(callback)
+            camera_button_layout.addWidget(btn)
         
         self.main_layout.addLayout(button_layout)
+        self.main_layout.addLayout(camera_button_layout)
 
+    def toggle_all_cameras(self):
+        """Activa/desactiva todas las cámaras"""
+        self.all_cameras_active = not self.all_cameras_active
+        for name in self.robot_names:
+            self.camera_states[name] = self.all_cameras_active
+        
+        if self.stack.currentIndex() == 0:  # Si estamos en la vista de cámaras
+            self.update_camera_view_layout()
+        
+        status = "ON" if self.all_cameras_active else "OFF"
+        self.show_warning("Camera Status", f"All cameras turned {status}")
 
-
+    def select_cameras_to_disable(self):
+        """Diálogo para seleccionar qué cámaras desactivar"""
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Select Cameras to Disable")
+        dialog.setMinimumWidth(300)
+        
+        layout = QVBoxLayout()
+        
+        # Crear checkboxes para cada dron
+        self.camera_checkboxes = {}
+        for name in self.robot_names:
+            cb = QCheckBox(name)
+            cb.setChecked(self.camera_states[name])  # Estado actual
+            self.camera_checkboxes[name] = cb
+            layout.addWidget(cb)
+        
+        # Botones de OK/Cancel
+        btn_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        btn_box.accepted.connect(dialog.accept)
+        btn_box.rejected.connect(dialog.reject)
+        layout.addWidget(btn_box)
+        
+        dialog.setLayout(layout)
+        
+        if dialog.exec_() == QDialog.Accepted:
+            for name, cb in self.camera_checkboxes.items():
+                self.camera_states[name] = cb.isChecked()
+            
+            self.update_camera_view_layout()
+            self.show_warning("Camera Status", "Camera selection updated")
+            
     def change_camera_view(self):
         self.current_camera_view = self.camera_selector.currentText()
         self.update_camera_view_layout()
 
     def update_camera_view_layout(self):
+        # # Limpiar layout
+        # for i in reversed(range(self.camera_layout.count())): 
+        #     self.camera_layout.itemAt(i).widget().setParent(None)
+        
+        # if self.current_camera_view == "Todas las cámaras":
+        #     # Mostrar todas las cámaras en grid
+        #     num_drones = len(self.robot_names)
+        #     cols = int(math.ceil(math.sqrt(num_drones)))
+            
+        #     for i, name in enumerate(self.robot_names):
+        #         self.camera_layout.addWidget(self.camera_labels[name], i//cols, i%cols)
+        # else:
+        #     # Mostrar solo la cámara seleccionada (centrada)
+        #     self.camera_layout.addWidget(self.camera_labels[self.current_camera_view], 0, 0, 2, 2)
         # Limpiar layout
+
         for i in reversed(range(self.camera_layout.count())): 
             self.camera_layout.itemAt(i).widget().setParent(None)
         
         if self.current_camera_view == "Todas las cámaras":
-            # Mostrar todas las cámaras en grid
-            num_drones = len(self.robot_names)
-            cols = int(math.ceil(math.sqrt(num_drones)))
+            # Mostrar solo cámaras activas en grid
+
+            active_drones = [name for name in self.robot_names if self.camera_states[name]]
+            num_active = len(active_drones)
             
-            for i, name in enumerate(self.robot_names):
+            if num_active == 0:
+                no_cam_label = QLabel("No cameras active")
+                no_cam_label.setAlignment(Qt.AlignCenter)
+                self.camera_layout.addWidget(no_cam_label, 0, 0)
+                return
+                
+            cols = int(math.ceil(math.sqrt(num_active)))
+            
+            for i, name in enumerate(active_drones):
                 self.camera_layout.addWidget(self.camera_labels[name], i//cols, i%cols)
         else:
-            # Mostrar solo la cámara seleccionada (centrada)
-            self.camera_layout.addWidget(self.camera_labels[self.current_camera_view], 0, 0, 2, 2)
+            # Mostrar solo la cámara seleccionada si está activa
+            if self.camera_states[self.current_camera_view]:
+                self.camera_layout.addWidget(self.camera_labels[self.current_camera_view], 0, 0, 2, 2)
+            else:
+                disabled_label = QLabel(f"Camera {self.current_camera_view} is disabled")
+                disabled_label.setAlignment(Qt.AlignCenter)
+                self.camera_layout.addWidget(disabled_label, 0, 0, 2, 2)
+
+    def toggle_all_cameras(self):
+        """Activa/desactiva todas las cámaras"""
+        self.all_cameras_active = not self.all_cameras_active
+        # Actualiza todos los estados individuales
+        for name in self.robot_names:
+            self.camera_states[name] = self.all_cameras_active
+        
+        if self.stack.currentIndex() == 0:  # Si estamos en la vista de cámaras
+            self.update_camera_view_layout()
+        
+        status = "ON" if self.all_cameras_active else "OFF"
+        self.show_warning("Camera Status", f"All cameras turned {status}")
 
     def update_current_view(self):
         """Actualiza solo la vista activa para mejorar rendimiento"""
@@ -233,14 +334,23 @@ class BebopGUI(Node, QMainWindow):
             self.update_error_plot()
 
     def update_camera_images(self):
-        """Actualiza solo las imágenes visibles"""
+        # """Actualiza solo las imágenes visibles"""
+        # if self.current_camera_view == "Todas las cámaras":
+        #     for name in self.robot_names:
+        #         if self.camera_images[name] is not None:
+        #             self.display_image(self.camera_images[name], self.camera_labels[name])
+        # else:
+        #     name = self.current_camera_view
+        #     if self.camera_images[name] is not None:
+        #         self.display_image(self.camera_images[name], self.camera_labels[name])
+        """Actualiza solo las imágenes visibles y activas"""
         if self.current_camera_view == "Todas las cámaras":
             for name in self.robot_names:
-                if self.camera_images[name] is not None:
+                if self.camera_states[name] and self.camera_images[name] is not None:
                     self.display_image(self.camera_images[name], self.camera_labels[name])
         else:
             name = self.current_camera_view
-            if self.camera_images[name] is not None:
+            if self.camera_states[name] and self.camera_images[name] is not None:
                 self.display_image(self.camera_images[name], self.camera_labels[name])
 
     def setup_camera_view(self):
