@@ -175,6 +175,13 @@ source ~/.bashrc
 ## Package Overview
 This project contains six main packages that work together to provide drone simulation capabilities:
 
+### bebop_bearings
+Implements a multi-agent bearing-based formation control system for 4 agents, achieving formation through bearing measurements.
+**Demo command:**
+```
+ros2 launch bebop_bearings bebop.launch.py
+```
+
 ### bebop_controller
 Contains a position-based PID controller for single-agent trajectory tracking. Also includes an additional demo for swarm formation:
 - Pyramid formation with leader-follower topology

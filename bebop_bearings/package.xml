@@ -1,27 +1,20 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>bebop_gui</name>
-  <version>0.0.1</version>
-  <description>GUI interface for Bebop drone control</description>
+  <name>bebop_bearings</name>
+  <version>0.0.0</version>
+  <description>TODO: Package description</description>
   <maintainer email="juliordzcer@outlook.com">jr</maintainer>
-  <license>Apache 2.0</license>
+  <license>TODO: License declaration</license>
 
-  <buildtool_depend>ament_python</buildtool_depend>
-
-  <!-- Dependencias principales -->
-  <depend>rclpy</depend>
-  <depend>std_srvs</depend>
+  <depend>rlcpy</depend>
   <depend>geometry_msgs</depend>
-  
-  <!-- Dependencias específicas de ejecución -->
-  <exec_depend>python3-pyqt5</exec_depend>
-  <exec_depend>rqt_gui_py</exec_depend>
+  <depend>sensor_msgs</depend>
 
-  <!-- Dependencias para testing -->
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
   <test_depend>ament_pep257</test_depend>
+  <test_depend>ament_xmllint</test_depend>
   <test_depend>python3-pytest</test_depend>
 
   <export>

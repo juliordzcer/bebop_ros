@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 import os
 from glob import glob
 
-package_name = 'bebop_demo'
+package_name = 'bebop_bearings'
 
 setup(
     name=package_name,
@@ -14,8 +14,6 @@ setup(
         ('share/' + package_name, ['package.xml']),
         (os.path.join('share', package_name, 'config'), glob('config/*')),
         (os.path.join('share', package_name, 'launch'), glob('launch/*')),
-        (os.path.join('share', package_name, 'models'), glob('models/****/***/**/*')),
-        (os.path.join('share', package_name, 'worlds'), glob('worlds/*')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -26,11 +24,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            "joystick = bebop_demo.joystick:main",
-            "setpoint = bebop_demo.setpoint:main",
-            "graficas = bebop_demo.graficas:main",
-            "imagenes = bebop_demo.image_viewer:main",
-            "set_pose = bebop_demo.set_pose:main",
+            'bearings_based = bebop_bearings.bearings_based:main',
         ],
     },
 )

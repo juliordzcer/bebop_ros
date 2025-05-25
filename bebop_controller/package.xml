@@ -4,7 +4,7 @@
   <name>bebop_controller</name>
   <version>0.0.0</version>
   <description>Controller for the bebop drone in ROS2</description>
-  <maintainer email="hello@juliordz.com">Julio Rodriguez</maintainer>
+  <maintainer email="juliordzcer@outlook.com">Julio Rodriguez</maintainer>
   <license>Apache License 2.0</license>
 
   <!-- Dependencias principales -->
