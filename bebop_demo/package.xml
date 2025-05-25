@@ -4,8 +4,8 @@
   <name>bebop_demo</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
-  <maintainer email="juliordzcer@outlook.com">jr</maintainer>
-  <license>TODO: License declaration</license>
+  <maintainer email="hello@juliordz.com">Julio Rodriguez</maintainer>
+  <license>Apache License 2.0</license>
 
   <depend>rlcpy</depend>
   <depend>geometry_msgs</depend>

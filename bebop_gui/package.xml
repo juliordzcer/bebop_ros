@@ -4,8 +4,8 @@
   <name>bebop_gui</name>
   <version>0.0.1</version>
   <description>GUI interface for Bebop drone control</description>
-  <maintainer email="juliordzcer@outlook.com">jr</maintainer>
-  <license>Apache 2.0</license>
+  <maintainer email="hello@juliordz.com">Julio Rodriguez</maintainer>
+  <license>Apache License 2.0</license>
 
   <buildtool_depend>ament_python</buildtool_depend>
 

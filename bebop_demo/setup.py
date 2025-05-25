@@ -20,9 +20,9 @@ setup(
     install_requires=['setuptools'],
     zip_safe=True,
     maintainer='jr',
-    maintainer_email='juliordzcer@outlook.com',
+    maintainer_email='hello@juliordz.com',
     description='TODO: Package description',
-    license='TODO: License declaration',
+    license='Apache License 2.0',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [

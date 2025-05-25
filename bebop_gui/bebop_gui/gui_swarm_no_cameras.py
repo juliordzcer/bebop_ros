@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+# Copyright 2025 Julio César Rodríguez
+# Licensed under the Apache License, Version 2.0
+# https://www.apache.org/licenses/LICENSE-2.0
+
 import rclpy
 import sys
 import math

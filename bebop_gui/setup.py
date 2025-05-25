@@ -1,3 +1,7 @@
+# Copyright 2025 Julio César Rodríguez
+# Licensed under the Apache License, Version 2.0
+# https://www.apache.org/licenses/LICENSE-2.0
+
 from setuptools import find_packages, setup
 import os
 from glob import glob
@@ -17,9 +21,9 @@ setup(
     install_requires=['setuptools'],
     zip_safe=True,
     maintainer='jr',
-    maintainer_email='juliordzcer@outlook.com',
+    maintainer_email='hello@juliordz.com',
     description='TODO: Package description',
-    license='TODO: License declaration',
+    license='Apache License 2.0',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
