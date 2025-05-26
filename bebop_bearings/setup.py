@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 import os
 from glob import glob
 
-package_name = 'bebop_gui'
+package_name = 'bebop_bearings'
 
 setup(
     name=package_name,
@@ -12,6 +12,7 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        (os.path.join('share', package_name, 'config'), glob('config/*')),
         (os.path.join('share', package_name, 'launch'), glob('launch/*')),
     ],
     install_requires=['setuptools'],
@@ -23,10 +24,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'bebop_gui = bebop_gui.gui_node:main',
-            'bebop_gui_one = bebop_gui.gui_node_one:main',
-            'bebop_gui_swarm = bebop_gui.gui_swarm:main',
-            'test_gui = bebop_gui.test:main', 
+            'bearings_based = bebop_bearings.bearings_based:main',
         ],
     },
 )
