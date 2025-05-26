@@ -84,7 +84,8 @@ sudo apt-get install cmake -y
 sudo pip3 install transforms3d --break-system-packages
 sudo pip3 install numpy --break-system-packages 
 sudo pip3 install matplotlib --break-system-packages
-sudo pip3 install scipy --break-system-packages 
+sudo pip3 install scipy --break-system-packages
+sudo pip3 install empy --break-system-packages
 ```
 
 ## Install Gazebo Ionic
