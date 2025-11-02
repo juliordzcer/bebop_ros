@@ -120,10 +120,14 @@ Clone the package into your catkin workspace (in src folder):
 cd
 cd ws_bebop/src
 git clone --recursive https://github.com/juliordzcer/bebop_ros.git
-cd bebop_ros
-git submodule init
-git submodule update
-cd
+cd bebop_ros/bebop_gz/plugins/build
+```
+```
+cmake ..
+```
+
+```
+make
 ```
 
 
