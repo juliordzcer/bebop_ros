@@ -133,7 +133,7 @@ make
 
 Use `colcon build` on your workspace to compile.
 ```
-cd ws_bebop
+cd ~/ws_bebop
 colcon build
 ```
 ## **Setup Instructions**
