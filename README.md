@@ -88,18 +88,19 @@ sudo pip3 install scipy --break-system-packages
 sudo pip3 install empy --break-system-packages
 ```
 
-## Install Gazebo Ionic
+## Install Gazebo Jetty
 First install some necessary tools:
 ```
 sudo apt-get update
-sudo apt-get install lsb-release gnupg
+sudo apt-get install curl lsb-release gnupg
 ```
-Then install Gazebo Ionic:
+Then install Gazebo jetty:
 ```
 sudo curl https://packages.osrfoundation.org/gazebo.gpg --output /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] https://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] https://packages.osrfoundation.org/gazebo/ubuntu-prerelease $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-prerelease.list > /dev/null
 sudo apt-get update
-sudo apt-get install gz-ionic
+sudo apt-get install gz-jetty
 ```
 ```
 sudo apt-get install libgz-cmake3-dev -y
@@ -141,7 +142,7 @@ You can add the necessary environment variables and source file to your `.bashrc
 echo "source ~/ws_bebop/install/setup.bash" >> ~/.bashrc
 echo "export GZ_SIM_RESOURCE_PATH=\$HOME/ws_bebop/src/bebop_ros/bebop_gz/worlds:$HOME/ws_bebop/src/bebop_ros/bebop_gz/models" >> ~/.bashrc
 echo "export GZ_SIM_SYSTEM_PLUGIN_PATH=$HOME/ws_bebop/src/bebop_ros/bebop_gz/plugins/build:${GZ_SIM_SYSTEM_PLUGIN_PATH}" >> ~/.bashrc
-echo "export GZ_VERSION=ionic" >> ~/.bashrc
+echo "export GZ_VERSION=jetty" >> ~/.bashrc
 source ~/.bashrc
 
 ```
@@ -160,7 +161,7 @@ nano ~/.bashrc
 source ~/ws_bebop/install/setup.bash
 export GZ_SIM_RESOURCE_PATH="$HOME/ws_bebop/src/bebop_ros/bebop_gz/worlds:$HOME/ws_bebop/src/bebop_ros/bebop_gz/models"
 export GZ_SIM_SYSTEM_PLUGIN_PATH=$HOME/ws_bebop/src/bebop_ros/bebop_gz/plugins/build:${GZ_SIM_SYSTEM_PLUGIN_PATH}
-export GZ_VERSION=ionic
+export GZ_VERSION=jetty
 ```
 
 3. Save the file by pressing `Ctrl+O`, then press `Enter`.
