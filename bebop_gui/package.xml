@@ -10,10 +10,16 @@
   <!-- Dependencias principales -->
   <depend>rclpy</depend>
   <depend>std_srvs</depend>
+  <depend>std_msgs</depend>
   <depend>geometry_msgs</depend>
-  
+  <depend>sensor_msgs</depend>
+  <depend>cv_bridge</depend>
+
   <!-- Dependencias específicas de ejecución -->
   <exec_depend>python3-pyqt5</exec_depend>
+  <exec_depend>python3-opencv</exec_depend>
+  <exec_depend>python3-matplotlib</exec_depend>
+  <exec_depend>python3-numpy</exec_depend>
   <exec_depend>rqt_gui_py</exec_depend>
 
   <!-- Dependencias para testing -->

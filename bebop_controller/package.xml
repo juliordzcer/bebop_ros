@@ -14,6 +14,7 @@
   <depend>std_srvs</depend>
   <depend>tf2_ros</depend>
   <depend>tf2_geometry_msgs</depend>
+  <depend>tf_transformations</depend>
   <depend>python3-numpy</depend>
 
   <!-- Dependencias de prueba -->
