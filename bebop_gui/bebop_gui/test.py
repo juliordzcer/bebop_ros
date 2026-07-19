@@ -45,7 +45,12 @@ def main(args=None):
         pass
     
     subscriber.destroy_node()
-    rclpy.shutdown()
+    # rclpy installs its own SIGINT handler that shuts the context down
+    # before KeyboardInterrupt reaches here on Ctrl-C, so calling
+    # shutdown() unconditionally raises "rcl_shutdown already called on
+    # the given context".
+    if rclpy.ok():
+        rclpy.shutdown()
 
 if __name__ == '__main__':
     main()

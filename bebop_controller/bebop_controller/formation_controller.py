@@ -577,7 +577,12 @@ def main(args=None):
         controller.get_logger().info("Shutting down controller...")
     finally:
         controller.destroy_node()
-        rclpy.shutdown()
+        # rclpy installs its own SIGINT handler that shuts the context
+        # down before KeyboardInterrupt reaches here on Ctrl-C, so
+        # calling shutdown() unconditionally raises "rcl_shutdown
+        # already called on the given context".
+        if rclpy.ok():
+            rclpy.shutdown()
 
 if __name__ == '__main__':
     main()

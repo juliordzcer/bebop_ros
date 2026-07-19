@@ -144,9 +144,18 @@ class TrajectoryCircle(Node):
 def main(args=None):
     rclpy.init(args=args)
     traj_circle = TrajectoryCircle()
-    rclpy.spin(traj_circle)
-    traj_circle.destroy_node()
-    rclpy.shutdown()
+    try:
+        rclpy.spin(traj_circle)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        traj_circle.destroy_node()
+        # rclpy installs its own SIGINT handler that shuts the context
+        # down before KeyboardInterrupt reaches here on Ctrl-C, so
+        # calling shutdown() unconditionally raises "rcl_shutdown
+        # already called on the given context".
+        if rclpy.ok():
+            rclpy.shutdown()
 
 
 if __name__ == '__main__':
