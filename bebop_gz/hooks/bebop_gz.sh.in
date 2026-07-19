@@ -4,7 +4,13 @@
 # previously-sourced package. Prefer COLCON_CURRENT_PREFIX when present.
 _bebop_gz_prefix="${COLCON_CURRENT_PREFIX:-$AMENT_CURRENT_PREFIX}"
 
-ament_prepend_unique_value GZ_SIM_RESOURCE_PATH "$_bebop_gz_prefix/share/@PROJECT_NAME@"
+# `gz sim <world>` and `model://` URI resolution only look directly
+# inside each GZ_SIM_RESOURCE_PATH entry, not in its subdirectories, so
+# worlds/ and models/ must be added separately (not their share/@PROJECT_NAME@
+# parent) or bare world filenames (e.g. "bebop1.sdf") and model URIs
+# (e.g. "model://parrot_bebop_2") fail to resolve.
+ament_prepend_unique_value GZ_SIM_RESOURCE_PATH "$_bebop_gz_prefix/share/@PROJECT_NAME@/worlds"
+ament_prepend_unique_value GZ_SIM_RESOURCE_PATH "$_bebop_gz_prefix/share/@PROJECT_NAME@/models"
 ament_prepend_unique_value GZ_SIM_SYSTEM_PLUGIN_PATH "$_bebop_gz_prefix/lib/bebop_gz_plugins"
 
 unset _bebop_gz_prefix
