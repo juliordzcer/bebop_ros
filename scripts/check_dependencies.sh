@@ -38,6 +38,16 @@ for arg in "$@"; do
   esac
 done
 
+if [ "$(id -u)" -eq 0 ]; then
+  echo "Do not run this script with sudo/as root." >&2
+  echo "Run it as your normal user: it calls sudo itself for the apt-get" >&2
+  echo "step. Running the whole script as root breaks rosdep (its cache" >&2
+  echo "lives under \$HOME/.ros, so it looks uninitialized for root) and" >&2
+  echo "makes pip install into system directories instead of your user" >&2
+  echo "site-packages, which can create duplicate/conflicting installs." >&2
+  exit 1
+fi
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 REPO_DIR="$(dirname "$SCRIPT_DIR")"
 # When cloned as <ws>/src/bebop_ros, this resolves to <ws>/src.
@@ -191,7 +201,7 @@ if [ ${#MISSING_APT[@]} -gt 0 ]; then
 fi
 
 if [ ${#MISSING_PIP[@]} -gt 0 ]; then
-  pip3 install --break-system-packages "${MISSING_PIP[@]}"
+  pip3 install --user --break-system-packages "${MISSING_PIP[@]}"
 fi
 
 log "Done. Re-run this script (without --install) to verify, then: colcon build"
