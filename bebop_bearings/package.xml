@@ -7,7 +7,7 @@
   <maintainer email="juliordzcer@outlook.com">jr</maintainer>
   <license>TODO: License declaration</license>
 
-  <depend>rlcpy</depend>
+  <depend>rclpy</depend>
   <depend>geometry_msgs</depend>
   <depend>sensor_msgs</depend>
 

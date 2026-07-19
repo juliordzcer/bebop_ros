@@ -54,13 +54,18 @@ def generate_launch_description():
     pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
     pkg_bebop_demo = get_package_share_directory('bebop_demo')
     pkg_bebop_bearings = get_package_share_directory('bebop_bearings')
+    pkg_bebop_gz = get_package_share_directory('bebop_gz')
+    world_file = os.path.join(pkg_bebop_gz, 'worlds', 'bebop_multi.world')
+    bridge_config = os.path.join(pkg_bebop_demo, 'config', 'bebop_bridge.yaml')
 
     # 1. World Generator (sin delay)
     world_generator = ExecuteProcess(
         cmd=[
             'python3',
-            os.path.expanduser('~/ws_bebop/src/bebop_ros/bebop_gz/world_generator.py'),
-            f'num_drones={num_drones}'
+            os.path.join(pkg_bebop_gz, 'world_generator.py'),
+            f'num_drones={num_drones}',
+            f'world_path={world_file}',
+            f'yaml_path={bridge_config}',
         ],
         output='screen'
     )
@@ -72,12 +77,12 @@ def generate_launch_description():
                 os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')
             ),
             launch_arguments={
-                'gz_args': '-r -z 1000000 bebop_multi.world',
+                'gz_args': f'-r -z 1000000 {world_file}',
             }.items(),
         ),
         RosGzBridge(
             bridge_name='ros_gz_bridge',
-            config_file=os.path.join(pkg_bebop_demo, 'config', 'bebop_bridge.yaml'),
+            config_file=bridge_config,
         ),
         Node(
             package='bebop_demo',

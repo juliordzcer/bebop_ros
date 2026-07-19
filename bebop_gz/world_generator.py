@@ -4,38 +4,42 @@ import os
 import sys
 
 def main():
-    # Valor por defecto
+    # Valores por defecto: se usan si el script se ejecuta de forma
+    # independiente. Cuando se invoca desde los launch files, world_path y
+    # yaml_path se pasan explícitamente apuntando al *install space* del
+    # workspace (ver get_package_share_directory en los launch files), para
+    # que funcione sin importar el nombre/ubicación del workspace.
     num_drones = 3
-    
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    world_path = os.path.join(script_dir, 'worlds', 'bebop_multi.world')
+    yaml_path = os.path.join(script_dir, '..', 'bebop_demo', 'config', 'bebop_bridge.yaml')
+
     # Procesar argumentos de la línea de comandos
     if len(sys.argv) > 1:
         try:
-            # Buscar argumentos en formato num_drones=X
             for arg in sys.argv[1:]:
                 if arg.startswith("num_drones="):
                     num_drones = int(arg.split("=")[1])
-                    break
-            else:
-                # Si no encontró num_drones=, intentar interpretar el primer argumento como número
-                num_drones = int(sys.argv[1])
+                elif arg.startswith("world_path="):
+                    world_path = arg.split("=", 1)[1]
+                elif arg.startswith("yaml_path="):
+                    yaml_path = arg.split("=", 1)[1]
+                elif "=" not in arg:
+                    # Compatibilidad: primer argumento posicional = num_drones
+                    num_drones = int(arg)
         except ValueError:
             print("Error: El número de drones debe ser un valor entero")
-            print("Uso: python3 generador_bebop.py [num_drones=X]")
+            print("Uso: python3 world_generator.py [num_drones=X] [world_path=...] [yaml_path=...]")
             sys.exit(1)
-    
+
     # Validar que el número de drones sea positivo
     if num_drones < 1:
         print("Error: El número de drones debe ser al menos 1")
         sys.exit(1)
-    
-    generate_bebop_files(num_drones)
 
-def generate_bebop_files(num_drones):
-    # Rutas de los archivos de salida
-    home_dir = os.path.expanduser('~')
-    world_path = os.path.join(home_dir, 'ws_bebop/src/bebop_ros/bebop_gz/worlds/bebop_multi.world')
-    yaml_path = os.path.join(home_dir, 'ws_bebop/src/bebop_ros/bebop_demo/config/bebop_bridge.yaml')
-    
+    generate_bebop_files(num_drones, world_path, yaml_path)
+
+def generate_bebop_files(num_drones, world_path, yaml_path):
     # Crear directorios si no existen
     os.makedirs(os.path.dirname(world_path), exist_ok=True)
     os.makedirs(os.path.dirname(yaml_path), exist_ok=True)

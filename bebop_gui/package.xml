@@ -7,8 +7,6 @@
   <maintainer email="juliordzcer@outlook.com">jr</maintainer>
   <license>Apache 2.0</license>
 
-  <buildtool_depend>ament_python</buildtool_depend>
-
   <!-- Dependencias principales -->
   <depend>rclpy</depend>
   <depend>std_srvs</depend>
