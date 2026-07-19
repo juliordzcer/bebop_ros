@@ -22,6 +22,9 @@ from PyQt5.QtGui import QImage, QPixmap
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
+from bebop_gui._mpl_compat import ensure_axes3d
+ensure_axes3d()
+
 import cv2
 # cv2 bundles its own (often incompatible) Qt "xcb" platform plugin and
 # points QT_QPA_PLATFORM_PLUGIN_PATH at it on import, which crashes

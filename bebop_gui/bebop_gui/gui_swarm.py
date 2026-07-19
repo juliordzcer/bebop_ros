@@ -30,6 +30,8 @@ matplotlib.use('Qt5Agg')  # Usar backend adecuado
 matplotlib.rcParams['path.simplify'] = True
 matplotlib.rcParams['path.simplify_threshold'] = 1.0
 
+from bebop_gui._mpl_compat import ensure_axes3d
+ensure_axes3d()
 
 import cv2
 # cv2 bundles its own (often incompatible) Qt "xcb" platform plugin and
