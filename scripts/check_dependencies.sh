@@ -92,10 +92,14 @@ else
   fi
   ROSDEP_OUT="$(rosdep install --from-paths "$WS_SRC_DIR" --ignore-src -y --simulate 2>&1)"
   ROSDEP_STATUS=$?
-  if [ $ROSDEP_STATUS -eq 0 ] && ! echo "$ROSDEP_OUT" | grep -q "^apt-get install"; then
+  # --simulate prints "#[<installer>] Installation commands:" followed by the
+  # actual (indented, e.g. "  sudo -H apt-get install -y ...") commands only
+  # when something is missing; with nothing to do it prints nothing.
+  if [ $ROSDEP_STATUS -eq 0 ] && ! echo "$ROSDEP_OUT" | grep -q "Installation commands:"; then
     ok "all rosdep-resolvable dependencies are already installed"
   elif [ $ROSDEP_STATUS -eq 0 ]; then
-    miss "rosdep reports missing packages (will be installed via 'rosdep install' below)"
+    miss "rosdep reports missing packages:"
+    echo "$ROSDEP_OUT" | sed 's/^/            /'
     NEED_ROSDEP_INSTALL=1
   else
     WARNINGS+=("rosdep could not resolve all keys (typo in a package.xml <depend>? see below):")
