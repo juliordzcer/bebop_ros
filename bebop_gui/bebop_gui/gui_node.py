@@ -447,6 +447,14 @@ class BebopGUI(Node, QMainWindow):
         
     def cleanup(self):
         """Cleanup resources before closing"""
+        # closeEvent() and app.aboutToQuit are both connected to this
+        # method, and QApplication.quit() below triggers aboutToQuit,
+        # so without this guard cleanup() runs twice: the second call
+        # tries to publish on an already-destroyed node ("cannot use
+        # Destroyable because destruction was requested").
+        if getattr(self, '_cleaned_up', False):
+            return
+        self._cleaned_up = True
         self.publish_state(DroneState.IDLE)
         self.destroy_node()
         if hasattr(self, 'timer'):
@@ -487,7 +495,8 @@ def main(args=None):
     ret = app.exec_()
     
     # Limpieza final por si acaso
-    rclpy.shutdown()
+    if rclpy.ok():
+        rclpy.shutdown()
     sys.exit(ret)
 
 if __name__ == '__main__':
