@@ -2,6 +2,7 @@
 
 import rclpy
 import sys
+import os
 import math
 import signal
 from rclpy.node import Node
@@ -31,6 +32,11 @@ matplotlib.rcParams['path.simplify_threshold'] = 1.0
 
 
 import cv2
+# cv2 bundles its own (often incompatible) Qt "xcb" platform plugin and
+# points QT_QPA_PLATFORM_PLUGIN_PATH at it on import, which crashes
+# PyQt5's QApplication with "Could not load the Qt platform plugin
+# xcb". Drop it so PyQt5 falls back to its own plugin.
+os.environ.pop("QT_QPA_PLATFORM_PLUGIN_PATH", None)
 from cv_bridge import CvBridge
 from enum import IntEnum
 from threading import Lock
