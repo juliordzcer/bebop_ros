@@ -1,1 +1,7 @@
 bebop_gz/models/Rubicon/meshes/rubicon.dae
+
+# Local/manual CMake builds (colcon build handles this now, see bebop_gz/CMakeLists.txt)
+bebop_gz/plugins/build/
+build/
+install/
+log/

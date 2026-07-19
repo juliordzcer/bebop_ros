@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>bebop_gz</name>
+  <version>0.0.1</version>
+  <description>Gazebo (gz-sim) simulation assets for the Bebop 2 swarm: drone/world models, the parametric world generator script, and the SetPosePlugin/RobotPosePublisher gz-sim system plugins.</description>
+  <maintainer email="hello@juliordz.com">Julio Rodriguez</maintainer>
+  <license>Apache 2.0</license>
+  <author>Julio Rodriguez</author>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!--
+    gz-sim / gz-transport / gz-msgs / gz-plugin / gz-math / gz-common /
+    gz-cmake are Gazebo (not ROS) libraries. On several Ubuntu/ROS distro
+    combinations rosdep does not carry keys for them, so they are not
+    declared here as rosdep-resolvable deps. Install them with
+    ../../scripts/check_dependencies.sh (see the repository README) before
+    running `rosdep install` / `colcon build`.
+  -->
+  <exec_depend>ros_gz_sim</exec_depend>
+  <exec_depend>ros_gz_bridge</exec_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

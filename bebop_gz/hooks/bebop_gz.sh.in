@@ -1,0 +1,16 @@
+# colcon (per-package install prefixes, the default `colcon build` layout)
+# only guarantees $COLCON_CURRENT_PREFIX is correct when sourcing a custom
+# hook like this one; $AMENT_CURRENT_PREFIX can be left over/stale from a
+# previously-sourced package. Prefer COLCON_CURRENT_PREFIX when present.
+_bebop_gz_prefix="${COLCON_CURRENT_PREFIX:-$AMENT_CURRENT_PREFIX}"
+
+ament_prepend_unique_value GZ_SIM_RESOURCE_PATH "$_bebop_gz_prefix/share/@PROJECT_NAME@"
+ament_prepend_unique_value GZ_SIM_SYSTEM_PLUGIN_PATH "$_bebop_gz_prefix/lib/bebop_gz_plugins"
+
+unset _bebop_gz_prefix
+
+# Pins the Gazebo release used by `gz sim` when more than one is installed
+# on the system. Only set it if the user hasn't already picked one.
+if [ -z "${GZ_VERSION:-}" ]; then
+  export GZ_VERSION=harmonic
+fi
