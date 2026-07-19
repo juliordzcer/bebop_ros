@@ -63,6 +63,8 @@ After cloning (see Quick start), `scripts/check_dependencies.sh` checks:
 ./bebop_ros/scripts/check_dependencies.sh --install # report and install (sudo will prompt)
 ```
 
+Do **not** run it as `sudo ./check_dependencies.sh ...` — it calls `sudo` itself for the one step that needs it (`apt-get`). Running the whole script as root breaks `rosdep` (its cache lives under your user's `$HOME`) and makes `pip` install into system directories instead of your user's, which can leave two conflicting copies of the same package installed.
+
 ## Running the demos
 
 ```bash
@@ -106,3 +108,4 @@ Meta-package integrating all of the above — the complete interface for using R
 
 - **`colcon build` fails on `bebop_gz` with a `find_package`/`Findgz-*` error**: your installed Gazebo version doesn't match the versioned CMake names in `bebop_gz/plugins/CMakeLists.txt` (`gz-cmake3`, `gz-sim8`, ... — Gazebo Harmonic). Run `dpkg -l | grep libgz-cmake` and adjust the version suffixes to match.
 - **Simulation can't find models/plugins**: make sure you sourced `install/setup.bash` from *this* workspace (not just `/opt/ros/<distro>/setup.bash`) after a successful `colcon build`.
+- **`check_dependencies.sh` was accidentally run with `sudo` and something is now duplicated** (e.g. a package installed both in `~/.local` and in `/usr/local/lib/python3*/dist-packages`): remove the `/usr/local/...` copy (`sudo rm -rf /usr/local/lib/python3*/dist-packages/<package>*`) and re-run the script without `sudo`.
